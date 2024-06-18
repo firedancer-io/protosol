@@ -1,0 +1,5 @@
+ELFBinary.data type:FT_POINTER
+
+ELFLoaderEffects.rodata type:FT_POINTER
+ELFLoaderEffects.calldests type:FT_POINTER
+
