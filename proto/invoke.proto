@@ -20,7 +20,7 @@ message InstrContext {
 
   // The address of the program loader if the invoked program is a user
   // deployed program.
-  optional bytes loader_id = 2;
+  bytes loader_id = 2;
 
   // Account state accessed by the instruction.  This may include
   // indirect accesses like sysvars.
