@@ -1,8 +1,8 @@
-InstrContext.program_id max_size:32 fixed_length:true
-InstrContext.loader_id max_size:32 fixed_length:true
-InstrContext.accounts type:FT_POINTER
-InstrContext.instr_accounts type:FT_POINTER
-InstrContext.data type:FT_POINTER
+org.solana.sealevel.v1.InstrContext.program_id max_size:32 fixed_length:true
+org.solana.sealevel.v1.InstrContext.loader_id max_size:32 fixed_length:true
+org.solana.sealevel.v1.InstrContext.accounts type:FT_POINTER
+org.solana.sealevel.v1.InstrContext.instr_accounts type:FT_POINTER
+org.solana.sealevel.v1.InstrContext.data type:FT_POINTER
 
-InstrEffects.modified_accounts type:FT_POINTER
-InstrEffects.return_data type:FT_POINTER
+org.solana.sealevel.v1.InstrEffects.modified_accounts type:FT_POINTER
+org.solana.sealevel.v1.InstrEffects.return_data type:FT_POINTER
