@@ -1,32 +1,35 @@
-org.solana.sealevel.v1.CompiledInstruction.accounts type:FT_POINTER
-org.solana.sealevel.v1.CompiledInstruction.data type:FT_POINTER
+txn.proto package:"fd_exec_test"
+txn.proto include:"../../nanopb/pb_firedancer.h"
 
-org.solana.sealevel.v1.MessageAddressTableLookup.account_key max_size:32 fixed_length:true
-org.solana.sealevel.v1.MessageAddressTableLookup.writable_indexes type:FT_POINTER
-org.solana.sealevel.v1.MessageAddressTableLookup.readonly_indexes type:FT_POINTER
+fd_exec_test.CompiledInstruction.accounts type:FT_POINTER
+fd_exec_test.CompiledInstruction.data type:FT_POINTER
 
-org.solana.sealevel.v1.LoadedAddresses.writable max_size:32 fixed_length:true
-org.solana.sealevel.v1.LoadedAddresses.readonly max_size:32 fixed_length:true
+fd_exec_test.MessageAddressTableLookup.account_key max_size:32 fixed_length:true
+fd_exec_test.MessageAddressTableLookup.writable_indexes type:FT_POINTER
+fd_exec_test.MessageAddressTableLookup.readonly_indexes type:FT_POINTER
 
-org.solana.sealevel.v1.TransactionMessage.header type:FT_POINTER
-org.solana.sealevel.v1.TransactionMessage.account_keys type:FT_POINTER
-org.solana.sealevel.v1.TransactionMessage.account_shared_data type:FT_POINTER
-org.solana.sealevel.v1.TransactionMessage.instructions type:FT_POINTER
-org.solana.sealevel.v1.TransactionMessage.address_table_lookups type:FT_POINTER
-org.solana.sealevel.v1.TransactionMessage.loaded_addresses type:FT_POINTER
+fd_exec_test.LoadedAddresses.writable max_size:32 fixed_length:true
+fd_exec_test.LoadedAddresses.readonly max_size:32 fixed_length:true
 
-org.solana.sealevel.v1.SanitizedTransaction.message type:FT_POINTER
-org.solana.sealevel.v1.SanitizedTransaction.message_hash type:FT_POINTER
-org.solana.sealevel.v1.SanitizedTransaction.signatures type:FT_POINTER
+fd_exec_test.TransactionMessage.header type:FT_POINTER
+fd_exec_test.TransactionMessage.account_keys type:FT_POINTER
+fd_exec_test.TransactionMessage.account_shared_data type:FT_POINTER
+fd_exec_test.TransactionMessage.instructions type:FT_POINTER
+fd_exec_test.TransactionMessage.address_table_lookups type:FT_POINTER
+fd_exec_test.TransactionMessage.loaded_addresses type:FT_POINTER
 
-org.solana.sealevel.v1.TxnContext.tx type:FT_POINTER
-org.solana.sealevel.v1.TxnContext.epoch_ctx type:FT_POINTER
-org.solana.sealevel.v1.TxnContext.slot_ctx type:FT_POINTER
+fd_exec_test.SanitizedTransaction.message type:FT_POINTER
+fd_exec_test.SanitizedTransaction.message_hash type:FT_POINTER
+fd_exec_test.SanitizedTransaction.signatures type:FT_POINTER
 
-org.solana.sealevel.v1.ResultingState.acct_states type:FT_POINTER
-org.solana.sealevel.v1.ResultingState.rent_debits type:FT_POINTER
+fd_exec_test.TxnContext.tx type:FT_POINTER
+fd_exec_test.TxnContext.epoch_ctx type:FT_POINTER
+fd_exec_test.TxnContext.slot_ctx type:FT_POINTER
 
-org.solana.sealevel.v1.RentDebits.pubkey max_size:32 fixed_length:true
+fd_exec_test.ResultingState.acct_states type:FT_POINTER
+fd_exec_test.ResultingState.rent_debits type:FT_POINTER
 
-org.solana.sealevel.v1.TxnResult.resulting_state type:FT_POINTER
-org.solana.sealevel.v1.TxnResult.return_data type:FT_POINTER
+fd_exec_test.RentDebits.pubkey max_size:32 fixed_length:true
+
+fd_exec_test.TxnResult.resulting_state type:FT_POINTER
+fd_exec_test.TxnResult.return_data type:FT_POINTER
