@@ -1,0 +1,32 @@
+CompiledInstruction.accounts type:FT_POINTER
+CompiledInstruction.data type:FT_POINTER
+
+MessageAddressTableLookup.account_key max_size:32 fixed_length:true
+MessageAddressTableLookup.writable_indexes type:FT_POINTER
+MessageAddressTableLookup.readonly_indexes type:FT_POINTER
+
+LoadedAddresses.writable max_size:32 fixed_length:true
+LoadedAddresses.readonly max_size:32 fixed_length:true
+
+TransactionMessage.header type:FT_POINTER
+TransactionMessage.account_keys type:FT_POINTER
+TransactionMessage.account_shared_data type:FT_POINTER
+TransactionMessage.instructions type:FT_POINTER
+TransactionMessage.address_table_lookups type:FT_POINTER
+TransactionMessage.loaded_addresses type:FT_POINTER
+
+SanitizedTransaction.message type:FT_POINTER
+SanitizedTransaction.message_hash type:FT_POINTER
+SanitizedTransaction.signatures type:FT_POINTER
+
+TxnContext.tx type:FT_POINTER
+TxnContext.epoch_ctx type:FT_POINTER
+TxnContext.slot_ctx type:FT_POINTER
+
+ResultingState.acct_states type:FT_POINTER
+ResultingState.rent_debits type:FT_POINTER
+
+RentDebits.pubkey max_size:32 fixed_length:true
+
+TxnResult.resulting_state type:FT_POINTER
+TxnResult.return_data type:FT_POINTER

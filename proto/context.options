@@ -1,0 +1,7 @@
+FeatureSet.features type:FT_POINTER
+
+# No options needed for SeedAddress since its solfuzz-specific
+
+AcctState.address max_size:32 fixed_length:true
+AcctState.data type:FT_POINTER
+AcctState.owner max_size:32 fixed_length:true
