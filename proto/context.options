@@ -1,7 +1,10 @@
-org.solana.sealevel.v1.FeatureSet.features type:FT_POINTER
+context.proto package:"fd_exec_test"
+context.proto include:"../../nanopb/pb_firedancer.h"
+
+fd_exec_test.FeatureSet.features type:FT_POINTER
 
 # No options needed for SeedAddress since its solfuzz-specific
 
-org.solana.sealevel.v1.AcctState.address max_size:32 fixed_length:true
-org.solana.sealevel.v1.AcctState.data type:FT_POINTER
-org.solana.sealevel.v1.AcctState.owner max_size:32 fixed_length:true
+fd_exec_test.AcctState.address max_size:32 fixed_length:true
+fd_exec_test.AcctState.data type:FT_POINTER
+fd_exec_test.AcctState.owner max_size:32 fixed_length:true
