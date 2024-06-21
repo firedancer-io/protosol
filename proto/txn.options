@@ -11,25 +11,17 @@ fd_exec_test.MessageAddressTableLookup.readonly_indexes type:FT_POINTER
 fd_exec_test.LoadedAddresses.writable max_size:32 fixed_length:true
 fd_exec_test.LoadedAddresses.readonly max_size:32 fixed_length:true
 
-fd_exec_test.TransactionMessage.header type:FT_POINTER
 fd_exec_test.TransactionMessage.account_keys type:FT_POINTER
 fd_exec_test.TransactionMessage.account_shared_data type:FT_POINTER
 fd_exec_test.TransactionMessage.instructions type:FT_POINTER
 fd_exec_test.TransactionMessage.address_table_lookups type:FT_POINTER
-fd_exec_test.TransactionMessage.loaded_addresses type:FT_POINTER
 
-fd_exec_test.SanitizedTransaction.message type:FT_POINTER
 fd_exec_test.SanitizedTransaction.message_hash type:FT_POINTER
 fd_exec_test.SanitizedTransaction.signatures type:FT_POINTER
-
-fd_exec_test.TxnContext.tx type:FT_POINTER
-fd_exec_test.TxnContext.epoch_ctx type:FT_POINTER
-fd_exec_test.TxnContext.slot_ctx type:FT_POINTER
 
 fd_exec_test.ResultingState.acct_states type:FT_POINTER
 fd_exec_test.ResultingState.rent_debits type:FT_POINTER
 
 fd_exec_test.RentDebits.pubkey max_size:32 fixed_length:true
 
-fd_exec_test.TxnResult.resulting_state type:FT_POINTER
 fd_exec_test.TxnResult.return_data type:FT_POINTER
