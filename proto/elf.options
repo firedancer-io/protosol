@@ -1,5 +1,5 @@
 elf.proto package:"fd_exec_test"
-elf.proto include:"../../nanopb/pb_firedancer.h"
+elf.proto include:"../../../nanopb/pb_firedancer.h"
 
 fd_exec_test.ELFBinary.data type:FT_POINTER
 

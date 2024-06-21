@@ -1,5 +1,5 @@
 invoke.proto package:"fd_exec_test"
-invoke.proto include:"../../nanopb/pb_firedancer.h"
+invoke.proto include:"../../../nanopb/pb_firedancer.h"
 
 fd_exec_test.InstrContext.program_id max_size:32 fixed_length:true
 fd_exec_test.InstrContext.accounts type:FT_POINTER

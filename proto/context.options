@@ -1,5 +1,5 @@
 context.proto package:"fd_exec_test"
-context.proto include:"../../nanopb/pb_firedancer.h"
+context.proto include:"../../../nanopb/pb_firedancer.h"
 
 fd_exec_test.FeatureSet.features type:FT_POINTER
 

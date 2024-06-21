@@ -1,5 +1,5 @@
 txn.proto package:"fd_exec_test"
-txn.proto include:"../../nanopb/pb_firedancer.h"
+txn.proto include:"../../../nanopb/pb_firedancer.h"
 
 fd_exec_test.CompiledInstruction.accounts type:FT_POINTER
 fd_exec_test.CompiledInstruction.data type:FT_POINTER
