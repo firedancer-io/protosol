@@ -105,3 +105,10 @@ message SyscallFixture {
     SyscallContext input = 1;
     SyscallEffects output = 2;
 }
+
+// Effects of fd_vm_validate
+message ValidateVmEffects {
+    int32 result = 1;
+    // if result is 0 (success), protobuf will be empty!!
+    bool success = 2;
+}
