@@ -10,7 +10,6 @@ message MessageHeader {
   uint32 num_readonly_unsigned_accounts = 3;
 }
 
-
 // The instruction a transaction executes
 message CompiledInstruction {
   // Index into the message pubkey array
@@ -113,4 +112,12 @@ message TxnResult {
   uint64 executed_units = 8;
   // The change in accounts data len for this transaction
   int64 accounts_data_len_delta = 9;
+}
+
+// Txn fixtures
+message TxnFixture {
+  // Context
+  TxnContext input = 1;
+  // Effects
+  TxnResult output = 2;
 }
