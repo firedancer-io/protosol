@@ -42,14 +42,15 @@ message TransactionMessage {
   repeated bytes account_keys = 3;
   // Data associated with the accounts referred above. Not all accounts need to be here.
   repeated AcctState account_shared_data = 4;
+  bytes recent_blockhash = 5;
 
   // The instructions this transaction executes
-  repeated CompiledInstruction instructions = 5;
+  repeated CompiledInstruction instructions = 6;
 
   // Not available in legacy message
-  repeated MessageAddressTableLookup address_table_lookups = 6;
+  repeated MessageAddressTableLookup address_table_lookups = 7;
   // Not available in legacy messages
-  LoadedAddresses loaded_addresses = 7;
+  LoadedAddresses loaded_addresses = 8;
 }
 
 // A valid verified transaction
@@ -75,8 +76,9 @@ message TxnContext {
   // The limit of bytes allowed for this transaction to load
   uint64 log_messages_byte_limit = 3;
 
-  EpochContext epoch_ctx = 4;
-  SlotContext slot_ctx = 5;
+  bytes genesis_hash = 4;
+  EpochContext epoch_ctx = 5;
+  SlotContext slot_ctx = 6;
 }
 
 // The resulting state of an account after a transaction
