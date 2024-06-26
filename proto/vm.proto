@@ -107,7 +107,7 @@ message SyscallFixture {
 }
 
 // Everything needed to setup a fd_vm_t
-message TestVmContext {
+message FullVmContext {
     VmContext vm_ctx = 1;
     InstrContext instr_ctx = 2;
 }
