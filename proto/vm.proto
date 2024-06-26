@@ -106,6 +106,12 @@ message SyscallFixture {
     SyscallEffects output = 2;
 }
 
+// Everything needed to setup a fd_vm_t
+message TestVmContext {
+    VmContext vm_ctx = 1;
+    InstrContext instr_ctx = 2;
+}
+
 // Effects of fd_vm_validate
 message ValidateVmEffects {
     int32 result = 1;
