@@ -1,6 +1,7 @@
 syntax = "proto3";
 package org.solana.sealevel.v1;
 import "invoke.proto";
+import "context.proto";
 
 // Describes an input data region. Agave's memory mapping sets up a series of
 // memory mapped regions, which combine to make the input data region.
