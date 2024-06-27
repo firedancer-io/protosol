@@ -109,7 +109,8 @@ message SyscallFixture {
 // Everything needed to setup a fd_vm_t
 message FullVmContext {
     VmContext vm_ctx = 1;
-    InstrContext instr_ctx = 2;
+    // InstrContext instr_ctx = 2;
+    FeatureSet features = 3;
 }
 
 // Effects of fd_vm_validate
