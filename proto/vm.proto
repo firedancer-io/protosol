@@ -120,3 +120,9 @@ message ValidateVmEffects {
     // if result is 0 (success), protobuf will be empty!!
     bool success = 2;
 }
+
+// Fixture for fd_vm_validate fuzz harness
+message ValidateVmFixture {
+    FullVmContext 	input 	= 1;
+    ValidateVmEffects 	output	= 2;
+}
