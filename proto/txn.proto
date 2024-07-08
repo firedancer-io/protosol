@@ -94,6 +94,11 @@ message RentDebits {
   int64 rent_collected = 2;
 }
 
+message FeeDetails {
+  uint64 transaction_fee = 1;
+  uint64 prioritization_fee = 2;
+}
+
 // The execution results for a transaction
 message TxnResult {
   // Whether this transaction was executed
@@ -114,6 +119,8 @@ message TxnResult {
   uint64 executed_units = 8;
   // The change in accounts data len for this transaction
   int64 accounts_data_len_delta = 9;
+  // The collected fees in this transaction
+  FeeDetails fee_details = 10;
 }
 
 // Txn fixtures
