@@ -4,13 +4,18 @@ import "invoke.proto";
 import "context.proto";
 import "vm.proto";
 
+message CPISigner{
+    // max count 16, max 32 bytes each
+    repeated bytes seeds = 1;
+}
+
 message CPIInstr{
     bytes callee_program_id = 1;
     repeated InstrAcct acct_metas = 2;
     bytes data = 3;
 
     repeated AcctState accounts = 4;
-    bytes signers_seeds = 5; // TODO: this is a 3d array, but we can't represent that in protobuf yet
+    repeated CPISigner signers_seeds = 5;
 }
 
 message CPIContext {
