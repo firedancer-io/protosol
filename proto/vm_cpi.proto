@@ -5,7 +5,6 @@ import "context.proto";
 import "vm.proto";
 
 message CPISigner{
-    // max count 16, max 32 bytes each
     repeated bytes seeds = 1;
 }
 
@@ -21,5 +20,6 @@ message CPIInstr{
 message CPIContext {
   // The vm context
   VmContext vm_context = 1;
-  InstrContext instr_context = 2;
+  CPIInstr cpi_instr = 2;
+  InstrContext instr_context = 3;
 }
