@@ -1,7 +1,7 @@
 vm_cpi.proto package:"fd_exec_test"
 vm_cpi.proto include:"../../../nanopb/pb_firedancer.h"
 
-fd_exec_test.CPISigner.seeds max_count:16 max_size:32
+fd_exec_test.CPISigner.seeds type:FT_POINTER
 
 fd_exec_test.CPIInstr.callee_program_id max_size:32 fixed_length:true
 fd_exec_test.CPIInstr.acct_metas type:FT_POINTER
