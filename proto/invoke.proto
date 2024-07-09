@@ -2,7 +2,6 @@ syntax = "proto3";
 package org.solana.sealevel.v1;
 
 import "context.proto";
-import "txn.proto";
 
 message InstrAcct {
   // Selects an account in an external list
