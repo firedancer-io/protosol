@@ -1,0 +1,20 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+import "invoke.proto";
+import "context.proto";
+import "vm.proto";
+
+message CPIInstr{
+    bytes callee_program_id = 1;
+    repeated InstrAcct acct_metas = 2;
+    bytes data = 3;
+
+    repeated AcctState accounts = 4;
+    bytes signers_seeds = 5; // TODO: this is a 3d array, but we can't represent that in protobuf yet
+}
+
+message CPIContext {
+  // The vm context
+  VmContext vm_context = 1;
+  InstrContext instr_context = 2;
+}
