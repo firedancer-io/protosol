@@ -17,9 +17,15 @@ message CPIInstr{
     repeated CPISigner signers_seeds = 5;
 }
 
+// Output from stubbed execute call
+message CPIExecuteOutput {
+  InstrEffects callee_effects = 1;
+}
+
 message CPIContext {
   // The vm context
   VmContext vm_ctx = 1;
   CPIInstr cpi_instr = 2;
   InstrContext instr_ctx = 3;
+  CPIExecuteOutput cpi_exec_out = 4;
 }
