@@ -73,12 +73,10 @@ message TxnContext {
   SanitizedTransaction tx = 1;
   // The maximum age allowed for this transaction
   uint64 max_age = 2;
-  // The limit of bytes allowed for this transaction to load
-  uint64 log_messages_byte_limit = 3;
 
-  bytes genesis_hash = 4;
-  EpochContext epoch_ctx = 5;
-  SlotContext slot_ctx = 6;
+  bytes genesis_hash = 3;
+  EpochContext epoch_ctx = 4;
+  SlotContext slot_ctx = 5;
 }
 
 // The resulting state of an account after a transaction
