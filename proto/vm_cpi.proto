@@ -19,7 +19,7 @@ message CPIInstr{
 
 message CPIContext {
   // The vm context
-  VmContext vm_context = 1;
+  VmContext vm_ctx = 1;
   CPIInstr cpi_instr = 2;
-  InstrContext instr_context = 3;
+  InstrContext instr_ctx = 3;
 }
