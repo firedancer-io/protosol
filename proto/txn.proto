@@ -45,17 +45,20 @@ message TransactionMessage {
   // Data associated with the accounts referred above. Not all accounts need to be here.
   repeated AcctState account_shared_data = 4;
 
-  // 300 most recent blockhashes (ordered from oldest to newest)
-  repeated bytes recent_blockhashes = 5;
+  // Recent blockhash provided in message
+  bytes recent_blockhash = 5;
+
+  // Up to 300 most recent blockhashes (ordered from oldest to newest)
+  repeated bytes blockhash_queue = 6;
 
   // The instructions this transaction executes
-  repeated CompiledInstruction instructions = 6;
+  repeated CompiledInstruction instructions = 7;
 
   // Not available in legacy message
-  repeated MessageAddressTableLookup address_table_lookups = 7;
+  repeated MessageAddressTableLookup address_table_lookups = 8;
 
   // Not available in legacy messages
-  LoadedAddresses loaded_addresses = 8;
+  LoadedAddresses loaded_addresses = 9;
 }
 
 // A valid verified transaction

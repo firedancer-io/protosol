@@ -13,7 +13,8 @@ fd_exec_test.LoadedAddresses.readonly max_size:32 fixed_length:true
 
 fd_exec_test.TransactionMessage.account_keys type:FT_POINTER
 fd_exec_test.TransactionMessage.account_shared_data type:FT_POINTER
-fd_exec_test.TransactionMessage.recent_blockhashes type:FT_POINTER
+fd_exec_test.TransactionMessage.recent_blockhash type:FT_POINTER
+fd_exec_test.TransactionMessage.blockhash_queue type:FT_POINTER
 fd_exec_test.TransactionMessage.instructions type:FT_POINTER
 fd_exec_test.TransactionMessage.address_table_lookups type:FT_POINTER
 
