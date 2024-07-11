@@ -13,14 +13,12 @@ fd_exec_test.LoadedAddresses.readonly max_size:32 fixed_length:true
 
 fd_exec_test.TransactionMessage.account_keys type:FT_POINTER
 fd_exec_test.TransactionMessage.account_shared_data type:FT_POINTER
-fd_exec_test.TransactionMessage.recent_blockhash max_size:32 fixed_length:true
+fd_exec_test.TransactionMessage.recent_blockhashes type:FT_POINTER
 fd_exec_test.TransactionMessage.instructions type:FT_POINTER
 fd_exec_test.TransactionMessage.address_table_lookups type:FT_POINTER
 
 fd_exec_test.SanitizedTransaction.message_hash type:FT_POINTER
 fd_exec_test.SanitizedTransaction.signatures type:FT_POINTER
-
-fd_exec_test.TxnContext.genesis_hash max_size:32 fixed_length:true
 
 fd_exec_test.ResultingState.acct_states type:FT_POINTER
 fd_exec_test.ResultingState.rent_debits type:FT_POINTER
