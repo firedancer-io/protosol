@@ -48,17 +48,14 @@ message TransactionMessage {
   // Recent blockhash provided in message
   bytes recent_blockhash = 5;
 
-  // Up to 300 most recent blockhashes (ordered from oldest to newest)
-  repeated bytes blockhash_queue = 6;
-
   // The instructions this transaction executes
-  repeated CompiledInstruction instructions = 7;
+  repeated CompiledInstruction instructions = 6;
 
   // Not available in legacy message
-  repeated MessageAddressTableLookup address_table_lookups = 8;
+  repeated MessageAddressTableLookup address_table_lookups = 7;
 
   // Not available in legacy messages
-  LoadedAddresses loaded_addresses = 9;
+  LoadedAddresses loaded_addresses = 8;
 }
 
 // A valid verified transaction
@@ -79,11 +76,15 @@ message SanitizedTransaction {
 message TxnContext {
   // The transaction data
   SanitizedTransaction tx = 1;
+
   // The maximum age allowed for this transaction
   uint64 max_age = 2;
 
-  EpochContext epoch_ctx = 3;
-  SlotContext slot_ctx = 4;
+  // Up to 300 most recent blockhashes (ordered from oldest to newest)
+  repeated bytes blockhash_queue = 3;
+
+  EpochContext epoch_ctx = 4;
+  SlotContext slot_ctx = 5;
 }
 
 // The resulting state of an account after a transaction
