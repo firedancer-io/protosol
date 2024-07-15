@@ -8,8 +8,8 @@ fd_exec_test.MessageAddressTableLookup.account_key max_size:32 fixed_length:true
 fd_exec_test.MessageAddressTableLookup.writable_indexes type:FT_POINTER
 fd_exec_test.MessageAddressTableLookup.readonly_indexes type:FT_POINTER
 
-fd_exec_test.LoadedAddresses.writable max_size:32 fixed_length:true
-fd_exec_test.LoadedAddresses.readonly max_size:32 fixed_length:true
+fd_exec_test.LoadedAddresses.writable type:FT_POINTER
+fd_exec_test.LoadedAddresses.readonly type:FT_POINTER
 
 fd_exec_test.TransactionMessage.account_keys type:FT_POINTER
 fd_exec_test.TransactionMessage.account_shared_data type:FT_POINTER
