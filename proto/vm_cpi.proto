@@ -8,9 +8,15 @@ message CPISigner{
     repeated bytes seeds = 1;
 }
 
+message CPIAccountMeta{
+    bytes pubkey = 1;
+    bool is_writable = 2;
+    bool is_signer = 3;
+}
+
 message CPIInstr{
     bytes callee_program_id = 1;
-    repeated InstrAcct acct_metas = 2;
+    repeated CPIAccountMeta acct_metas = 2;
     bytes data = 3;
 
     repeated AcctState accounts = 4;
