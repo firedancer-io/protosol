@@ -51,6 +51,8 @@ message VmContext {
     uint64 r10 = 16;
     uint64 r11 = 17;
 
+    bool check_align = 18;
+
     // TODO: extend this to support the rest of the vm fields, needed for
     // full coverage of the vm interpreter code.
 }
