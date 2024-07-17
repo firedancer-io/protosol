@@ -8,6 +8,12 @@ message CPISigner{
     repeated bytes seeds = 1;
 }
 
+enum CPIABI{
+  UNKNOWN = 0;
+  C = 1;
+  RUST = 2;
+}
+
 message CPIAccountMeta{
     bytes pubkey = 1;
     bool is_writable = 2;
@@ -34,4 +40,20 @@ message CPIContext {
   CPIInstr cpi_instr = 2;
   InstrContext instr_ctx = 3;
   CPIExecuteOutput cpi_exec_out = 4;
+}
+
+message CPISnapshot {
+  uint64 instruction_va = 1;
+  uint64 account_infos_va = 2;
+  uint64 account_infos_cnt = 3;
+  uint64 signers_seeds_va = 4;
+  uint64 signers_seeds_cnt = 5;
+
+  bytes ro_region = 6;
+  bytes stack = 7;
+  bytes heap = 8;
+  bytes input_region = 9;
+
+  InstrContext instr_ctx = 10;
+  CPIABI abi = 11;
 }
