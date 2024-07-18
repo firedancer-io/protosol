@@ -31,6 +31,9 @@ message InstrContext {
 
   SlotContext slot_context = 8;
   EpochContext epoch_context = 9;
+
+  uint64 starting_lamports_h = 10;
+  uint64 starting_lamports_l = 11;
 }
 
 // The results of executing an InstrContext.

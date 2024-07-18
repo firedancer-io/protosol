@@ -45,10 +45,6 @@ message AcctState {
   // TODO: This is a solfuzz specific extension and is not compliant
   // with the org.solana.sealevel.v1 API.
   SeedAddress seed_addr = 7;
-
-  // Account info additional fields
-  bool is_signer = 8;
-  bool is_writable = 9;
 }
 
 // EpochContext includes context scoped to an epoch.
