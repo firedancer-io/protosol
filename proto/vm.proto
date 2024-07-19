@@ -52,6 +52,7 @@ message VmContext {
     uint64 r11 = 17;
 
     bool check_align = 18;
+    bool check_size = 19;
 
     // TODO: extend this to support the rest of the vm fields, needed for
     // full coverage of the vm interpreter code.
@@ -70,6 +71,8 @@ message SyscallInvocation {
     bytes function_name = 1;
     // The initial portion of the heap, for example to store syscall inputs
     bytes heap_prefix = 2;
+    // The initial portion of the stack, for example to store syscall inputs
+    bytes stack_prefix = 3;
 }
 
 // Execution context for a VM Syscall execution.
