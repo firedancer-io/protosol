@@ -32,10 +32,8 @@ message InstrContext {
   SlotContext slot_context = 8;
   EpochContext epoch_context = 9;
 
-  uint64 starting_lamports_h = 10;
-  uint64 starting_lamports_l = 11;
-
   // FIXME: move to future transaction context protobuf
+  // Tag is intentionally set to 12 DO NOT CHANGE
   uint64 heap_size = 12;
 }
 
