@@ -34,6 +34,9 @@ message InstrContext {
 
   uint64 starting_lamports_h = 10;
   uint64 starting_lamports_l = 11;
+
+  // FIXME: move to future transaction context protobuf
+  uint64 heap_size = 12;
 }
 
 // The results of executing an InstrContext.
