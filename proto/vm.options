@@ -8,6 +8,7 @@ fd_exec_test.VmContext.input_data_regions type:FT_POINTER
 
 fd_exec_test.SyscallInvocation.function_name max_size:1400
 fd_exec_test.SyscallInvocation.heap_prefix type:FT_POINTER
+fd_exec_test.SyscallInvocation.stack_prefix type:FT_POINTER
 
 fd_exec_test.SyscallEffects.heap type:FT_POINTER
 fd_exec_test.SyscallEffects.stack type:FT_POINTER
