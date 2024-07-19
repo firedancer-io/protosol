@@ -123,10 +123,8 @@ message TxnResult {
   bytes return_data = 7;
   // Number of executed compute units
   uint64 executed_units = 8;
-  // The change in accounts data len for this transaction
-  int64 accounts_data_len_delta = 9;
   // The collected fees in this transaction
-  FeeDetails fee_details = 10;
+  FeeDetails fee_details = 9;
 }
 
 // Txn fixtures
