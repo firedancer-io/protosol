@@ -2,11 +2,6 @@ syntax = "proto3";
 package org.solana.sealevel.v1;
 import "invoke.proto";
 import "context.proto";
-import "vm.proto";
-
-message CPISigner{
-    repeated bytes seeds = 1;
-}
 
 enum CPIABI{
   UNKNOWN = 0;
@@ -14,34 +9,7 @@ enum CPIABI{
   RUST = 2;
 }
 
-message CPIAccountMeta{
-    bytes pubkey = 1;
-    bool is_writable = 2;
-    bool is_signer = 3;
-}
-
-message CPIInstr{
-    bytes callee_program_id = 1;
-    repeated CPIAccountMeta acct_metas = 2;
-    bytes data = 3;
-
-    repeated AcctState accounts = 4;
-    repeated CPISigner signers_seeds = 5;
-}
-
-// Output from stubbed execute call
-message CPIExecuteOutput {
-  InstrEffects callee_effects = 1;
-}
-
-message CPIContext {
-  // The vm context
-  VmContext vm_ctx = 1;
-  CPIInstr cpi_instr = 2;
-  InstrContext instr_ctx = 3;
-  CPIExecuteOutput cpi_exec_out = 4;
-}
-
+// TODO: Only captures start state, what about post instruction execution state?
 message CPISnapshot {
   uint64 instruction_va = 1;
   uint64 account_infos_va = 2;
