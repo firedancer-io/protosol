@@ -54,6 +54,10 @@ message VmContext {
     bool check_align = 18;
     bool check_size = 19;
 
+    // for interpreter
+    uint64  entry_pc = 20; // in terms of instruction count
+    bytes   call_whitelist = 21; // list of pcs that can be called to FIXME: do we need this?
+
     // TODO: extend this to support the rest of the vm fields, needed for
     // full coverage of the vm interpreter code.
 }
@@ -104,6 +108,9 @@ message SyscallEffects {
 
     // Syscall log
     bytes log = 8;
+
+    // Interpreter state
+    uint64 pc = 9; // reg[11] in agave
 }
 
 // A syscall processing test fixture.
@@ -131,3 +138,4 @@ message ValidateVmFixture {
     FullVmContext 	input 	= 1;
     ValidateVmEffects 	output	= 2;
 }
+
