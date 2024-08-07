@@ -98,12 +98,13 @@ message SyscallEffects {
     bytes heap = 4;
     bytes stack = 5;
     bytes inputdata = 6;
+    bytes rodata = 7;
 
     // Current number of stack frames pushed
-    uint64 frame_count = 7;
+    uint64 frame_count = 8;
 
     // Syscall log
-    bytes log = 8;
+    bytes log = 9;
 }
 
 // A syscall processing test fixture.
