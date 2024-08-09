@@ -1,0 +1,2 @@
+vm_cpi.proto package:"fd_exec_test"
+vm_cpi.proto include:"../../../nanopb/pb_firedancer.h"

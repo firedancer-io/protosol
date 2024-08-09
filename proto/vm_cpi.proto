@@ -1,0 +1,27 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+import "invoke.proto";
+import "context.proto";
+
+enum CPIABI{
+  UNKNOWN = 0;
+  C = 1;
+  RUST = 2;
+}
+
+// TODO: Only captures start state, what about post instruction execution state?
+message CPISnapshot {
+  uint64 instruction_va = 1;
+  uint64 account_infos_va = 2;
+  uint64 account_infos_cnt = 3;
+  uint64 signers_seeds_va = 4;
+  uint64 signers_seeds_cnt = 5;
+
+  bytes ro_region = 6;
+  bytes stack = 7;
+  bytes heap = 8;
+  bytes input_region = 9;
+
+  InstrContext instr_ctx = 10;
+  CPIABI abi = 11;
+}
