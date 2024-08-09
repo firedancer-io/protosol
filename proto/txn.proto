@@ -119,12 +119,17 @@ message TxnResult {
   bool is_ok = 5;
   // The transaction status (error code)
   uint32 status = 6;
+  // The instruction status (error code, if there was any)
+  uint32 instruction_error = 7;
+  // Custom error, if any
+  uint32 custom_error = 8;
+
   // The return data from this transaction, if any
-  bytes return_data = 7;
+  bytes return_data = 9;
   // Number of executed compute units
-  uint64 executed_units = 8;
+  uint64 executed_units = 10;
   // The collected fees in this transaction
-  FeeDetails fee_details = 9;
+  FeeDetails fee_details = 11;
 }
 
 // Txn fixtures
