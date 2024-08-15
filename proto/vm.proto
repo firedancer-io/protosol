@@ -97,7 +97,9 @@ message SyscallEffects {
     // Memory regions
     bytes heap = 4;
     bytes stack = 5;
-    bytes inputdata = 6;
+
+    bytes inputdata = 6; // deprecated, use input_data_regions
+    repeated InputDataRegion input_data_regions = 11;
 
     // Current number of stack frames pushed
     uint64 frame_count = 7;
