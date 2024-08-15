@@ -135,4 +135,3 @@ message ValidateVmFixture {
     FullVmContext 	input 	= 1;
     ValidateVmEffects 	output	= 2;
 }
-
