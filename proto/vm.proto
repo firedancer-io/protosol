@@ -53,12 +53,12 @@ message VmContext {
 
     bool check_align = 18;
     bool check_size = 19;
-    // for interpreter
-    uint64  entry_pc = 20; // in terms of instruction count
-    bytes   call_whitelist = 21; // list of pcs that can be called to FIXME: do we need this?
-
-    // TODO: extend this to support the rest of the vm fields, needed for
-    // full coverage of the vm interpreter code.
+    
+    // for vm execution
+    uint64  entry_pc = 20;
+    /* Bitset of valid call destinations (in terms of pc).
+       This model is used by the Firedancer VM for CALL_IMMs */
+    bytes   call_whitelist = 21;
 }
 
 // TODO: use structured types for syscall implementation to improve fuzz coverage
@@ -112,8 +112,8 @@ message SyscallEffects {
 
     bytes rodata = 9;
 
-    // Interpreter state
-    uint64 pc = 10; // reg[11] in agave
+    // VM state
+    uint64 pc = 10;
 }
 
 // A syscall processing test fixture.
