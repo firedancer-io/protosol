@@ -59,6 +59,7 @@ message VmContext {
     /* Bitset of valid call destinations (in terms of pc).
        This model is used by the Firedancer VM for CALL_IMMs */
     bytes   call_whitelist = 21;
+    bool tracing_enabled = 22;
 }
 
 // TODO: use structured types for syscall implementation to improve fuzz coverage
