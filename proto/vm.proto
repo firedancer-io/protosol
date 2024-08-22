@@ -53,9 +53,13 @@ message VmContext {
 
     bool check_align = 18;
     bool check_size = 19;
-
-    // TODO: extend this to support the rest of the vm fields, needed for
-    // full coverage of the vm interpreter code.
+    
+    // for vm execution
+    uint64  entry_pc = 20;
+    /* Bitset of valid call destinations (in terms of pc).
+       This model is used by the Firedancer VM for CALL_IMMs */
+    bytes   call_whitelist = 21;
+    bool tracing_enabled = 22;
 }
 
 // TODO: use structured types for syscall implementation to improve fuzz coverage
@@ -108,6 +112,9 @@ message SyscallEffects {
     bytes log = 8;
 
     bytes rodata = 9;
+
+    // VM state
+    uint64 pc = 10;
 }
 
 // A syscall processing test fixture.
