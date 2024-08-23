@@ -1,0 +1,4 @@
+shred.proto package:"fd_exec_test"
+shred.proto include:"../../../nanopb/pb_firedancer.h"
+
+fd_exec_test.ShredBinary.data type:FT_POINTER
