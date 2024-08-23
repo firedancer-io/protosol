@@ -1,0 +1,40 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+
+// raw bytes to test shred parsing
+message ShredBinary {
+  bytes data = 1;
+}
+
+
+message DataHeader {
+  uint32 parent_off = 1;
+  uint32 flags = 2;
+  uint32 size = 3;
+}
+
+message CodeHeader {
+  uint32 data_cnt = 1;
+  uint32 code_cnt = 2;
+  uint32 idx = 3;
+}
+
+message ParsedShred {
+  string signature = 1;
+  uint32 variant = 2;
+  uint64 slot = 3;
+  uint32 idx = 4;
+  uint32 version = 5;
+  uint32 fec_set_idx = 6;
+
+  oneof shred_type {
+    DataHeader data = 7;
+    CodeHeader code = 8;
+  }
+}
+
+// If shred is accepted after parseing. This is all we are interested in
+// between Firedancer and Agave.
+message AcceptsShred {
+  bool valid = 1;
+}
