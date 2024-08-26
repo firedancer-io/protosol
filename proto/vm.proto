@@ -85,6 +85,9 @@ message SyscallContext {
     // InflightInstruction - contain temporary fields that live for the duration of an instructions execution, and is needed if we have overhanging context from a previous instruction
     InstrContext instr_ctx = 2;
     SyscallInvocation syscall_invocation = 3;
+
+    // For CPI, we want to control the effects of a program invocation
+    InstrEffects exec_effects = 4;
 }
 
 // The effects of executing a SyscallContext.
@@ -115,6 +118,7 @@ message SyscallEffects {
 
     // VM state
     uint64 pc = 10;
+
 }
 
 // A syscall processing test fixture.
