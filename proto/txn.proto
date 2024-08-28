@@ -26,12 +26,6 @@ message MessageAddressTableLookup {
   repeated uint32 readonly_indexes = 3;
 }
 
-// Addresses loaded with on-chain lookup tables
-message LoadedAddresses {
-  repeated bytes writable = 1;
-  repeated bytes readonly = 2;
-}
-
 // Message contains the transaction data
 message TransactionMessage {
   // Whether this is a legacy message or not
@@ -53,9 +47,6 @@ message TransactionMessage {
 
   // Not available in legacy message
   repeated MessageAddressTableLookup address_table_lookups = 7;
-
-  // Not available in legacy messages
-  LoadedAddresses loaded_addresses = 8;
 }
 
 // A valid verified transaction
