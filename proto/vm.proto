@@ -118,7 +118,6 @@ message SyscallEffects {
 
     // VM state
     uint64 pc = 10;
-
 }
 
 // A syscall processing test fixture.
