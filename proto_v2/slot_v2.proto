@@ -1,0 +1,68 @@
+syntax = "proto3";
+package fd.v2;
+
+import "txn_v2.proto";
+
+message SlotBank {
+    int32 todo = 1;
+}
+
+message SysvarCache {
+    int32 todo = 1;
+}
+
+/* The amount that this should be filled out is dependent on if there is 
+   epoch or slot granularity fuzzing */
+message EpochRewardStatus {
+    uint32 discriminant = 1;
+    uint32 todo = 2; /* Rest of the struct should be populated */
+}
+
+/* High level of what happens in a slot:
+   1. Update sysvars
+   2. Distribute partitioned rewards to stake accounts
+   3. Collect raw txns from the ledger/network. TODO: Figure out if we should
+      fuzz using the raw txn bytes or the partially parsed TxnEnvs. Perhaps
+      leave this as a configuration option. For the sake of simplicity as a 
+      PoC, will assume that we pass in the partially parsed TxnEnvs.
+   4. TODO: Decide if we want to fuzz the ticks/poh??? Assuming this is not being
+      done for the sake of simplicity as we are just trying to fuzz the runtime.enum
+      However, this is possible to do.
+   5. Pass in all txns into waves that are generated, or use the pack code path
+   6. Execute each transaction in the wave.
+   7. Finalize block: update sysvar(s) update bpf cache, update
+      bank hash. Collect Rent too. Collect slot fees.
+   8. As a note: this should also be able to handle fuzzing of the epoch
+      boundary.
+*/
+
+message SlotEnv {
+
+    /* The slot number */
+    uint64            slot_number   = 1;
+    uint64            prev_slot     = 2;
+    uint64            block_height  = 3;
+
+    EpochRewardStatus reward_status = 4;
+
+    /* TODO: rent. Figure out the best way to represent a rent partition
+       that works with firedancer and agave. Ideally for a slot fuzzer this
+       is prepopulated and is recomputed at the epoch level fuzzer. */
+
+
+    bytes             stake_accounts = 5; /* for distributions */
+
+    SlotBank          slot_bank    = 6;
+    SysvarCache       sysvar_cache = 7;
+    /* TODO: everything from the slot_bank */
+
+}
+
+message SlotEffects {
+    /* The resulting state of the accounts after the slot */
+    repeated AcctState reward_acct_states = 1;
+    repeated AcctState rent_acct_states   = 2;
+    repeated AcctState sysvar_acct_states = 4;
+    repeated TxnEnv    txn_envs           = 5; /* Contains all resultant account states */
+    uint64             capitalization     = 6;
+}
