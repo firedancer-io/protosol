@@ -1,0 +1,47 @@
+syntax = "proto3";
+package fd.v2;
+
+import "slot_v2.proto";
+
+message AcctState {
+    /* The account address. (32 bytes) */
+    bytes address = 1;
+
+    /* Starting lamport balance */
+    uint64 lamports = 2;
+
+    /* Account data is limited to 10 MiB on Solana mainnet as of 2024-Feb. */
+    bytes data = 3;
+
+    bool executable = 4;
+
+    /* The rent epoch is deprecated on Solana mainnet as of 2024-Feb.
+       If ommitted, implies a value of UINT64_MAX. */
+    uint64 rent_epoch = 5;
+
+    /* Address of the program that owns this account.  (32 bytes) */
+    bytes owner = 6;
+
+    /* TODO: do we need seed address? */
+}
+
+message Feature {
+    bytes  feature_id = 1; /* Feature pubkey */
+    uint64 slot       = 2; /* Leave as 0 if activated */
+}
+
+message EpochSchedule {
+    uint64 slots_per_epoch   = 1;
+    uint64 first_normal_slot = 2;
+}
+
+message EpochEnv {
+    repeated AcctState acct_states    = 1;
+    repeated Feature   features       = 2;
+    repeated SlotEnv   slots          = 3;
+    EpochSchedule      epoch_schedule = 4;
+}
+
+message EpochEffects {
+    repeated SlotEffects slot_effects = 1;
+}

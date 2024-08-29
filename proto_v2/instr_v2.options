@@ -1,0 +1,4 @@
+instr_v2.proto package:"fd_exec_test"
+ 
+fd_exec_test.InstrEnv.accounts type:FT_POINTER
+fd_exec_test.InstrEnv.data type:FT_POINTER 
