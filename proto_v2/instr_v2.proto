@@ -1,0 +1,29 @@
+syntax = "proto3";
+package fd.v2;
+
+message InstrAcct {
+    uint32 index      = 1;
+    bool   is_writable = 2;
+    bool   is_signer   = 3;
+}
+
+/* As a note, the accounts and account data fields are populated at a higher
+   level than the instruction. */
+message InstrEnv {
+    /* Index into the set of txn accounts defined by the TxnEnv. */
+    uint32             program_id_idx = 1;
+
+    /* Indexes into the set of txn accounts defined by the TxnEnv. */
+    repeated InstrAcct accounts       = 2;
+
+    /* The instruction data */
+    bytes              data           = 3;
+}
+
+message InstrEffects {
+    /* Result of the instruction execution */
+    int32              result      = 1;
+
+    /* Custom error code if applicable */
+    int32              custom_err  = 2;
+}

@@ -1,0 +1,97 @@
+syntax = "proto3";
+package fd.v2;
+
+import "slot_v2.proto";
+
+message SeedAddress {
+    /* The seed address base. (32 bytes) */
+    bytes base  = 1;
+
+    /* The seed path. (<= 32 bytes) */
+    bytes seed  = 2;
+
+    /* The seed address owner. (32 bytes) */
+    bytes owner = 3;
+}
+
+message AcctState {
+    /* The account address. (32 bytes) */
+    bytes       address    = 1;
+
+    /* Starting lamport balance. */
+    uint64      lamports   = 2;
+
+    /* Account data is limited to 10 MiB. */
+    bytes       data       = 3;
+
+    /* Is an account executable */
+    bool        executable = 4;
+
+    /* All new accounts have a rent_epoch of ULONG_MAX. If omitted, 
+       implies a value of ULONG_MAX. */
+    uint64      rent_epoch = 5;
+
+    /* Address of the program that owns this account. (32 bytes) */
+    bytes       owner      = 6;
+
+    /* Seed address used by the fuzzing engine. */
+    SeedAddress seed_addr  = 7;
+}
+
+message Feature {
+    bytes  feature_id = 1; /* Feature pubkey */
+    uint64 slot       = 2; /* Slot at which feature is activated */
+}
+
+message LeaderSchedule {
+    uint64          epoch  = 1; /* Epoch number. */
+    bytes           pubkey = 2; /* Leader pubkey. */
+    repeated uint32 idxs   = 3; /* Indexes into the leader. */ 
+}
+
+message RentSchedule {
+    /* Rent schedule for the current epoch. */
+    uint64         epoch          = 1;
+
+    /* Vector of pubkeys for each slot that rent should be collected from. */
+    repeated bytes partitions     = 2;
+
+    /* Rent calculation parameters. */
+    uint64         slots_per_year = 3;
+}
+
+message StatusCache {
+    /* Vector of transaction hashes that exist in the status cache. */
+    bytes          tx_hashes = 1;
+
+    /* TODO: fill in the rest of the status cache. */
+}
+
+message ExecEnv {
+    /* Starting account states before harness execution. */
+    repeated AcctState acct_states      = 1;
+    
+    /* Feature set for the execution. */
+    repeated Feature   features         = 2;
+
+    /* Leader schedule for the first epoch. This value is recomputed at the
+       epoch boundary. */
+    LeaderSchedule     leader_schedule  = 3;
+
+    /* Slot envs to execute. */
+    repeated SlotEnv   slots            = 4;
+
+    /* Status cache of recent transactions. */
+    StatusCache        status_cache     = 5;
+
+    /* 301 most recent blockhashes. */
+    bytes              block_hash_queue = 6;
+}
+
+message ExecEffects {
+    /* Slot effects. */
+    repeated SlotEffects slot_effects = 1;
+
+    /* Resulting account states at the end of execution. */
+    repeated AcctState   acct_states  = 2;
+}
