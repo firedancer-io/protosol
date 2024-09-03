@@ -39,6 +39,4 @@ message SlotEffects {
 
    /* Capitalization for the end of the slot */
    uint64              capitalization = 2;
-
-   /* 
 }
