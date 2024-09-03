@@ -1,1 +1,1 @@
-context.proto include:"../../../nanopb/pb_firedancer.h"
+instr_v2.proto include:"../../../nanopb/pb_firedancer.h"
