@@ -1,0 +1,69 @@
+syntax = "proto3";
+package fd.v2;
+
+import "instr_v2.proto";
+
+/* Message header information. */
+message TxnHeader {
+    uint32 num_required_signatures = 1;
+    uint32 num_readonly_signed_accounts = 2;
+    uint32 num_readonly_unsigned_accounts = 3;
+}
+  
+/* Address Lookup table related metadata. This is used to parse the data from 
+   the lookup table accounts. from the account list. */
+message LUTEntry {
+    bytes           account_key      = 1;
+    repeated uint32 writable_indexes = 2;
+    repeated uint32 readonly_indexes = 3;
+}
+
+/* As a note, if the scope of the fuzzer is just an instruction, then all of
+   the fields in TxnEnv will be set to null except for account_keys and 
+   InstrEnv. */
+message TxnEnv {
+    /* Transaction header. */
+    TxnHeader         header           = 1;
+
+    /* Determines if the transaction is legacy or not. */
+    bool              is_legacy        = 2;
+
+    /* Account keys in order that they are passed into the transaction. The
+       account data actually comes from higher level fuzzers. */
+
+    repeated bytes    account_keys     = 3;
+
+    /* Instruction(s) that the transaction executes. */
+    repeated InstrEnv instructions     = 4;
+
+    /* Recent blockhash provided in the message. */
+    bytes             recent_blockhash = 5;
+
+    /* Address table lookups that aren't availble in legacy messages. */
+    repeated LUTEntry alut_entires     = 6;
+
+    /* The message hash. */
+    bytes             message_hash     = 7;
+
+    /* The signatures needed in the transaction. */
+    repeated bytes    signatures        = 8;
+};
+
+message TxnEffects {
+    /* Transaction level error code. */
+    bool                  txn_error          = 1;
+
+    /* Resulting account states from each instruction execution. */
+    repeated InstrEffects instr_effects      = 2;
+
+    /* Return data from the instruction */
+    bytes                 return_data        = 3;
+
+    /* Consumed compute units by the instruction. This value will be used
+       by fuzzers that operate at the transaction granularity. */
+    uint64                cus_remain         = 4;
+
+    /* Details about the fee. */
+    uint64                transaction_fee    = 5;
+    uint64                prioritization_fee = 6;
+}
