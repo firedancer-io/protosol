@@ -61,10 +61,9 @@ message RentSchedule {
 }
 
 message StatusCache {
-    /* Vector of transaction hashes that exist in the status cache. */
+    /* Vector of transaction hashes that exist in the status cache.
+       TODO: fill in the rest of the status cache. */
     bytes          tx_hashes = 1;
-
-    /* TODO: fill in the rest of the status cache. */
 }
 
 message ExecEnv {

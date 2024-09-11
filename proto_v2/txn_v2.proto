@@ -30,40 +30,43 @@ message TxnEnv {
 
     /* Account keys in order that they are passed into the transaction. The
        account data actually comes from higher level fuzzers. */
-
     repeated bytes    account_keys     = 3;
 
     /* Instruction(s) that the transaction executes. */
-    repeated InstrEnv instructions     = 4;
+    repeated InstrEnv instrs           = 4;
 
     /* Recent blockhash provided in the message. */
     bytes             recent_blockhash = 5;
 
     /* Address table lookups that aren't availble in legacy messages. */
-    repeated LUTEntry alut_entires     = 6;
+    repeated LUTEntry alut_entries     = 6;
 
     /* The message hash. */
     bytes             message_hash     = 7;
 
     /* The signatures needed in the transaction. */
-    repeated bytes    signatures        = 8;
+    repeated bytes    signatures       = 8;
+
+    /* The amount of compute units that the transaction has. */
+    uint64            cu_avail         = 9;
 };
 
 message TxnEffects {
     /* Transaction level error code. */
     bool                  txn_error          = 1;
+    int32                 txn_error_code     = 2;
 
     /* Resulting account states from each instruction execution. */
-    repeated InstrEffects instr_effects      = 2;
+    repeated InstrEffects instr_effects      = 3;
 
     /* Return data from the instruction */
-    bytes                 return_data        = 3;
+    bytes                 return_data        = 4;
 
     /* Consumed compute units by the instruction. This value will be used
        by fuzzers that operate at the transaction granularity. */
-    uint64                cus_remain         = 4;
+    uint64                cus_remain         = 5;
 
     /* Details about the fee. */
-    uint64                transaction_fee    = 5;
-    uint64                prioritization_fee = 6;
+    uint64                transaction_fee    = 6;
+    uint64                prioritization_fee = 7;
 }
