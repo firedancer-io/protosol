@@ -3,6 +3,13 @@ package fd.v2;
 
 import "slot_v2.proto";
 
+enum HarnessType {
+    INSTR   = 0;
+    TXN     = 1;
+    SLOT    = 2;
+    RUNTIME = 3;
+}
+
 message SeedAddress {
     /* The seed address base. (32 bytes) */
     bytes base  = 1;
@@ -67,30 +74,34 @@ message StatusCache {
 }
 
 message ExecEnv {
+    HarnessType        harness_type     = 1;
+
     /* Starting account states before harness execution. */
-    repeated AcctState acct_states      = 1;
+    repeated AcctState acct_states      = 2;
     
     /* Feature set for the execution. */
-    repeated Feature   features         = 2;
+    repeated Feature   features         = 3;
 
     /* Leader schedule for the first epoch. This value is recomputed at the
        epoch boundary. */
-    LeaderSchedule     leader_schedule  = 3;
+    LeaderSchedule     leader_schedule  = 4;
 
     /* Slot envs to execute. */
-    repeated SlotEnv   slots            = 4;
+    repeated SlotEnv   slots            = 5;
 
     /* Status cache of recent transactions. */
-    StatusCache        status_cache     = 5;
+    StatusCache        status_cache     = 6;
 
     /* 301 most recent blockhashes. */
-    bytes              block_hash_queue = 6;
+    bytes              block_hash_queue = 7;
 }
 
 message ExecEffects {
+    HarnessType          harness_type = 1;
+
     /* Slot effects. */
-    repeated SlotEffects slot_effects = 1;
+    repeated SlotEffects slot_effects = 2;
 
     /* Resulting account states at the end of execution. */
-    repeated AcctState   acct_states  = 2;
+    repeated AcctState   acct_states  = 3;
 }
