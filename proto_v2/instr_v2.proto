@@ -11,18 +11,18 @@ message InstrAcct {
    level than the instruction. */
 message InstrEnv {
     /* Index into the set of txn accounts defined by the TxnEnv. */
-    uint32 program_id_idx    = 1;
+    uint32 program_id_idx = 1;
 
     /* Indexes into the set of txn accounts defined by the TxnEnv. */
-    repeated uint32 accounts = 2;
+    bytes  accounts       = 2;
 
     /* The instruction data */
-    bytes data               = 3;
+    bytes  data           = 3;
 }
 
 message InstrEffects {
     /* Result of the instruction execution */
-    int32 result     = 1;
+    int32 result      = 1;
 
     /* Custom error code if applicable */
     uint32 custom_err = 2;
