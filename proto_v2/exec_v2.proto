@@ -105,3 +105,8 @@ message ExecEffects {
     /* Resulting account states at the end of execution. */
     repeated AcctState   acct_states  = 3;
 }
+
+message ExecFixture {
+    ExecEnv     input  = 1;
+    ExecEffects output = 2;
+}
