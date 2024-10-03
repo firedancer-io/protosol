@@ -93,10 +93,10 @@ message SyscallContext {
 // We are only concerned with these error kinds as the syscall/VM fuzzers don't
 // hit higher level error kinds (e.g., transaction errors)
 enum ErrKind {
-    ERRK_UNSPECIFIED = 0;
-    ERRK_EBPF        = 1;
-    ERRK_SYSCALL     = 2;
-    ERRK_INSTR       = 3;
+    UNSPECIFIED     = 0;
+    EBPF            = 1;
+    SYSCALL         = 2;
+    INSTRUCTION     = 3;
 }
 
 // The effects of executing a SyscallContext.
