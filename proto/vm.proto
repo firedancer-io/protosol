@@ -90,6 +90,15 @@ message SyscallContext {
     InstrEffects exec_effects = 4;
 }
 
+// We are only concerned with these error kinds as the syscall/VM fuzzers don't
+// hit higher level error kinds (e.g., transaction errors)
+enum ErrKind {
+    ERRK_UNSPECIFIED = 0;
+    ERRK_INSTRUCTION = 1;
+    ERRK_SYSCALL     = 2;
+    ERRK_EBPF        = 3;
+}
+
 // The effects of executing a SyscallContext.
 message SyscallEffects {
     // EBPF error code, if the invocation was unsuccessful
@@ -118,6 +127,9 @@ message SyscallEffects {
 
     // VM state
     uint64 pc = 10;
+
+    // Error Kind (should be used along with error code)
+    ErrKind error_kind = 11
 }
 
 // A syscall processing test fixture.
