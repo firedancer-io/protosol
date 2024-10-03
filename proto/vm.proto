@@ -103,6 +103,8 @@ enum ErrKind {
 message SyscallEffects {
     // EBPF error code, if the invocation was unsuccessful
     int64 error = 1;
+    // Error Kind (should be used along with error code)
+    ErrKind error_kind = 12;
     
     // Registers
     uint64 r0 = 2; // Result of a successful execution
@@ -128,8 +130,6 @@ message SyscallEffects {
     // VM state
     uint64 pc = 10;
 
-    // Error Kind (should be used along with error code)
-    ErrKind error_kind = 11
 }
 
 // A syscall processing test fixture.
