@@ -94,9 +94,9 @@ message SyscallContext {
 // hit higher level error kinds (e.g., transaction errors)
 enum ErrKind {
     ERRK_UNSPECIFIED = 0;
-    ERRK_INSTRUCTION = 1;
+    ERRK_EBPF        = 1;
     ERRK_SYSCALL     = 2;
-    ERRK_EBPF        = 3;
+    ERRK_INSTR       = 3;
 }
 
 // The effects of executing a SyscallContext.
