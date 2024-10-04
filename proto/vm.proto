@@ -61,7 +61,7 @@ message VmContext {
     bytes   call_whitelist = 21;
     bool tracing_enabled = 22;
 
-    uint64 return_data_len = 23;
+    bytes return_data = 23;
     uint64 instr_trace_len = 24;
 }
 
