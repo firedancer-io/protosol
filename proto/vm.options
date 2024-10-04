@@ -6,7 +6,6 @@ fd_exec_test.InputDataRegion.content type:FT_POINTER
 fd_exec_test.VmContext.rodata type:FT_POINTER
 fd_exec_test.VmContext.input_data_regions type:FT_POINTER
 fd_exec_test.VmContext.call_whitelist type:FT_POINTER
-fd_exec_test.VmContext.return_data type:FT_POINTER
 
 fd_exec_test.SyscallInvocation.function_name max_size:1400
 fd_exec_test.SyscallInvocation.heap_prefix type:FT_POINTER
@@ -18,3 +17,6 @@ fd_exec_test.SyscallEffects.inputdata type:FT_POINTER
 fd_exec_test.SyscallEffects.log type:FT_POINTER
 fd_exec_test.SyscallEffects.rodata type:FT_POINTER
 fd_exec_test.SyscallEffects.input_data_regions type:FT_POINTER
+
+fd_exec_test.ReturnData.program_id type:FT_POINTER
+fd_exec_test.ReturnData.data type:FT_POINTER

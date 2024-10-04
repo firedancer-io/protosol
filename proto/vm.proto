@@ -61,8 +61,7 @@ message VmContext {
     bytes   call_whitelist = 21;
     bool tracing_enabled = 22;
 
-    bytes return_data = 23;
-    uint64 instr_trace_len = 24;
+    ReturnData return_data = 23;
 }
 
 // TODO: use structured types for syscall implementation to improve fuzz coverage
@@ -147,4 +146,9 @@ message ValidateVmEffects {
 message ValidateVmFixture {
     FullVmContext 	input 	= 1;
     ValidateVmEffects 	output	= 2;
+}
+
+message ReturnData {
+    bytes program_id = 1;
+    bytes data = 2;
 }
