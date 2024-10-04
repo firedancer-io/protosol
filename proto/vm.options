@@ -17,3 +17,6 @@ fd_exec_test.SyscallEffects.inputdata type:FT_POINTER
 fd_exec_test.SyscallEffects.log type:FT_POINTER
 fd_exec_test.SyscallEffects.rodata type:FT_POINTER
 fd_exec_test.SyscallEffects.input_data_regions type:FT_POINTER
+
+fd_exec_test.ReturnData.program_id type:FT_POINTER
+fd_exec_test.ReturnData.data type:FT_POINTER
