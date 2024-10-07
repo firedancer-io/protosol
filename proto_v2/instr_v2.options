@@ -1,1 +1,6 @@
-context.proto include:"../../../nanopb/pb_firedancer.h"
+instr_v2.proto include:"../../../nanopb/pb_firedancer.h"
+
+instr_v2.proto package:"fd_v2"
+
+fd_v2.InstrEnv.accounts type:FT_POINTER
+fd_v2.InstrEnv.data type:FT_POINTER

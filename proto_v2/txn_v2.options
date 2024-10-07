@@ -1,0 +1,15 @@
+txn_v2.proto package:"fd_v2"
+
+fd_v2.LUTEntry.account_key max_size:32 fixed_length:true
+fd_v2.LUTEntry.writable_indexes type:FT_POINTER
+fd_v2.LUTEntry.readonly_indexes type:FT_POINTER
+
+fd_v2.TxnEnv.account_keys type:FT_POINTER
+fd_v2.TxnEnv.instrs type:FT_POINTER
+fd_v2.TxnEnv.recent_blockhash type:FT_POINTER
+fd_v2.TxnEnv.alut_entries type:FT_POINTER
+fd_v2.TxnEnv.message_hash type:FT_POINTER
+fd_v2.TxnEnv.signatures type:FT_POINTER
+
+fd_v2.TxnEffects.instr_effects type:FT_POINTER
+fd_v2.TxnEffects.return_data type:FT_POINTER
