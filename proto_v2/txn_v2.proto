@@ -53,20 +53,19 @@ message TxnEnv {
 
 message TxnEffects {
     /* Transaction level error code. */
-    bool                  txn_error          = 1;
-    int32                 txn_error_code     = 2;
+    int32                 txn_error_code     = 1;
 
     /* Resulting account states from each instruction execution. */
-    repeated InstrEffects instr_effects      = 3;
+    repeated InstrEffects instr_effects      = 2;
 
     /* Return data from the instruction */
-    bytes                 return_data        = 4;
+    bytes                 return_data        = 3;
 
     /* Consumed compute units by the instruction. This value will be used
        by fuzzers that operate at the transaction granularity. */
-    uint64                cus_remain         = 5;
+    uint64                cus_remain         = 4;
 
     /* Details about the fee. */
-    uint64                transaction_fee    = 6;
-    uint64                prioritization_fee = 7;
+    uint64                transaction_fee    = 5;
+    uint64                prioritization_fee = 6;
 }
