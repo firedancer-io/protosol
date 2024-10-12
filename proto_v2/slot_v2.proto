@@ -35,7 +35,7 @@ message SlotEnv {
 
 message SlotEffects {
    /* The resulting state after each transaction in the slot */
-   repeated TxnEffects txn_envs       = 1;
+   repeated TxnEffects txn_effects    = 1;
 
    /* Capitalization for the end of the slot */
    uint64              capitalization = 2;
