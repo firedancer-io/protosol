@@ -1,0 +1,4 @@
+metadata.proto package:"fd_exec_test"
+metadata.proto include:"../../../nanopb/pb_firedancer.h"
+
+fd_exec_test.FixtureMetadata.fn_entrypoint max_length:128
