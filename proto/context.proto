@@ -53,7 +53,6 @@ message EpochContext {
   FeatureSet features = 1;
 }
 
-
 // SlotContext includes context scoped to a block.
 // On "real" ledgers, it is created during the slot boundary.
 message SlotContext {

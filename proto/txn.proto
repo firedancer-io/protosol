@@ -2,6 +2,7 @@ syntax = "proto3";
 package org.solana.sealevel.v1;
 
 import "context.proto";
+import "metadata.proto";
 
 // Message header contains the counts of required readonly and signatures
 message MessageHeader {
@@ -128,8 +129,9 @@ message TxnResult {
 
 // Txn fixtures
 message TxnFixture {
+  FixtureMetadata metadata = 1;
   // Context
-  TxnContext input = 1;
+  TxnContext input = 2;
   // Effects
-  TxnResult output = 2;
+  TxnResult output = 3;
 }
