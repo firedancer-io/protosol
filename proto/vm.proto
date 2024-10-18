@@ -2,6 +2,7 @@ syntax = "proto3";
 package org.solana.sealevel.v1;
 import "invoke.proto";
 import "context.proto";
+import "metadata.proto";
 
 // Describes an input data region. Agave's memory mapping sets up a series of
 // memory mapped regions, which combine to make the input data region.
@@ -136,8 +137,9 @@ message SyscallEffects {
 
 // A syscall processing test fixture.
 message SyscallFixture {
-    SyscallContext input = 1;
-    SyscallEffects output = 2;
+    FixtureMetadata metadata = 1;
+    SyscallContext input = 2;
+    SyscallEffects output = 3;
 }
 
 // Everything needed to setup a fd_vm_t
@@ -156,8 +158,9 @@ message ValidateVmEffects {
 
 // Fixture for fd_vm_validate fuzz harness
 message ValidateVmFixture {
-    FullVmContext 	input 	= 1;
-    ValidateVmEffects 	output	= 2;
+    FixtureMetadata metadata = 1;
+    FullVmContext 	input 	= 2;
+    ValidateVmEffects 	output	= 3;
 }
 
 message ReturnData {
