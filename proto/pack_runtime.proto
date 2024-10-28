@@ -9,7 +9,7 @@ message PackComputeBudgetContext {
 
 message PackComputeBudgetEffects {
     uint64 compute_unit_limit = 1;
-    uint64 
+    uint64 rewards = 2;
 }
 
 message PackComputeBudgetFixture {
