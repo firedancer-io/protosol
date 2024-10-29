@@ -47,15 +47,96 @@ message AcctState {
   SeedAddress seed_addr = 7;
 }
 
+message VoteAccount {
+  // Account state of the vote account
+  AcctState vote_account = 1;
+
+  // How much stake has been delegated to this account
+  uint64 stake = 2;
+}
+
+message StakeAccount {
+  // Pubkey of the stake account
+  bytes stake_account_pubkey = 1;
+
+  // The voter pubkey whom this stake account delegated to
+  bytes voter_pubkey = 2;
+
+  // Other fields
+  uint64 stake = 3;
+  uint64 activation_epoch = 4;
+  uint64 deactivation_epoch = 5;
+  double warmup_cooldown_rate = 6;
+}
+
+// Epoch bank inflation parameters
+message Inflation {
+  double initial = 1;
+  double terminal = 2;
+  double taper = 3;
+  double foundation = 4;
+  double foundation_term = 5;
+}
+
 // EpochContext includes context scoped to an epoch.
 // On "real" ledgers, it is created during the epoch boundary.
 message EpochContext {
+  // Active feature set
   FeatureSet features = 1;
+
+  // Hashes per tick
+  uint64 hashes_per_tick = 2;
+
+  // Ticks per slot
+  uint64 ticks_per_slot = 3;
+
+  // Slots per year
+  double slots_per_year = 4;
+
+  // Inflation
+  Inflation inflation = 5;
+
+  // Genesis creation time
+  uint64 genesis_creation_time = 6;
+
+  // New stake accounts for this running epoch
+  repeated bytes new_stake_accounts = 7;
+
+  // Epoch stakes for epoch T
+  repeated StakeAccount stake_accounts = 8;
+
+  // New vote accounts for this running epoch
+  repeated bytes new_vote_accounts = 9;
+
+  // Epoch vote accounts for epochs [T-2, T]
+  repeated VoteAccount vote_accounts_t = 10;
+  repeated VoteAccount vote_accounts_t_1 = 11;
+  repeated VoteAccount vote_accounts_t_2 = 12;
 }
 
 // SlotContext includes context scoped to a block.
 // On "real" ledgers, it is created during the slot boundary.
 message SlotContext {
-  // Slot number
+  // Current slot number
   fixed64 slot = 1;
+
+  fixed64 block_height = 2;
+
+  // POH hash
+  bytes poh = 3;
+
+  // Parent bank hash
+  bytes parent_bank_hash = 4;
+
+  // Parent LT hash
+  bytes parent_lt_hash = 5;
+
+  // The last executed slot
+  fixed64 prev_slot = 6;
+
+  // Last slot lamports per signature
+  uint64 prev_lps = 7;
+
+  // Previous epoch's capitalization
+  uint64 prev_epoch_capitalization = 8;
 }
