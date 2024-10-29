@@ -1,0 +1,50 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+
+import "context.proto";
+import "txn.proto";
+import "metadata.proto";
+
+message BlockContext {
+    // All transactions in this slot
+    repeated SanitizedTransaction txns = 1;
+
+    // Input account states
+    repeated AcctState acct_states = 2;
+
+    // The blockhash queue
+    repeated bytes blockhash_queue = 3;
+
+    // Slot context (contains slot number)
+    SlotContext slot_ctx = 4;
+
+    // Epoch context (contains feature info)
+    EpochContext epoch_ctx = 5;
+}
+
+message BlockEffects {
+    // First transaction error code
+    uint32 first_error = 1;
+
+    // Resulting account states
+    repeated AcctState acct_states = 2;
+
+    // Slot capitalization
+    uint64 slot_capitalization = 3;
+
+    // Accounts lattice hash
+    bytes lt_hash = 4;
+
+    // Account delta hash
+    bytes account_delta_hash = 5;
+}
+
+message BlockFixture {
+    FixtureMetadata metadata = 1;
+
+    // The block input
+    BlockContext input = 2;
+
+    // The output
+    BlockEffects output = 3;
+}
