@@ -50,12 +50,38 @@ message AcctState {
 // EpochContext includes context scoped to an epoch.
 // On "real" ledgers, it is created during the epoch boundary.
 message EpochContext {
+  // Active feature set
   FeatureSet features = 1;
+
+  // Hashes per tick
+  uint64 hashes_per_tick = 2;
+
+  // Ticks per slot
+  uint64 ticks_per_slot = 3;
+
+  // Nanoseconds per slot; represented as a uint128 using two uint64s
+  uint64 ns_per_slot_lo = 4;
+  uint64 ns_per_slot_hi = 5;
+
+  // Genesis creation time
+  uint64 genesis_creation_time = 6;
+
+  // Slots per year
+  double slots_per_year = 7;  
 }
 
 // SlotContext includes context scoped to a block.
 // On "real" ledgers, it is created during the slot boundary.
 message SlotContext {
-  // Slot number
+  // Current slot number
   fixed64 slot = 1;
+
+  // The last executed slot
+  fixed64 prev_slot = 2;
+
+  // Last slot lamports per signature
+  uint64 prev_lps = 3;
+
+  // Parent's signature count
+  uint64 parent_signature_cnt = 4;
 }
