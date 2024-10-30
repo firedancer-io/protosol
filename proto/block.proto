@@ -6,26 +6,29 @@ import "txn.proto";
 import "metadata.proto";
 
 message BlockContext {
-    // All sanitized transactions in this slot
+    // All transactions in this slot
     repeated SanitizedTransaction txns = 1;
 
+    // Input account states
+    repeated AcctState acct_states = 2;
+
     // The blockhash queue
-    repeated bytes blockhash_queue = 2;
+    repeated bytes blockhash_queue = 3;
 
     // Last slot's lamports per signature
-    uint64 prev_lps = 3;
+    uint64 prev_lps = 4;
 
     // Parent's signature count
-    uint64 parent_signature_cnt = 4;
+    uint64 parent_signature_cnt = 5;
     
     // The last executed slot
-    fixed64 prev_slot = 5;
+    fixed64 prev_slot = 6;
 
-    // Current slot number
-    fixed64 slot = 6;
+    // Epoch context (contains feature info)
+    EpochContext epoch_ctx = 4;
 
-    // Last restart slot
-    fixed64 last_restart_slot = 7;
+    // Slot context (contains slot number)
+    SlotContext slot_ctx = 5;
 }
 
 message BlockEffects {
@@ -40,6 +43,9 @@ message BlockEffects {
 
     // Accounts lattice hash
     bytes lt_hash = 4;
+
+    // Account delta hash
+    bytes account_delta_hash = 5;
 }
 
 message BlockFixture {
