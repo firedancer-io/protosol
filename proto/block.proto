@@ -15,20 +15,11 @@ message BlockContext {
     // The blockhash queue
     repeated bytes blockhash_queue = 3;
 
-    // Last slot's lamports per signature
-    uint64 prev_lps = 4;
-
-    // Parent's signature count
-    uint64 parent_signature_cnt = 5;
-    
-    // The last executed slot
-    fixed64 prev_slot = 6;
+    // Slot context (contains slot number)
+    SlotContext slot_ctx = 4;
 
     // Epoch context (contains feature info)
-    EpochContext epoch_ctx = 7;
-
-    // Slot context (contains slot number)
-    SlotContext slot_ctx = 8;
+    EpochContext epoch_ctx = 5;
 }
 
 message BlockEffects {
