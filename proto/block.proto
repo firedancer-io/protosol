@@ -25,10 +25,10 @@ message BlockContext {
     fixed64 prev_slot = 6;
 
     // Epoch context (contains feature info)
-    EpochContext epoch_ctx = 4;
+    EpochContext epoch_ctx = 7;
 
     // Slot context (contains slot number)
-    SlotContext slot_ctx = 5;
+    SlotContext slot_ctx = 8;
 }
 
 message BlockEffects {
