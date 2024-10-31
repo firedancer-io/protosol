@@ -69,9 +69,6 @@ message TxnContext {
   // The transaction data
   SanitizedTransaction tx = 1;
 
-  // The maximum age allowed for this transaction
-  uint64 max_age = 2;
-
   // Up to 300 (actually 301) most recent blockhashes (ordered from oldest to newest)
   repeated bytes blockhash_queue = 3;
 
