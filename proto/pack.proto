@@ -1,0 +1,19 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+import "metadata.proto";
+
+
+message PackComputeBudgetContext {
+    repeated bytes instr_datas = 1;
+}
+
+message PackComputeBudgetEffects {
+    uint64 compute_unit_limit = 1;
+    uint64 rewards = 2;
+}
+
+message PackComputeBudgetFixture {
+    FixtureMetadata metadata = 1;
+    PackComputeBudgetContext input = 2;
+    PackComputeBudgetEffects output = 3;
+}
