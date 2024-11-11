@@ -10,6 +10,8 @@ message PackComputeBudgetContext {
 message PackComputeBudgetEffects {
     uint64 compute_unit_limit = 1;
     uint64 rewards = 2;
+    uint32 heap_sz = 3;
+    uint32 loaded_acct_data_sz = 4;
 }
 
 message PackComputeBudgetFixture {
