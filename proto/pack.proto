@@ -12,6 +12,9 @@ message PackComputeBudgetEffects {
     uint64 rewards = 2;
     uint32 heap_sz = 3;
     uint32 loaded_acct_data_sz = 4;
+
+   // To prevent empty effects when encoding a "skipped" effects
+   uint32 is_empty = 5;
 }
 
 message PackComputeBudgetFixture {
