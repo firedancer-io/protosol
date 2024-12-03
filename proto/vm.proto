@@ -63,6 +63,9 @@ message VmContext {
     bool tracing_enabled = 22;
 
     ReturnData return_data = 23;
+
+    // SBPF version
+    uint32 sbpf_version = 24;
 }
 
 // TODO: use structured types for syscall implementation to improve fuzz coverage
@@ -133,6 +136,17 @@ message SyscallEffects {
     // VM state
     uint64 pc = 10;
 
+    // Output registers (to test interpreter)
+    uint64 r1 = 107;
+    uint64 r2 = 108;
+    uint64 r3 = 109;
+    uint64 r4 = 110;
+    uint64 r5 = 111;
+    uint64 r6 = 112;
+    uint64 r7 = 113;
+    uint64 r8 = 114;
+    uint64 r9 = 115;
+    uint64 r10 = 116;
 }
 
 // A syscall processing test fixture.
