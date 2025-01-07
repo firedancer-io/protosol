@@ -47,6 +47,24 @@ message AcctState {
   SeedAddress seed_addr = 7;
 }
 
+// A vote account with active delegated stake in the network
+message VoteAcct {
+  // Vote account pubkey
+  bytes pubkey = 1;
+
+  // Stake delegated to voter, in lamports
+  uint64 delegated_stake = 2;
+}
+
+// A stake account with active stake in the network
+message StakeAcct {
+  // Stake account pubkey
+  bytes pubkey = 1;
+
+  // Stake amount, in lamports
+  uint64 stake = 2;
+}
+
 // EpochContext includes context scoped to an epoch.
 // On "real" ledgers, it is created during the epoch boundary.
 message EpochContext {
@@ -71,8 +89,8 @@ message EpochContext {
 
   // Vectors of account pubkeys that is set at the epoch boundary
   // For block fuzzing, vote account 0 is the leader
-  repeated bytes vote_accounts = 9; 
-  repeated bytes stake_accounts = 10;
+  repeated VoteAcct vote_accounts = 9; 
+  repeated StakeAcct stake_accounts = 10;
 }
 
 // SlotContext includes context scoped to a block.
