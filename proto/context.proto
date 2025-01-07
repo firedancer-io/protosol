@@ -104,7 +104,4 @@ message SlotContext {
 
   // Last slot lamports per signature
   uint64 prev_lps = 3;
-
-  // Parent's signature count
-  uint64 parent_signature_cnt = 4;
 }
