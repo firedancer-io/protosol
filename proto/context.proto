@@ -67,7 +67,12 @@ message EpochContext {
   uint64 genesis_creation_time = 6;
 
   // Slots per year
-  double slots_per_year = 7;  
+  double slots_per_year = 7;
+
+  // Vectors of account pubkeys that is set at the epoch boundary
+  // For block fuzzing, vote account 0 is the leader
+  repeated bytes vote_accounts = 9; 
+  repeated bytes stake_accounts = 10;
 }
 
 // SlotContext includes context scoped to a block.
