@@ -104,4 +104,7 @@ message SlotContext {
 
   // Last slot lamports per signature
   uint64 prev_lps = 3;
+
+  // Parent bank hash
+  bytes parent_bank_hash = 4;
 }
