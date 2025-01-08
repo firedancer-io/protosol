@@ -84,13 +84,10 @@ message EpochContext {
   // Genesis creation time
   uint64 genesis_creation_time = 6;
 
-  // Slots per year
-  double slots_per_year = 7;
-
   // Vectors of account pubkeys that is set at the epoch boundary
   // For block fuzzing, vote account 0 is the leader
-  repeated VoteAcct vote_accounts = 9; 
-  repeated StakeAcct stake_accounts = 10;
+  repeated VoteAcct vote_accounts = 7; 
+  repeated StakeAcct stake_accounts = 8;
 }
 
 // SlotContext includes context scoped to a block.
@@ -99,12 +96,15 @@ message SlotContext {
   // Current slot number
   fixed64 slot = 1;
 
-  // The last executed slot
-  fixed64 prev_slot = 2;
-
-  // Last slot lamports per signature
-  uint64 prev_lps = 3;
+  // POH hash
+  bytes poh = 2;
 
   // Parent bank hash
-  bytes parent_bank_hash = 4;
+  bytes parent_bank_hash = 3;
+
+  // The last executed slot
+  fixed64 prev_slot = 4;
+
+  // Last slot lamports per signature
+  uint64 prev_lps = 5;
 }
