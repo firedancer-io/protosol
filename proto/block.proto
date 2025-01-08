@@ -30,8 +30,8 @@ message BlockContext {
 }
 
 message BlockEffects {
-    // First transaction error code
-    uint32 first_error = 1;
+    // If block execution failed
+    bool has_error = 1;
 
     // Resulting account states
     repeated AcctState acct_states = 2;
@@ -39,11 +39,14 @@ message BlockEffects {
     // Slot capitalization
     uint64 slot_capitalization = 3;
 
+    // Bank hash
+    bytes bank_hash = 4;
+
     // Accounts lattice hash
-    bytes lt_hash = 4;
+    bytes lt_hash = 5;
 
     // Account delta hash
-    bytes account_delta_hash = 5;
+    bytes account_delta_hash = 6;
 }
 
 message BlockFixture {
