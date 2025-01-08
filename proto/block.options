@@ -8,4 +8,6 @@ fd_exec_test.BlockContext.acct_states type:FT_POINTER
 fd_exec_test.BlockContext.blockhash_queue type:FT_POINTER
 
 fd_exec_test.BlockEffects.acct_states type:FT_POINTER
+fd_exec_test.BlockEffects.bank_hash type:FT_POINTER
 fd_exec_test.BlockEffects.lt_hash type:FT_POINTER
+fd_exec_test.BlockEffects.account_delta_hash type:FT_POINTER
