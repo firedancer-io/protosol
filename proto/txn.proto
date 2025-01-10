@@ -37,9 +37,6 @@ message TransactionMessage {
   // Vector of pubkeys
   repeated bytes account_keys = 3;
 
-  // Data associated with the accounts referred above. Not all accounts need to be here.
-  repeated AcctState account_shared_data = 4;
-
   // Recent blockhash provided in message
   bytes recent_blockhash = 5;
 
@@ -56,8 +53,6 @@ message SanitizedTransaction {
   TransactionMessage message = 1;
   // The message hash
   bytes message_hash = 2;
-  // Is this a voting transaction?
-  bool is_simple_vote_tx = 3;
   // The signatures needed in the transaction
   repeated bytes signatures = 4;
 }
@@ -68,6 +63,9 @@ message SanitizedTransaction {
 message TxnContext {
   // The transaction data
   SanitizedTransaction tx = 1;
+
+  // Data associated with transaction accounts, sysvars, etc.
+  repeated AcctState account_shared_data = 2;
 
   // Up to 300 (actually 301) most recent blockhashes (ordered from oldest to newest)
   repeated bytes blockhash_queue = 3;
