@@ -9,7 +9,6 @@ fd_exec_test.MessageAddressTableLookup.writable_indexes type:FT_POINTER
 fd_exec_test.MessageAddressTableLookup.readonly_indexes type:FT_POINTER
 
 fd_exec_test.TransactionMessage.account_keys type:FT_POINTER
-fd_exec_test.TransactionMessage.account_shared_data type:FT_POINTER
 fd_exec_test.TransactionMessage.recent_blockhash type:FT_POINTER
 fd_exec_test.TransactionMessage.instructions type:FT_POINTER
 fd_exec_test.TransactionMessage.address_table_lookups type:FT_POINTER
@@ -17,6 +16,7 @@ fd_exec_test.TransactionMessage.address_table_lookups type:FT_POINTER
 fd_exec_test.SanitizedTransaction.message_hash max_size:32 fixed_length:true
 fd_exec_test.SanitizedTransaction.signatures type:FT_POINTER
 
+fd_exec_test.TxnContext.account_shared_data type:FT_POINTER
 fd_exec_test.TxnContext.blockhash_queue type:FT_POINTER
 
 fd_exec_test.ResultingState.acct_states type:FT_POINTER
