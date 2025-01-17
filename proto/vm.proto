@@ -35,6 +35,9 @@ message VmContext {
     // Length of the text section in the program rodata region, in bytes.
     uint64 rodata_text_section_length = 4;
     
+    // The input data regions
+    repeated InputDataRegion input_data_regions = 5;
+
     // Registers
     uint64 r0 = 6;
     uint64 r1 = 7;
