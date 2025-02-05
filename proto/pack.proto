@@ -1,11 +1,10 @@
 syntax = "proto3";
 package org.solana.sealevel.v1;
 import "metadata.proto";
-import "context.proto";
+
 
 message PackComputeBudgetContext {
     repeated bytes instr_datas = 1;
-    EpochContext epoch_context = 2;
 }
 
 message PackComputeBudgetEffects {
