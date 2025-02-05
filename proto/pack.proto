@@ -5,6 +5,7 @@ import "metadata.proto";
 
 message PackComputeBudgetContext {
     repeated bytes instr_datas = 1;
+    EpochContext epoch_context = 2;
 }
 
 message PackComputeBudgetEffects {
