@@ -9,12 +9,5 @@ fd_exec_test.AcctState.address max_size:32 fixed_length:true
 fd_exec_test.AcctState.data type:FT_POINTER
 fd_exec_test.AcctState.owner max_size:32 fixed_length:true
 
-fd_exec_test.VoteAcct.pubkey max_size:32 fixed_length:true
-
-fd_exec_test.StakeAcct.pubkey max_size:32 fixed_length:true
-
-fd_exec_test.EpochContext.vote_accounts type:FT_POINTER
-fd_exec_test.EpochContext.stake_accounts type:FT_POINTER
-
 fd_exec_test.SlotContext.poh max_size:32 fixed_length:true
 fd_exec_test.SlotContext.parent_bank_hash max_size:32 fixed_length:true
