@@ -47,15 +47,36 @@ message AcctState {
   SeedAddress seed_addr = 7;
 }
 
+message VoteAccount {
+  // Account state of the vote account
+  AcctState vote_account = 1;
+
+  // How much stake has been delegated to this account
+  uint64 stake = 2;
+}
+
+message StakeAccount {
+  // Account state of the stake account
+  AcctState stake_account = 1;
+
+  // The voter pubkey whom this stake account delegated to
+  bytes voter_pubkey = 2;
+
+  // Other fields
+  uint64 activation_epoch = 3;
+  uint64 deactivation_epoch = 4;
+  double warmup_cooldown_rate = 5;
+}
+
 // A set of vote and stake account pubkeys for the current epoch. The
 // relevant delegation / stake information for these accounts should
 // be loaded in via the context's account shared data.
 message Stakes {
-  // Vote account pubkeys
-  repeated bytes vote_account_keys = 1;
+  // Vote account infos
+  repeated VoteAccount vote_accounts = 1;
 
-  // Stake account pubkeys
-  repeated bytes stake_account_keys = 2;
+  // Stake account infos
+  repeated StakeAccount stake_accounts = 2;
 }
 
 // EpochContext includes context scoped to an epoch.
@@ -79,7 +100,9 @@ message EpochContext {
 
   // Vectors of account pubkeys that is set at the epoch boundary
   // For block fuzzing, vote account 0 is the leader
-  Stakes epoch_stakes = 7;
+  Stakes epoch_stakes_t = 7;
+  Stakes epoch_stakes_t_1 = 8;
+  Stakes epoch_stakes_t_2 = 9;
 }
 
 // SlotContext includes context scoped to a block.
