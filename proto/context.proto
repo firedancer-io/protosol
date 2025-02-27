@@ -88,13 +88,17 @@ message EpochContext {
   // Genesis creation time
   uint64 genesis_creation_time = 6;
 
+  // New vote and stake accounts for this running epoch
+  repeated StakeAccount new_stake_accounts = 7;
+  repeated VoteAccount new_vote_accounts = 8;
+
   // Epoch stakes for epoch T
-  repeated StakeAccount stake_accounts = 7;
+  repeated StakeAccount stake_accounts = 9;
 
   // Epoch vote accounts for epochs [T-2, T]
-  repeated VoteAccount vote_accounts_t = 8;
-  repeated VoteAccount vote_accounts_t_1 = 9;
-  repeated VoteAccount vote_accounts_t_2 = 10;
+  repeated VoteAccount vote_accounts_t = 10;
+  repeated VoteAccount vote_accounts_t_1 = 11;
+  repeated VoteAccount vote_accounts_t_2 = 12;
 }
 
 // SlotContext includes context scoped to a block.
