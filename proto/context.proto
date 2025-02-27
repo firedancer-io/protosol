@@ -63,9 +63,10 @@ message StakeAccount {
   bytes voter_pubkey = 2;
 
   // Other fields
-  uint64 activation_epoch = 3;
-  uint64 deactivation_epoch = 4;
-  double warmup_cooldown_rate = 5;
+  uint64 stake = 3;
+  uint64 activation_epoch = 4;
+  uint64 deactivation_epoch = 5;
+  double warmup_cooldown_rate = 6;
 }
 
 // A set of vote and stake account pubkeys for the current epoch. The
