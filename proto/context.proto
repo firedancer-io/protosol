@@ -69,17 +69,6 @@ message StakeAccount {
   double warmup_cooldown_rate = 6;
 }
 
-// A set of vote and stake account pubkeys for the current epoch. The
-// relevant delegation / stake information for these accounts should
-// be loaded in via the context's account shared data.
-message Stakes {
-  // Vote account infos
-  repeated VoteAccount vote_accounts = 1;
-
-  // Stake account infos
-  repeated StakeAccount stake_accounts = 2;
-}
-
 // EpochContext includes context scoped to an epoch.
 // On "real" ledgers, it is created during the epoch boundary.
 message EpochContext {
@@ -99,11 +88,13 @@ message EpochContext {
   // Genesis creation time
   uint64 genesis_creation_time = 6;
 
-  // Vectors of account pubkeys that is set at the epoch boundary
-  // For block fuzzing, vote account 0 is the leader
-  Stakes epoch_stakes_t = 7;
-  Stakes epoch_stakes_t_1 = 8;
-  Stakes epoch_stakes_t_2 = 9;
+  // Epoch stakes for epoch T
+  repeated StakeAccount stake_accounts = 7;
+
+  // Epoch vote accounts for epochs [T-2, T]
+  repeated VoteAccount vote_accounts_t = 8;
+  repeated VoteAccount vote_accounts_t_1 = 9;
+  repeated VoteAccount vote_accounts_t_2 = 10;
 }
 
 // SlotContext includes context scoped to a block.
