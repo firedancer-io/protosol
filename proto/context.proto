@@ -88,12 +88,14 @@ message EpochContext {
   // Genesis creation time
   uint64 genesis_creation_time = 6;
 
-  // New vote and stake accounts for this running epoch
+  // New stake accounts for this running epoch
   repeated StakeAccount new_stake_accounts = 7;
-  repeated VoteAccount new_vote_accounts = 8;
 
   // Epoch stakes for epoch T
-  repeated StakeAccount stake_accounts = 9;
+  repeated StakeAccount stake_accounts = 8;
+
+  // New vote accounts for this running epoch
+  repeated VoteAccount new_vote_accounts = 9;
 
   // Epoch vote accounts for epochs [T-2, T]
   repeated VoteAccount vote_accounts_t = 10;
