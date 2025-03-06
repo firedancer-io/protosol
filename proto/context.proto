@@ -69,6 +69,15 @@ message StakeAccount {
   double warmup_cooldown_rate = 6;
 }
 
+// Epoch bank inflation parameters
+message Inflation {
+  double initial = 1;
+  double terminal = 2;
+  double taper = 3;
+  double foundation = 4;
+  double foundation_term = 5;
+}
+
 // EpochContext includes context scoped to an epoch.
 // On "real" ledgers, it is created during the epoch boundary.
 message EpochContext {
@@ -84,22 +93,25 @@ message EpochContext {
   // Slots per year
   double slots_per_year = 4;
 
+  // Inflation
+  Inflation inflation = 5;
+  
   // Genesis creation time
-  uint64 genesis_creation_time = 5;
+  uint64 genesis_creation_time = 6;
 
   // New stake accounts for this running epoch
-  repeated StakeAccount new_stake_accounts = 6;
+  repeated StakeAccount new_stake_accounts = 7;
 
   // Epoch stakes for epoch T
-  repeated StakeAccount stake_accounts = 7;
+  repeated StakeAccount stake_accounts = 8;
 
   // New vote accounts for this running epoch
-  repeated VoteAccount new_vote_accounts = 8;
+  repeated VoteAccount new_vote_accounts = 9;
 
   // Epoch vote accounts for epochs [T-2, T]
-  repeated VoteAccount vote_accounts_t = 9;
-  repeated VoteAccount vote_accounts_t_1 = 10;
-  repeated VoteAccount vote_accounts_t_2 = 11;
+  repeated VoteAccount vote_accounts_t = 10;
+  repeated VoteAccount vote_accounts_t_1 = 11;
+  repeated VoteAccount vote_accounts_t_2 = 12;
 }
 
 // SlotContext includes context scoped to a block.
@@ -124,4 +136,7 @@ message SlotContext {
 
   // Last slot lamports per signature
   uint64 prev_lps = 7;
+
+  // Previous epoch's capitalization
+  uint64 prev_epoch_capitalization = 8;
 }
