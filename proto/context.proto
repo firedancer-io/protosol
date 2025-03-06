@@ -81,26 +81,25 @@ message EpochContext {
   // Ticks per slot
   uint64 ticks_per_slot = 3;
 
-  // Target tick duration
-  uint64 target_tick_duration_lo = 4;
-  uint64 target_tick_duration_hi = 5;
+  // Slots per year
+  double slots_per_year = 4;
 
   // Genesis creation time
-  uint64 genesis_creation_time = 6;
+  uint64 genesis_creation_time = 5;
 
   // New stake accounts for this running epoch
-  repeated StakeAccount new_stake_accounts = 7;
+  repeated StakeAccount new_stake_accounts = 6;
 
   // Epoch stakes for epoch T
-  repeated StakeAccount stake_accounts = 8;
+  repeated StakeAccount stake_accounts = 7;
 
   // New vote accounts for this running epoch
-  repeated VoteAccount new_vote_accounts = 9;
+  repeated VoteAccount new_vote_accounts = 8;
 
   // Epoch vote accounts for epochs [T-2, T]
-  repeated VoteAccount vote_accounts_t = 10;
-  repeated VoteAccount vote_accounts_t_1 = 11;
-  repeated VoteAccount vote_accounts_t_2 = 12;
+  repeated VoteAccount vote_accounts_t = 9;
+  repeated VoteAccount vote_accounts_t_1 = 10;
+  repeated VoteAccount vote_accounts_t_2 = 11;
 }
 
 // SlotContext includes context scoped to a block.
