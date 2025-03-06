@@ -1,0 +1,13 @@
+block.proto package:"fd_exec_test"
+block.proto include:"../../../nanopb/pb_firedancer.h"
+
+fd_exec_test.Microblock.txns type:FT_POINTER
+
+fd_exec_test.BlockContext.microblocks type:FT_POINTER
+fd_exec_test.BlockContext.acct_states type:FT_POINTER
+fd_exec_test.BlockContext.blockhash_queue type:FT_POINTER
+
+fd_exec_test.BlockEffects.acct_states type:FT_POINTER
+fd_exec_test.BlockEffects.bank_hash max_size:32 fixed_length:true
+fd_exec_test.BlockEffects.lt_hash max_size:32 fixed_length:true
+fd_exec_test.BlockEffects.account_delta_hash max_size:32 fixed_length:true

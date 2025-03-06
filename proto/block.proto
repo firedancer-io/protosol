@@ -1,0 +1,60 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+
+import "context.proto";
+import "txn.proto";
+import "metadata.proto";
+
+// A microblock may or may not contain several transactions. If a microblock
+// contains no transactions, it's called a "tick"
+message Microblock {
+    // All transactions in this microblock (can be 0)
+    repeated SanitizedTransaction txns = 1;
+}
+
+message BlockContext {
+    // Microblocks in this block
+    repeated Microblock microblocks = 1;
+
+    // Input account states
+    repeated AcctState acct_states = 2;
+
+    // The blockhash queue
+    repeated bytes blockhash_queue = 3;
+
+    // Slot context (contains slot number)
+    SlotContext slot_ctx = 4;
+
+    // Epoch context (contains feature info)
+    EpochContext epoch_ctx = 5;
+}
+
+message BlockEffects {
+    // If block execution failed
+    bool has_error = 1;
+
+    // Resulting account states
+    repeated AcctState acct_states = 2;
+
+    // Slot capitalization
+    uint64 slot_capitalization = 3;
+
+    // Bank hash
+    bytes bank_hash = 4;
+
+    // Accounts lattice hash
+    bytes lt_hash = 5;
+
+    // Account delta hash
+    bytes account_delta_hash = 6;
+}
+
+message BlockFixture {
+    FixtureMetadata metadata = 1;
+
+    // The block input
+    BlockContext input = 2;
+
+    // The output
+    BlockEffects output = 3;
+}
