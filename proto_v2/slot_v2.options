@@ -1,0 +1,7 @@
+slot_v2.proto package:"fd_v2"
+
+fd_v2.SlotEnv.txns           type:FT_POINTER
+fd_v2.SlotEnv.vote_accounts  type:FT_POINTER
+fd_v2.SlotEnv.stake_accounts type:FT_POINTER
+
+fd_v2.SlotEffects.txn_effects type:FT_POINTER

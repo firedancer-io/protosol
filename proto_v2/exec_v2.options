@@ -1,0 +1,21 @@
+exec_v2.proto package:"fd_v2"
+
+fd_v2.SeedAddress.base max_size:32 fixed_length:true
+fd_v2.SeedAddress.seed max_size:32 fixed_length:true
+fd_v2.SeedAddress.owner max_size:32 fixed_length:true
+
+fd_v2.AcctState.address max_size:32 fixed_length:true
+fd_v2.AcctState.data    type:FT_POINTER
+fd_v2.AcctState.owner   max_size:32 fixed_length:true
+
+fd_v2.Feature.feature_id max_size:32 fixed_length:true
+
+fd_v2.LeaderSchedule.pubkey type:FT_POINTER
+fd_v2.LeaderSchedule.idxs type:FT_POINTER
+
+fd_v2.ExecEnv.acct_states type:FT_POINTER
+fd_v2.ExecEnv.features    type:FT_POINTER
+fd_v2.ExecEnv.slots       type:FT_POINTER
+
+fd_v2.ExecEffects.slot_effects type:FT_POINTER
+fd_v2.ExecEffects.acct_states type:FT_POINTER
