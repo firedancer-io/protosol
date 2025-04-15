@@ -1,6 +1,8 @@
 syntax = "proto3";
 package org.solana.sealevel.v1;
 
+import "metadata.proto";
+
 message TypeContext {
     bytes content = 1;
 }
