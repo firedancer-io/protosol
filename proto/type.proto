@@ -12,6 +12,6 @@ message TypeEffects {
 
 message TypeComputeBudgetFixture {
     FixtureMetadata metadata = 1;
-    TypesContext input = 2;
-    TypesEffects output = 3;
+    TypeContext input = 2;
+    TypeEffects output = 3;
 }
