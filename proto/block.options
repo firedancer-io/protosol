@@ -1,5 +1,5 @@
 block.proto package:"fd_exec_test"
-block.proto include:"../../../nanopb/pb_firedancer.h"
+block.proto include:"../../../../../ballet/nanopb/pb_firedancer.h"
 
 fd_exec_test.Microblock.txns type:FT_POINTER
 
