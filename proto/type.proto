@@ -1,0 +1,17 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+
+message TypeContext {
+    bytes content = 1;
+}
+
+message TypeEffects {
+    uint64 result = 1;
+    bytes content = 2;
+}
+
+message TypeComputeBudgetFixture {
+    FixtureMetadata metadata = 1;
+    TypesContext input = 2;
+    TypesEffects output = 3;
+}
