@@ -1,5 +1,5 @@
 vm.proto package:"fd_exec_test"
-vm.proto include:"../../../nanopb/pb_firedancer.h"
+vm.proto include:"../../../../../ballet/nanopb/pb_firedancer.h"
 
 fd_exec_test.InputDataRegion.content type:FT_POINTER
 
