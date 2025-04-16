@@ -12,7 +12,7 @@ message TypeEffects {
     bytes content = 2;
 }
 
-message TypeComputeBudgetFixture {
+message TypeFixture {
     FixtureMetadata metadata = 1;
     TypeContext input = 2;
     TypeEffects output = 3;
