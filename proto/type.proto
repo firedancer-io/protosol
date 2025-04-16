@@ -9,7 +9,8 @@ message TypeContext {
 
 message TypeEffects {
     uint64 result = 1;
-    bytes content = 2;
+    bytes representation = 2;
+    bytes yaml = 3;
 }
 
 message TypeFixture {
