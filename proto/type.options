@@ -3,4 +3,6 @@ type.proto include:"../../../nanopb/pb_firedancer.h"
 
 fd_exec_test.TypeContext.content type:FT_POINTER
 
-fd_exec_test.TypeEffects.content type:FT_POINTER
+fd_exec_test.TypeEffects.representation type:FT_POINTER
+
+fd_exec_test.TypeEffects.yaml type:FT_POINTER
