@@ -50,9 +50,6 @@ message AcctState {
 message VoteAccount {
   // Account state of the vote account
   AcctState vote_account = 1;
-
-  // How much stake has been delegated to this account
-  uint64 stake = 2;
 }
 
 message StakeAccount {
