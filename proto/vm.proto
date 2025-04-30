@@ -15,10 +15,10 @@ message InputDataRegion {
   bool is_writable = 3;
 }
 
-// TODO: investigate make this an overlay not a context, and let each target set up the 
+// TODO: investigate make this an overlay not a context, and let each target set up the
 // vm context from the instruction context.
 
-// Information sufficient to allow the fuzzer to generate a fd_vm_t context for 
+// Information sufficient to allow the fuzzer to generate a fd_vm_t context for
 // execution inside the VM (excluding the instruction context).
 //
 // TODO: this currently only includes fields necessary for executing syscalls,
@@ -34,7 +34,7 @@ message VmContext {
     uint64 rodata_text_section_offset = 3;
     // Length of the text section in the program rodata region, in bytes.
     uint64 rodata_text_section_length = 4;
-    
+
     // Registers
     uint64 r0 = 6;
     uint64 r1 = 7;
@@ -51,7 +51,7 @@ message VmContext {
 
     bool check_align = 18;
     bool check_size = 19;
-    
+
     // for vm execution
     uint64  entry_pc = 20;
     /* Bitset of valid call destinations (in terms of pc).
@@ -88,9 +88,6 @@ message SyscallContext {
     // InflightInstruction - contain temporary fields that live for the duration of an instructions execution, and is needed if we have overhanging context from a previous instruction
     InstrContext instr_ctx = 2;
     SyscallInvocation syscall_invocation = 3;
-
-    // For CPI, we want to control the effects of a program invocation
-    InstrEffects exec_effects = 4;
 }
 
 // We are only concerned with these error kinds as the syscall/VM fuzzers don't
@@ -108,7 +105,7 @@ message SyscallEffects {
     int64 error = 1;
     // Error Kind (should be used along with error code)
     ErrKind error_kind = 12;
-    
+
     // Registers
     uint64 r0 = 2; // Result of a successful execution
 
