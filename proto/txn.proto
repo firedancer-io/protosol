@@ -120,6 +120,8 @@ message TxnResult {
   uint64 executed_units = 11;
   // The collected fees in this transaction
   FeeDetails fee_details = 12;
+  // Loaded accounts data size
+  uint64 loaded_accounts_data_size = 13;
 }
 
 // Txn fixtures
