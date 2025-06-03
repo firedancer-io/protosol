@@ -33,20 +33,11 @@ message BlockEffects {
     // If block execution failed
     bool has_error = 1;
 
-    // Resulting account states
-    repeated AcctState acct_states = 2;
-
     // Slot capitalization
-    uint64 slot_capitalization = 3;
+    uint64 slot_capitalization = 2;
 
     // Bank hash
-    bytes bank_hash = 4;
-
-    // Accounts lattice hash
-    bytes lt_hash = 5;
-
-    // Account delta hash
-    bytes account_delta_hash = 6;
+    bytes bank_hash = 3;
 }
 
 message BlockFixture {
