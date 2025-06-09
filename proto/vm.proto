@@ -49,9 +49,6 @@ message VmContext {
     uint64 r10 = 16;
     uint64 r11 = 17;
 
-    bool check_align = 18;
-    bool check_size = 19;
-
     // for vm execution
     uint64  entry_pc = 20;
     /* Bitset of valid call destinations (in terms of pc).
