@@ -5,6 +5,7 @@ import "metadata.proto";
 
 message TypeContext {
     bytes content = 1;
+    string typename = 2;
 }
 
 message TypeEffects {
