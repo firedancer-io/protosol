@@ -9,9 +9,6 @@ fd_exec_test.AcctState.address max_size:32 fixed_length:true
 fd_exec_test.AcctState.data type:FT_POINTER
 fd_exec_test.AcctState.owner max_size:32 fixed_length:true
 
-fd_exec_test.StakeAccount.stake_account_pubkey max_size:32 fixed_length:true
-fd_exec_test.StakeAccount.voter_pubkey max_size:32 fixed_length:true
-
 fd_exec_test.EpochContext.vote_accounts_t_1 type:FT_POINTER
 fd_exec_test.EpochContext.vote_accounts_t_2 type:FT_POINTER
 

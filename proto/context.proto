@@ -55,20 +55,6 @@ message VoteAccount {
   uint64 stake = 2;
 }
 
-message StakeAccount {
-  // Pubkey of the stake account
-  bytes stake_account_pubkey = 1;
-
-  // The voter pubkey whom this stake account delegated to
-  bytes voter_pubkey = 2;
-
-  // Other fields
-  uint64 stake = 3;
-  uint64 activation_epoch = 4;
-  uint64 deactivation_epoch = 5;
-  double warmup_cooldown_rate = 6;
-}
-
 // Epoch bank inflation parameters
 message Inflation {
   double initial = 1;
