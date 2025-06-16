@@ -124,6 +124,7 @@ message SlotContext {
   // Last slot lamports per signature
   uint64 prev_lps = 7;
 
-  // Previous epoch's capitalization
+  // Previous slot's capitalization.
+  // TODO: I was very smart and named this incorrectly. This should be fixed in the future.
   uint64 prev_epoch_capitalization = 8;
 }
