@@ -5,16 +5,9 @@ import "context.proto";
 import "txn.proto";
 import "metadata.proto";
 
-// A microblock may or may not contain several transactions. If a microblock
-// contains no transactions, it's called a "tick"
-message Microblock {
+message BlockContext {
     // All transactions in this microblock (can be 0)
     repeated SanitizedTransaction txns = 1;
-}
-
-message BlockContext {
-    // Microblocks in this block
-    repeated Microblock microblocks = 1;
 
     // Input account states
     repeated AcctState acct_states = 2;

@@ -1,9 +1,7 @@
 block.proto package:"fd_exec_test"
 block.proto include:"../../../../../ballet/nanopb/pb_firedancer.h"
 
-fd_exec_test.Microblock.txns type:FT_POINTER
-
-fd_exec_test.BlockContext.microblocks type:FT_POINTER
+fd_exec_test.BlockContext.txns type:FT_POINTER
 fd_exec_test.BlockContext.acct_states type:FT_POINTER
 fd_exec_test.BlockContext.blockhash_queue type:FT_POINTER
 
