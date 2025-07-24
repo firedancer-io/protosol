@@ -31,6 +31,9 @@ message BlockEffects {
 
     // Bank hash
     bytes bank_hash = 3;
+
+    // Accounts Lattice Hash
+    bytes lt_hash = 4;
 }
 
 message BlockFixture {
