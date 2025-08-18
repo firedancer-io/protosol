@@ -64,6 +64,15 @@ message Inflation {
   double foundation_term = 5;
 }
 
+// Fee rate governor parameters
+message FeeRateGovernor {
+  uint64 target_lamports_per_signature = 1;
+  uint64 target_signatures_per_slot = 2;
+  uint64 min_lamports_per_signature = 3;
+  uint64 max_lamports_per_signature = 4;
+  uint32 burn_percent = 5;
+}
+
 // EpochContext includes context scoped to an epoch.
 // On "real" ledgers, it is created during the epoch boundary.
 message EpochContext {
@@ -113,4 +122,10 @@ message SlotContext {
   // Previous slot's capitalization.
   // TODO: I was very smart and named this incorrectly. This should be fixed in the future.
   uint64 prev_epoch_capitalization = 8;
+
+  // Fee rate governor
+  FeeRateGovernor fee_rate_governor = 9;
+
+  // Parent signature count (used for fee rate governor)
+  uint64 parent_signature_count = 10;
 }
