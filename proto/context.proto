@@ -23,6 +23,8 @@ message SeedAddress {
 
 // The complete state of an account excluding its public key.
 message AcctState {
+  reserved 5;
+
   // The account address.  (32 bytes)
   bytes address = 1;
 
@@ -32,10 +34,6 @@ message AcctState {
   bytes data = 3;
 
   bool executable = 4;
-
-  // The rent epoch is deprecated on Solana mainnet as of 2024-Feb.
-  // If ommitted, implies a value of UINT64_MAX.
-  optional uint64 rent_epoch = 5;
 
   // Address of the program that owns this account.  (32 bytes)
   bytes owner = 6;
