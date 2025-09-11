@@ -35,7 +35,7 @@ message AcctState {
 
   // The rent epoch is deprecated on Solana mainnet as of 2024-Feb.
   // If ommitted, implies a value of UINT64_MAX.
-  uint64 rent_epoch = 5;
+  optional uint64 rent_epoch = 5;
 
   // Address of the program that owns this account.  (32 bytes)
   bytes owner = 6;
