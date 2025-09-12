@@ -5,6 +5,11 @@ import "context.proto";
 import "txn.proto";
 import "metadata.proto";
 
+message CostTracker {
+    uint64 block_cost = 1;
+    uint64 vote_cost = 2;
+}
+
 message BlockContext {
     // All transactions in this microblock (can be 0)
     repeated SanitizedTransaction txns = 1;
@@ -31,6 +36,9 @@ message BlockEffects {
 
     // Bank hash
     bytes bank_hash = 3;
+
+    // The cost tracker
+    CostTracker cost_tracker = 4;
 }
 
 message BlockFixture {
