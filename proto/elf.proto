@@ -29,6 +29,8 @@ message ELFLoaderEffects {
     uint64 entry_pc = 6;
 
     repeated uint64 calldests = 7;
+
+    int32 error = 8;
 }
 
 message ELFLoaderFixture {
