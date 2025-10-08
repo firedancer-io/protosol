@@ -40,8 +40,13 @@ message BlockEffects {
     // The cost tracker
     CostTracker cost_tracker = 4;
 
-    // Hash of the leader schedule (for epoch boundaries)
-    bytes leader_schedule_hash = 5; // optional field
+    // Leader schedule
+    uint64 leaders_epoch = 5;
+    uint64 leaders_slot0 = 6;
+    uint64 leaders_slot_cnt = 7;
+    uint64 leader_pub_cnt = 8;
+    uint64 leaders_sched_cnt = 9;
+    bytes leader_schedule_hash = 10; // optional field
 }
 
 message BlockFixture {
