@@ -6,3 +6,4 @@ fd_exec_test.BlockContext.acct_states type:FT_POINTER
 fd_exec_test.BlockContext.blockhash_queue type:FT_POINTER
 
 fd_exec_test.BlockEffects.bank_hash max_size:32 fixed_length:true
+fd_exec_test.LeaderScheduleEffects.leader_schedule_hash max_size:16 fixed_length:true
