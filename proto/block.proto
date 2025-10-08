@@ -50,7 +50,7 @@ message BlockEffects {
     CostTracker cost_tracker = 4;
 
     // Leader schedule (optional)
-    optional LeaderScheduleEffects = 5;
+    optional LeaderScheduleEffects leader_schedule = 5;
 }
 
 message BlockFixture {
