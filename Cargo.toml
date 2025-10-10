@@ -1,6 +1,6 @@
 [package]
 name = "protosol"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 license = "Apache-2.0"
 description = "Protobuf definitions for the SVM fuzzing project."
@@ -9,6 +9,7 @@ authors = ["Firedancer Team"]
 keywords = ["solana", "protobuf", "sealevel", "fuzzing"]
 categories = ["encoding"]
 readme = "README.md"
+links = "protosol"
 
 [build-dependencies]
 prost-build = "0.11.9"
