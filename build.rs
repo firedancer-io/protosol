@@ -1,4 +1,22 @@
-use std::{env, fs, path::PathBuf};
+use std::{env, fs, path::{Path, PathBuf}};
+
+/// Normalize path only on Windows, else just return unchanged.
+fn maybe_normalize_windows_path(path: &Path) -> PathBuf {
+    #[cfg(windows)]
+    {
+        const EXTENDED_PREFIX: &str = r"\\?\";
+        let s = path.display().to_string();
+        if s.starts_with(EXTENDED_PREFIX) {
+            PathBuf::from(&s[EXTENDED_PREFIX.len()..])
+        } else {
+            path.to_path_buf()
+        }
+    }
+    #[cfg(not(windows))]
+    {
+        path.to_path_buf()
+    }
+}
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let proto_dir = PathBuf::from("proto");
@@ -6,6 +24,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .expect("cwd")
         .join(&proto_dir)
         .canonicalize()
+        .map(|p| maybe_normalize_windows_path(&p))
         .expect("canonicalize proto dir");
 
     println!("cargo:rerun-if-changed={}", abs.display());
