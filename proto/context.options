@@ -14,3 +14,4 @@ fd_exec_test.EpochContext.vote_accounts_t_2 type:FT_POINTER
 
 fd_exec_test.SlotContext.poh max_size:32 fixed_length:true
 fd_exec_test.SlotContext.parent_bank_hash max_size:32 fixed_length:true
+fd_exec_test.SlotContext.parent_lthash max_size:2048 fixed_length:true
