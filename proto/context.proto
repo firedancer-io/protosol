@@ -111,6 +111,9 @@ message SlotContext {
   // Parent bank hash
   bytes parent_bank_hash = 4;
 
+  // Parent lt hash
+  bytes parent_lthash = 5;
+
   // The last executed slot
   fixed64 prev_slot = 6;
 
