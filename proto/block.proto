@@ -27,6 +27,26 @@ message BlockContext {
     EpochContext epoch_ctx = 5;
 }
 
+message LeaderScheduleEffects {
+    // Epoch number for which this leader schedule applies
+    uint64 leaders_epoch = 1;
+
+    // First slot number covered by this leader schedule
+    uint64 leaders_slot0 = 2;
+
+    // Total number of slots covered by this leader schedule
+    uint64 leaders_slot_cnt = 3;
+
+    // Number of unique validator public keys in the leader schedule
+    uint64 leader_pub_cnt = 4;
+
+    // Number of entries in the leader schedule (slots with assigned leaders)
+    uint64 leaders_sched_cnt = 5;
+
+    // Hash of the leader schedule
+    bytes leader_schedule_hash = 6;
+}
+
 message BlockEffects {
     // If block execution failed
     bool has_error = 1;
@@ -39,6 +59,9 @@ message BlockEffects {
 
     // The cost tracker
     CostTracker cost_tracker = 4;
+
+    // Leader schedule
+    LeaderScheduleEffects leader_schedule = 5;
 }
 
 message BlockFixture {
