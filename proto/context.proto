@@ -9,22 +9,8 @@ message FeatureSet {
   repeated fixed64 features = 1;
 }
 
-// A seed address.  This is not a PDA.
-message SeedAddress {
-  // The seed address base.  (32 bytes)
-  bytes base = 1;
-
-  // The seed path  (<= 32 bytes)
-  bytes seed = 2;
-
-  // The seed address owner.  (32 bytes)
-  bytes owner = 3;
-}
-
 // The complete state of an account excluding its public key.
 message AcctState {
-  reserved 5;
-
   // The account address.  (32 bytes)
   bytes address = 1;
 
@@ -35,14 +21,12 @@ message AcctState {
 
   bool executable = 4;
 
+  reserved 5;
+
   // Address of the program that owns this account.  (32 bytes)
   bytes owner = 6;
 
-  // The account address, but derived as a seed address.  Overrides
-  // `address` if present.
-  // TODO: This is a solfuzz specific extension and is not compliant
-  // with the org.solana.sealevel.v1 API.
-  SeedAddress seed_addr = 7;
+  reserved 7;
 }
 
 message VoteAccount {
