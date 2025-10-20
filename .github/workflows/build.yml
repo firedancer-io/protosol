@@ -1,0 +1,31 @@
+name: Build protosol
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
+
+      - name: Run deps.sh
+        run: bash ./deps.sh
+
+      - name: Build (release)
+        run: cargo build --release
+
+

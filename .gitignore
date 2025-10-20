@@ -1,3 +1,4 @@
 # Cargo / Rust
 target/
 **/*.rs.bk
+opt/

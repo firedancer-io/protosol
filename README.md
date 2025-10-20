@@ -1,6 +1,6 @@
 # Protosol
 
-Protocol buffer definitions for the Solana Virtual Machine (SVM) testing harness in Agave. This crate provides Rust bindings for protobuf schemas used in fuzzing and testing the Solana blockchain's execution environment.
+Protocol buffer + flatbuffer definitions for the Solana Virtual Machine (SVM) testing harness in Agave. This crate provides Rust bindings for protobuf schemas used in fuzzing and testing the Solana blockchain's execution environment.
 
 ## Overview
 
@@ -121,6 +121,13 @@ This crate is specifically designed for use with the anza-xyz/agave repository's
 
 ## Development
 
+### Installing dependencies (builds flatc)
+
+```bash
+git submodule update --init --recursive
+./deps.sh
+```
+
 ### Building
 
 ```bash
@@ -152,6 +159,12 @@ proto/
 ├── pack.proto           # Compute budget testing
 ├── metadata.proto       # Test fixture metadata
 └── *.options            # Nanopb configuration files
+
+flatbuffers/
+├── elf.fbs              # ELF VM program and state structures
+├── context.fbs          # Account and execution context definitions
+├── metadata.fbs         # Test fixture metadata for Flatbuffers
+
 ```
 
 ## License
