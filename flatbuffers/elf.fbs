@@ -5,12 +5,8 @@ include "context.fbs";
 
 namespace org.solana.sealevel.v2;
 
-table ELFBinary {
-  data:[ubyte] (required);
-}
-
 table ELFLoaderCtx {
-  elf:ELFBinary (required);
+  elf_data:[ubyte] (required);
   features:FeatureSet;
   deploy_checks:bool;
 }
