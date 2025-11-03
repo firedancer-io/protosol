@@ -12,13 +12,13 @@ table ELFLoaderCtx {
 }
 
 table ELFLoaderEffects {
+  err_code:ubyte;
   rodata:[ubyte];
   rodata_sz:ulong;
   text_cnt:ulong;
   text_off:ulong;
   entry_pc:ulong;
   calldests:[ulong];
-  err_code:ubyte;
 }
 
 table ELFLoaderFixture {
