@@ -7,7 +7,7 @@ namespace org.solana.sealevel.v2;
 
 table ELFLoaderCtx {
   elf_data:[ubyte] (required);
-  features:FeatureSet;
+  features:FeatureSet (required);
   deploy_checks:bool;
 }
 
