@@ -13,11 +13,11 @@ table ELFLoaderCtx {
 
 table ELFLoaderEffects {
   err_code:ubyte;
-  rodata:[ubyte];
+  rodata_hash:[ubyte];
   text_cnt:ulong;
   text_off:ulong;
   entry_pc:ulong;
-  calldests:[ulong];
+  calldests_hash:[ubyte];
 }
 
 table ELFLoaderFixture {
