@@ -1,0 +1,84 @@
+// Generated from block.proto
+
+include "metadata.fbs";
+include "context.fbs";
+include "txn.fbs";
+
+namespace org.solana.sealevel.v2;
+
+table CostTracker {
+  block_cost:ulong;
+  vote_cost:ulong;
+}
+
+table Inflation {
+  initial:double;
+  terminal:double;
+  taper:double;
+  foundation:double;
+  foundation_term:double;
+}
+
+table FeeRateGovernor {
+  target_lamports_per_signature:ulong;
+  target_signatures_per_slot:ulong;
+  min_lamports_per_signature:ulong;
+  max_lamports_per_signature:ulong;
+  burn_percent:ubyte;
+}
+
+table BankFields {
+  block_height:ulong;
+  poh:Hash (required);
+  parent_bank_hash:Hash (required);
+  parent_lthash:LtHash (required);
+  current_slot:ulong;
+  parent_slot:ulong;
+  prev_lps:ulong;
+  fee_rate_governor:FeeRateGovernor (required);
+  parent_signature_count:ulong;
+  hashes_per_tick:ulong;
+  ticks_per_slot:ulong;
+  slots_per_year:double;
+  inflation:Inflation (required);
+  genesis_creation_time:ulong;
+  prev_epoch_capitalization:ulong;
+  vote_accounts_t_1:[VoteAccount] (required);
+  vote_accounts_t_2:[VoteAccount] (required);
+}
+
+struct LeaderScheduleHash {
+  hash:[ubyte:16];
+}
+
+table LeaderScheduleEffects {
+  leaders_epoch:ulong;
+  leaders_slot0:ulong;
+  leaders_slot_cnt:ulong;
+  leader_pub_cnt:ulong;
+  leaders_sched_cnt:ulong;
+  leader_schedule_hash:LeaderScheduleHash (required);
+}
+
+table BlockContext {
+  transactions:[TransactionMessage] (required);
+  account_states:[Account] (required);
+  blockhash_queue:[Hash] (required);
+  bank_fields:BankFields (required);
+  features:FeatureSet;
+}
+
+table BlockEffects {
+  has_err:bool;
+  slot_capitalization:ulong;
+  bank_hash:Hash;
+  cost_tracker:CostTracker;
+  leader_schedule:LeaderScheduleEffects;
+}
+
+table BlockFixture {
+  metadata:FixtureMetadata (required);
+  input:BlockContext (required);
+  output:BlockEffects (required);
+}
+

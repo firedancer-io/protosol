@@ -1,0 +1,28 @@
+// Generated from elf.proto
+
+include "metadata.fbs";
+include "context.fbs";
+
+namespace org.solana.sealevel.v2;
+
+table ELFLoaderCtx {
+  elf_data:[ubyte] (required);
+  features:FeatureSet (required);
+  deploy_checks:bool;
+}
+
+table ELFLoaderEffects {
+  err_code:ubyte;
+  rodata_hash:ulong;
+  text_cnt:ulong;
+  text_off:ulong;
+  entry_pc:ulong;
+  calldests_hash:ulong;
+}
+
+table ELFLoaderFixture {
+  metadata:FixtureMetadata (required);
+  input:ELFLoaderCtx (required);
+  output:ELFLoaderEffects (required);
+}
+

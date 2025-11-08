@@ -1,0 +1,66 @@
+// Generated from txn.proto
+
+include "metadata.fbs";
+include "context.fbs";
+
+namespace org.solana.sealevel.v2;
+
+table MessageHeader {
+  num_required_signatures:ubyte;
+  num_readonly_signed_accounts:ubyte;
+  num_readonly_unsigned_accounts:ubyte;
+}
+
+table CompiledInstruction {
+  program_id_index:ubyte;
+  accounts:[ubyte] (required);
+  data:[ubyte] (required);
+}
+
+table AddressLookupTable {
+  account_key:Pubkey (required);
+  writable_indexes:[ubyte] (required);
+  readonly_indexes:[ubyte] (required);
+}
+
+table TransactionMessage {
+  is_legacy:bool;
+  header:MessageHeader (required);
+  account_keys:[Pubkey] (required);
+  recent_blockhash:Hash (required);
+  instructions:[CompiledInstruction] (required);
+  address_lookup_tables:[AddressLookupTable] (required);
+  message_hash:Hash (required);
+  signatures:[Signature] (required);
+}
+
+table TxnContext {
+  txn_message:TransactionMessage (required);
+  account_states:[Account] (required);
+  blockhash_queue:[Hash] (required);
+  features:FeatureSet;
+}
+
+table FeeDetails {
+  transaction_fee:ulong;
+  prioritization_fee:ulong;
+}
+
+table TxnEffects {
+  txn_err_code:ubyte;
+  instr_err_code:ubyte;
+  instr_err_idx:ubyte;
+  custom_err_code:uint;
+  modified_accounts:[Account];
+  return_data:[ubyte];
+  executed_units:ulong;
+  fee_details:FeeDetails;
+  loaded_accounts_data_size:uint;
+}
+
+table TxnFixture {
+  metadata:FixtureMetadata (required);
+  input:TxnContext (required);
+  output:TxnEffects (required);
+}
+

@@ -1,0 +1,8 @@
+// Generated from metadata.proto
+
+namespace org.solana.sealevel.v2;
+
+table FixtureMetadata {
+  fn_entrypoint:string (required);
+}
+

@@ -1,0 +1,90 @@
+// Generated from vm.proto
+
+include "metadata.fbs";
+include "context.fbs";
+include "instr.fbs";
+
+namespace org.solana.sealevel.v2;
+
+enum ErrKind : ubyte {
+  UNSPECIFIED = 0,
+  EBPF = 1,
+  SYSCALL = 2,
+  INSTRUCTION = 3,
+}
+
+table InputDataRegion {
+  offset:ulong;
+  content:[ubyte] (required);
+  is_writable:bool;
+}
+
+table VmContext {
+  heap_max:ulong;
+  rodata:[ubyte] (required);
+  rodata_text_section_offset:ulong;
+  rodata_text_section_length:ulong;
+  r0:ulong;
+  r1:ulong;
+  r2:ulong;
+  r3:ulong;
+  r4:ulong;
+  r5:ulong;
+  r6:ulong;
+  r7:ulong;
+  r8:ulong;
+  r9:ulong;
+  r10:ulong;
+  r11:ulong;
+  entry_pc:ulong;
+  calldests:[ubyte] (required);
+  return_data:ReturnData;
+  sbpf_version:ubyte;
+}
+
+table ReturnData {
+  program_id:Pubkey (required);
+  data:[ubyte] (required);
+}
+
+table SyscallInvocation {
+  function_name:string (required);
+  heap_prefix:[ubyte] (required);
+  stack_prefix:[ubyte] (required);
+}
+
+table SyscallContext {
+  vm_ctx:VmContext (required);
+  instr_ctx:InstrContext (required);
+  syscall_invocation:SyscallInvocation (required);
+}
+
+table SyscallEffects {
+  err_code:byte;
+  err_kind:ErrKind;
+  cu_avail:ulong;
+  heap:[ubyte];
+  stack:[ubyte];
+  input_data_regions:[InputDataRegion];
+  frame_count:ulong;
+  log:string;
+  rodata:[ubyte];
+  pc:ulong;
+  r0:ulong;
+  r1:ulong;
+  r2:ulong;
+  r3:ulong;
+  r4:ulong;
+  r5:ulong;
+  r6:ulong;
+  r7:ulong;
+  r8:ulong;
+  r9:ulong;
+  r10:ulong;
+}
+
+table SyscallFixture {
+  metadata:FixtureMetadata (required);
+  input:SyscallContext (required);
+  output:SyscallEffects (required);
+}

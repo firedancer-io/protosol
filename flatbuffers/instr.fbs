@@ -1,0 +1,36 @@
+// Generated from invoke.proto
+
+include "metadata.fbs";
+include "context.fbs";
+
+namespace org.solana.sealevel.v2;
+
+table InstrAccount {
+  index:ubyte;
+  is_writable:bool;
+  is_signer:bool;
+}
+
+table InstrContext {
+  program_id:Pubkey (required);
+  account_states:[Account] (required);
+  instr_accounts:[InstrAccount] (required);
+  instr_data:[ubyte] (required);
+  cu_avail:ulong;
+  features:FeatureSet;
+}
+
+table InstrEffects {
+  err_code:ubyte;
+  custom_err_code:uint;
+  modified_accounts:[Account];
+  cu_remaining:ulong;
+  return_data:[ubyte];
+}
+
+table InstrFixture {
+  metadata:FixtureMetadata (required);
+  input:InstrContext (required);
+  output:InstrEffects (required);
+}
+
