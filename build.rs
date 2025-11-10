@@ -55,7 +55,8 @@ fn compile_protos() -> Result<(), Box<dyn std::error::Error>> {
 
     let out_dir = PathBuf::from(env::var("OUT_DIR")?);
     let mut config = prost_build::Config::new();
-    config.protoc_executable(PathBuf::from("opt/bin/protoc"));
+    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
+    config.protoc_executable(manifest_dir.join("opt").join("bin").join("protoc"));
     config.out_dir(&out_dir);
     config.compile_protos(
         &proto_files
