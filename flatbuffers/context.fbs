@@ -1,0 +1,40 @@
+// Generated from context.proto
+
+namespace org.solana.sealevel.v2;
+
+struct Pubkey {
+  address:[ubyte:32];
+}
+
+struct Signature {
+  signature:[ubyte:64];
+}
+
+struct XXHash {
+  hash:[ubyte:8];
+}
+
+struct Hash {
+  hash:[ubyte:32];
+}
+
+struct LtHash {
+  hash:[ushort:1024];
+}
+
+table FeatureSet {
+  features:[ulong];
+}
+
+table Account {
+  address:Pubkey (required);
+  lamports:ulong;
+  data:[ubyte] (required);
+  executable:bool;
+  owner:Pubkey (required);
+}
+
+table VoteAccount {
+  vote_account:Account (required);
+  stake:ulong;
+}
