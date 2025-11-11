@@ -22,6 +22,58 @@ fn maybe_normalize_windows_path(path: &Path) -> PathBuf {
     }
 }
 
+/// Get the path to protoc, checking multiple sources:
+/// 1. PROTOC_EXECUTABLE environment variable
+/// 2. PROTOSOL_PROTOC environment variable
+/// 3. opt/bin/protoc relative to CARGO_MANIFEST_DIR (if it exists)
+/// 4. Panic if not found
+fn get_protoc_path() -> Result<PathBuf, Box<dyn std::error::Error>> {
+    // Check explicit PROTOC_EXECUTABLE env var first
+    if let Ok(path) = env::var("PROTOC_EXECUTABLE") {
+        return Ok(PathBuf::from(path));
+    }
+
+    // Check PROTOSOL_PROTOC env var
+    if let Ok(path) = env::var("PROTOSOL_PROTOC") {
+        return Ok(PathBuf::from(path));
+    }
+
+    // Check for opt/bin/protoc relative to manifest dir
+    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
+    let local_protoc = manifest_dir.join("opt").join("bin").join("protoc");
+    if local_protoc.exists() {
+        return Ok(local_protoc);
+    }
+
+    panic!("protoc not found");
+}
+
+/// Get the path to flatc, checking multiple sources:
+/// 1. FLATC_EXECUTABLE environment variable
+/// 2. PROTOSOL_FLATC environment variable
+/// 3. opt/bin/flatc relative to CARGO_MANIFEST_DIR (if it exists)
+/// 4. Panic if not found
+fn get_flatc_path() -> Result<PathBuf, Box<dyn std::error::Error>> {
+    // Check explicit FLATC_EXECUTABLE env var first
+    if let Ok(path) = env::var("FLATC_EXECUTABLE") {
+        return Ok(PathBuf::from(path));
+    }
+
+    // Check PROTOSOL_FLATC env var
+    if let Ok(path) = env::var("PROTOSOL_FLATC") {
+        return Ok(PathBuf::from(path));
+    }
+
+    // Check for opt/bin/flatc relative to manifest dir
+    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
+    let local_flatc = manifest_dir.join("opt").join("bin").join("flatc");
+    if local_flatc.exists() {
+        return Ok(local_flatc);
+    }
+
+    panic!("flatc not found");
+}
+
 fn monitor_and_get_files(
     dir: &PathBuf,
     env_var: &str,
@@ -55,8 +107,8 @@ fn compile_protos() -> Result<(), Box<dyn std::error::Error>> {
 
     let out_dir = PathBuf::from(env::var("OUT_DIR")?);
     let mut config = prost_build::Config::new();
-    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
-    config.protoc_executable(manifest_dir.join("opt").join("bin").join("protoc"));
+    let protoc_path = get_protoc_path()?;
+    config.protoc_executable(protoc_path);
     config.out_dir(&out_dir);
     config.compile_protos(
         &proto_files
@@ -75,10 +127,8 @@ fn compile_flatbuffers() -> Result<(), Box<dyn std::error::Error>> {
 
     let out_dir = PathBuf::from(env::var("OUT_DIR")?);
 
-    // Use custom flatc from ./opt/bin/flatc relative to this build.rs
-    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
-    let flatc_path = manifest_dir.join("opt").join("bin").join("flatc");
-
+    // Use custom flatc from multiple sources or fall back to system
+    let flatc_path = get_flatc_path()?;
     let flatc = flatc_rust::Flatc::from_path(&flatc_path);
     flatc.check()?;
     flatc.run(flatc_rust::Args {
