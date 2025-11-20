@@ -67,8 +67,7 @@ message EpochContext {
   // Ticks per slot
   uint64 ticks_per_slot = 3;
 
-  // Slots per year
-  double slots_per_year = 4;
+  reserved 4;
 
   // Inflation
   Inflation inflation = 5;
