@@ -85,13 +85,13 @@ let block_ctx = protos::BlockContext {
     txns: vec![txn],
     acct_states: vec![account],
     blockhash_queue: vec![/* recent blockhashes */],
-    slot_ctx: Some(protos::SlotContext {
+    slot_context: Some(protos::SlotContext {
         slot: 12345,
         poh: vec![/* POH hash */],
         parent_bank_hash: vec![/* parent hash */],
         parent_lthash: vec![/* parent LT hash */],
     }),
-    epoch_ctx: Some(protos::EpochContext {
+    epoch_context: Some(protos::EpochContext {
         epoch: 100,
         features: Some(protos::FeatureSet {
             features: vec![/* feature flags */],
