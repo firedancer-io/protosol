@@ -29,11 +29,9 @@ message VmContext {
 
     // Program read-only data
     bytes rodata = 2;
-    // Offset of the text section from the start of the program rodata segment
-    // (0x100000000)
-    uint64 rodata_text_section_offset = 3;
-    // Length of the text section in the program rodata region, in bytes.
-    uint64 rodata_text_section_length = 4;
+
+    reserved 3;
+    reserved 4;
 
     // Registers
     uint64 r0 = 6;
@@ -50,11 +48,12 @@ message VmContext {
     uint64 r11 = 17;
 
     // for vm execution
-    uint64  entry_pc = 20;
+    uint64 entry_pc = 20;
+
     /* Bitset of valid call destinations (in terms of pc).
        This model is used by the Firedancer VM for CALL_IMMs */
-    bytes   call_whitelist = 21;
-    bool tracing_enabled = 22;
+    bytes call_whitelist = 21;
+    reserved 22;
 
     ReturnData return_data = 23;
 
@@ -112,8 +111,8 @@ message SyscallEffects {
     // Memory regions
     bytes heap = 4;
     bytes stack = 5;
+    reserved 6;
 
-    bytes inputdata = 6; // deprecated, use input_data_regions
     repeated InputDataRegion input_data_regions = 11;
 
     // Current number of stack frames pushed
