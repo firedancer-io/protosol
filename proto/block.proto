@@ -21,10 +21,10 @@ message BlockContext {
     repeated bytes blockhash_queue = 3;
 
     // Slot context (contains slot number)
-    SlotContext slot_ctx = 4;
+    SlotContext slot_context = 4;
 
     // Epoch context (contains feature info)
-    EpochContext epoch_ctx = 5;
+    EpochContext epoch_context = 5;
 }
 
 message LeaderScheduleEffects {
