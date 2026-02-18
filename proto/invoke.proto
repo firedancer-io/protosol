@@ -30,7 +30,7 @@ message InstrContext {
 
   uint64 cu_avail = 6;
 
-  SlotContext slot_context = 8;
+  reserved 8;
   EpochContext epoch_context = 9;
 }
 
