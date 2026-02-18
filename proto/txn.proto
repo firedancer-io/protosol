@@ -71,7 +71,7 @@ message TxnContext {
   repeated bytes blockhash_queue = 3;
 
   EpochContext epoch_ctx = 4;
-  SlotContext slot_ctx = 5;
+  reserved 5;
 }
 
 // The resulting state of an account after a transaction
