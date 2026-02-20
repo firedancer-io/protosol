@@ -1,8 +1,0 @@
-type.proto package:"fd_exec_test"
-type.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
-
-fd_exec_test.TypeContext.content type:FT_POINTER
-
-fd_exec_test.TypeEffects.representation type:FT_POINTER
-
-fd_exec_test.TypeEffects.yaml type:FT_POINTER
