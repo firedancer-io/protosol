@@ -55,6 +55,35 @@ message FeeRateGovernor {
   uint32 burn_percent = 5;
 }
 
+message EpochSchedule {
+  // The maximum number of slots in each epoch.
+  uint64 slots_per_epoch = 1;
+
+  // A number of slots before beginning of an epoch to calculate
+  // a leader schedule for that epoch.
+  uint64 leader_schedule_slot_offset = 2;
+
+  // Whether epochs start short and grow.
+  bool warmup = 3;
+
+  // The first epoch after the warmup period.
+  uint64 first_normal_epoch = 4;
+
+  // The first slot after the warmup period.
+  uint64 first_normal_slot = 5;
+}
+
+message Rent {
+  // Rental rate in lamports/byte-year.
+  uint64 lamports_per_byte_year = 1;
+
+  // Amount of time (in years) a balance must include rent for the account to be rent exempt.
+  double exemption_threshold = 2;
+
+  // The percentage of collected rent that is burned.
+  uint32 burn_percent = 3;
+}
+
 // EpochContext includes context scoped to an epoch.
 // On "real" ledgers, it is created during the epoch boundary.
 message EpochContext {
@@ -112,4 +141,10 @@ message SlotContext {
 
   // Parent signature count (used for fee rate governor)
   uint64 parent_signature_count = 10;
+}
+
+// A single entry in the blockhash queue.
+message BlockhashQueueEntry {
+  bytes blockhash = 1;
+  uint64 lamports_per_signature = 2;
 }
