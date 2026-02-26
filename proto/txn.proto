@@ -57,6 +57,26 @@ message SanitizedTransaction {
   repeated bytes signatures = 4;
 }
 
+/* Bank fields relevant to transaction execution */
+message TxnBank {
+  // Up to 300 (actually 301) most recent blockhashes (ordered from oldest to newest)
+  repeated BlockhashQueueEntry blockhash_queue = 1;
+
+  uint32 rbh_lamports_per_signature = 2;
+
+  FeeRateGovernor fee_rate_governor = 3;
+
+  uint64 total_epoch_stake = 4;
+
+  EpochSchedule epoch_schedule = 5;
+
+  Rent rent = 6;
+
+  FeatureSet features = 7;
+
+  uint64 epoch = 8;
+}
+
 // This Transaction context be used to fuzz either `load_execute_and_commit_transactions`,
 // `load_and_execute_transactions` in `bank.rs` or `load_and_execute_sanitized_transactions`
 // in `svm/transaction_processor.rs`
@@ -67,24 +87,10 @@ message TxnContext {
   // Data associated with transaction accounts, sysvars, etc.
   repeated AcctState account_shared_data = 2;
 
-  // Up to 300 (actually 301) most recent blockhashes (ordered from oldest to newest)
-  repeated bytes blockhash_queue = 3;
+  reserved 3, 4, 5;
 
-  EpochContext epoch_ctx = 4;
-  reserved 5;
-}
-
-// The resulting state of an account after a transaction
-message ResultingState {
-    repeated AcctState acct_states = 1;
-    repeated RentDebits rent_debits = 2;
-    uint64 transaction_rent = 3;
-}
-
-// The rent state for an account after a transaction
-message RentDebits {
-  bytes pubkey = 1;
-  int64 rent_collected = 2;
+  /* Bank fields for the transaction fuzzer */
+  TxnBank bank = 6;
 }
 
 message FeeDetails {
@@ -98,9 +104,8 @@ message TxnResult {
   bool executed = 1;
   // Whether there was a sanitization error
   bool sanitization_error = 2;
-  // The state of each account after the transaction
-  ResultingState resulting_state = 3;
-  uint64 rent = 4;
+
+  reserved 3, 4;
 
   // If an executed transaction has no error
   bool is_ok = 5;
@@ -113,7 +118,6 @@ message TxnResult {
   // Custom error, if any
   uint32 custom_error = 9;
 
-
   // The return data from this transaction, if any
   bytes return_data = 10;
   // Number of executed compute units
@@ -122,6 +126,9 @@ message TxnResult {
   FeeDetails fee_details = 12;
   // Loaded accounts data size
   uint64 loaded_accounts_data_size = 13;
+
+  repeated AcctState modified_accounts = 14;
+  repeated AcctState rollback_accounts = 15;
 }
 
 // Txn fixtures
