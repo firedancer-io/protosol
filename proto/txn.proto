@@ -74,7 +74,7 @@ message TxnBank {
 
   FeatureSet features = 7;
 
-  uint64 epoch = 8;
+  reserved 8;
 }
 
 // This Transaction context be used to fuzz either `load_execute_and_commit_transactions`,
