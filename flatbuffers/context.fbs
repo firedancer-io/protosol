@@ -26,6 +26,9 @@ table FeatureSet {
   features:[ulong];
 }
 
+/* For inputs, the account data is the raw data. For outputs, the
+   account data is the XXHash of the raw resulting account data,
+   hashed for performance. */
 table Account {
   address:Pubkey (required);
   lamports:ulong;
