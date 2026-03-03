@@ -91,11 +91,11 @@ let block_ctx = protos::BlockContext {
         parent_bank_hash: vec![/* parent hash */],
         parent_lthash: vec![/* parent LT hash */],
     }),
+    features: Some(protos::FeatureSet {
+        features: vec![/* feature flags */],
+    }),
     epoch_ctx: Some(protos::EpochContext {
         epoch: 100,
-        features: Some(protos::FeatureSet {
-            features: vec![/* feature flags */],
-        }),
         vote_accounts: vec![],
     }),
 };
