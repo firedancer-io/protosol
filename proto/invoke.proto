@@ -30,8 +30,10 @@ message InstrContext {
 
   uint64 cu_avail = 6;
 
-  reserved 8;
-  EpochContext epoch_context = 9;
+  reserved 7, 8, 9;
+
+  // Active feature set
+  FeatureSet features = 10;
 }
 
 // The results of executing an InstrContext.
