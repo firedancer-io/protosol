@@ -32,12 +32,6 @@ Protosol defines the data structures used to capture, serialize, and replay Sola
 #### Execution Context (`context.proto`)
 - `AcctState`: Complete account state (address, lamports, data, owner)
 - `FeatureSet`: Enabled Solana features for execution
-- `SlotContext`: Slot-specific information (POH, parent hashes)
-- `EpochContext`: Epoch-level data (vote accounts, feature sets)
-
-#### Compute Budget (`pack.proto`)
-- `PackComputeBudgetContext`: Input for compute budget testing
-- `PackComputeBudgetEffects`: Output effects of compute budget execution
 
 ## Usage
 
@@ -94,11 +88,7 @@ let block_ctx = protos::BlockContext {
     features: Some(protos::FeatureSet {
         features: vec![/* feature flags */],
     }),
-    epoch_ctx: Some(protos::EpochContext {
-        epoch: 100,
-        vote_accounts: vec![],
-    }),
-};
+    bank: None,
 ```
 
 ### Testing and Fuzzing
