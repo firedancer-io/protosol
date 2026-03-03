@@ -29,23 +29,6 @@ message AcctState {
   reserved 7;
 }
 
-message VoteAccount {
-  // Account state of the vote account
-  AcctState vote_account = 1;
-
-  // How much stake has been delegated to this account
-  uint64 stake = 2;
-}
-
-// Epoch bank inflation parameters
-message Inflation {
-  double initial = 1;
-  double terminal = 2;
-  double taper = 3;
-  double foundation = 4;
-  double foundation_term = 5;
-}
-
 // Fee rate governor parameters
 message FeeRateGovernor {
   uint64 target_lamports_per_signature = 1;
@@ -82,65 +65,6 @@ message Rent {
 
   // The percentage of collected rent that is burned.
   uint32 burn_percent = 3;
-}
-
-// EpochContext includes context scoped to an epoch.
-// On "real" ledgers, it is created during the epoch boundary.
-message EpochContext {
-  // Active feature set
-  FeatureSet features = 1;
-
-  // Hashes per tick
-  uint64 hashes_per_tick = 2;
-
-  // Ticks per slot
-  uint64 ticks_per_slot = 3;
-
-  reserved 4;
-
-  // Inflation
-  Inflation inflation = 5;
-
-  // Genesis creation time
-  uint64 genesis_creation_time = 6;
-
-  // Epoch vote accounts for epochs T-1 and T-2
-  repeated VoteAccount vote_accounts_t_1 = 11;
-  repeated VoteAccount vote_accounts_t_2 = 12;
-}
-
-// SlotContext includes context scoped to a block.
-// On "real" ledgers, it is created during the slot boundary.
-message SlotContext {
-  // Current slot number
-  fixed64 slot = 1;
-
-  fixed64 block_height = 2;
-
-  // POH hash
-  bytes poh = 3;
-
-  // Parent bank hash
-  bytes parent_bank_hash = 4;
-
-  // Parent lt hash
-  bytes parent_lthash = 5;
-
-  // The last executed slot
-  fixed64 prev_slot = 6;
-
-  // Last slot lamports per signature
-  uint64 prev_lps = 7;
-
-  // Previous slot's capitalization.
-  // TODO: I was very smart and named this incorrectly. This should be fixed in the future.
-  uint64 prev_epoch_capitalization = 8;
-
-  // Fee rate governor
-  FeeRateGovernor fee_rate_governor = 9;
-
-  // Parent signature count (used for fee rate governor)
-  uint64 parent_signature_count = 10;
 }
 
 // A single entry in the blockhash queue.
