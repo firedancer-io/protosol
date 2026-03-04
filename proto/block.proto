@@ -24,7 +24,31 @@ message PrevVoteAccount {
     bytes node_pubkey = 2;
 
     uint64 stake = 3;
+
+    uint32 commission = 4;
   }
+
+enum WarmupCooldownRate {
+    RATE_025 = 0; // 0.25
+
+    RATE_009 = 1; // 0.09
+}
+
+message StakeDelegation {
+    bytes stake_account = 1;
+
+    bytes vote_account = 2;
+
+    uint64 stake = 3;
+
+    uint64 credits_observed = 4;
+
+    uint64 activation_epoch = 5;
+
+    uint64 deactivation_epoch = 6;
+
+    WarmupCooldownRate warmup_cooldown_rate = 7;
+}
 
 message BlockBank {
     /* Up to 300 (actually 301) most recent blockhashes (ordered from oldest to newest) */
@@ -71,6 +95,7 @@ message BlockBank {
 
     repeated PrevVoteAccount vote_accounts_t_1 = 15;
     repeated PrevVoteAccount vote_accounts_t_2 = 16;
+    repeated StakeDelegation stake_delegations_t_1 = 17;
 }
 
 message BlockContext {
