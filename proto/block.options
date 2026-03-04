@@ -10,6 +10,7 @@ fd_exec_test.BlockBank.parent_bank_hash max_size:32 fixed_length:true
 fd_exec_test.BlockBank.parent_lt_hash max_size:2048 fixed_length:true
 fd_exec_test.BlockBank.vote_accounts_t_1 type:FT_POINTER
 fd_exec_test.BlockBank.vote_accounts_t_2 type:FT_POINTER
+fd_exec_test.BlockBank.stake_delegations_t_1 type:FT_POINTER
 
 fd_exec_test.BlockContext.txns type:FT_POINTER
 fd_exec_test.BlockContext.acct_states type:FT_POINTER
