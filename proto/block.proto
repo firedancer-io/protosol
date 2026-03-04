@@ -66,6 +66,9 @@ message BlockBank {
 
     uint64 capitalization = 6;
 
+    /* uint128: nanoseconds per slot */
+    bytes ns_per_slot = 7;
+
     /*
       Constraints (all f64, must be finite and non-negative):
       initial: 0.0 - 0.15 (mainnet: 0.08)
@@ -74,31 +77,31 @@ message BlockBank {
       foundation: 0.0 - 1.0 (mainnet: 0.05)
       foundation_term: 0.0 - 100.0 (mainnet: 7.0)
     */
-    Inflation inflation = 7;
+    Inflation inflation = 8;
 
     /* 0 <= block_height <= slot */
-    uint64 block_height = 8;
+    uint64 block_height = 9;
 
     /* POH (computed right before block execution) */
-    bytes poh = 9;
+    bytes poh = 10;
 
     /* Parent bank hash */
-    bytes parent_bank_hash = 10;
+    bytes parent_bank_hash = 11;
 
     /* Parent LT hash */
-    bytes parent_lt_hash = 11;
+    bytes parent_lt_hash = 12;
 
-    uint64 parent_signature_count = 12;
+    uint64 parent_signature_count = 13;
 
-    EpochSchedule epoch_schedule = 13;
+    EpochSchedule epoch_schedule = 14;
 
-    Rent rent = 14;
+    Rent rent = 15;
 
-    FeatureSet features = 15;
+    FeatureSet features = 16;
 
-    repeated PrevVoteAccount vote_accounts_t_1 = 16;
-    repeated PrevVoteAccount vote_accounts_t_2 = 17;
-    repeated StakeDelegation stake_delegations_t_1 = 18;
+    repeated PrevVoteAccount vote_accounts_t_1 = 17;
+    repeated PrevVoteAccount vote_accounts_t_2 = 18;
+    repeated StakeDelegation stake_delegations_t_1 = 19;
 }
 
 message BlockContext {

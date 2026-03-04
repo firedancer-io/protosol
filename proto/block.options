@@ -8,6 +8,7 @@ fd_exec_test.StakeDelegation.stake_account max_size:32 fixed_length:true
 fd_exec_test.StakeDelegation.vote_account max_size:32 fixed_length:true
 
 fd_exec_test.BlockBank.blockhash_queue type:FT_POINTER
+fd_exec_test.BlockBank.ns_per_slot max_size:16 fixed_length:true
 fd_exec_test.BlockBank.poh max_size:32 fixed_length:true
 fd_exec_test.BlockBank.parent_bank_hash max_size:32 fixed_length:true
 fd_exec_test.BlockBank.parent_lt_hash max_size:2048 fixed_length:true
