@@ -58,10 +58,13 @@ message BlockBank {
 
     FeeRateGovernor fee_rate_governor = 3;
 
-    /* 0 <= parent_slot < slot. Note that the slot is derived from the clock sysvar account. */
-    uint64 parent_slot = 4;
+    /* The slot number of the block being executed */
+    uint64 slot = 4;
 
-    uint64 capitalization = 5;
+    /* 0 <= parent_slot < slot */
+    uint64 parent_slot = 5;
+
+    uint64 capitalization = 6;
 
     /*
       Constraints (all f64, must be finite and non-negative):
@@ -71,31 +74,31 @@ message BlockBank {
       foundation: 0.0 - 1.0 (mainnet: 0.05)
       foundation_term: 0.0 - 100.0 (mainnet: 7.0)
     */
-    Inflation inflation = 6;
+    Inflation inflation = 7;
 
     /* 0 <= block_height <= slot */
-    uint64 block_height = 7;
+    uint64 block_height = 8;
 
     /* POH (computed right before block execution) */
-    bytes poh = 8;
+    bytes poh = 9;
 
     /* Parent bank hash */
-    bytes parent_bank_hash = 9;
+    bytes parent_bank_hash = 10;
 
     /* Parent LT hash */
-    bytes parent_lt_hash = 10;
+    bytes parent_lt_hash = 11;
 
-    uint64 parent_signature_count = 11;
+    uint64 parent_signature_count = 12;
 
-    EpochSchedule epoch_schedule = 12;
+    EpochSchedule epoch_schedule = 13;
 
-    Rent rent = 13;
+    Rent rent = 14;
 
-    FeatureSet features = 14;
+    FeatureSet features = 15;
 
-    repeated PrevVoteAccount vote_accounts_t_1 = 15;
-    repeated PrevVoteAccount vote_accounts_t_2 = 16;
-    repeated StakeDelegation stake_delegations_t_1 = 17;
+    repeated PrevVoteAccount vote_accounts_t_1 = 16;
+    repeated PrevVoteAccount vote_accounts_t_2 = 17;
+    repeated StakeDelegation stake_delegations_t_1 = 18;
 }
 
 message BlockContext {
