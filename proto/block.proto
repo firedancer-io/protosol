@@ -10,6 +10,120 @@ message CostTracker {
     uint64 vote_cost = 2;
 }
 
+message Inflation {
+    double initial = 1;
+    double terminal = 2;
+    double taper = 3;
+    double foundation = 4;
+    double foundation_term = 5;
+}
+
+message EpochCredit {
+    uint64 epoch = 1;
+
+    uint64 credits = 2;
+
+    uint64 prev_credits = 3;
+}
+
+enum VoteAccountVersion {
+    V1_14_11 = 0;
+    V3 = 1;
+    V4 = 2;
+}
+
+message PrevVoteAccount {
+    bytes address = 1;
+
+    bytes node_pubkey = 2;
+
+    uint64 stake = 3;
+
+    uint32 commission = 4;
+
+    /* Epoch credits are only needed for recalculating partitioned
+       epoch rewards during the distribution phase. */
+    repeated EpochCredit epoch_credits = 5;
+
+    VoteAccountVersion version = 6;
+}
+
+enum WarmupCooldownRate {
+    RATE_025 = 0; // 0.25
+
+    RATE_009 = 1; // 0.09
+}
+
+message StakeDelegation {
+    bytes stake_account = 1;
+
+    bytes vote_account = 2;
+
+    uint64 stake = 3;
+
+    uint64 credits_observed = 4;
+
+    uint64 activation_epoch = 5;
+
+    uint64 deactivation_epoch = 6;
+
+    WarmupCooldownRate warmup_cooldown_rate = 7;
+}
+
+message BlockBank {
+    /* Up to 300 (actually 301) most recent blockhashes (ordered from oldest to newest) */
+    repeated BlockhashQueueEntry blockhash_queue = 1;
+
+    uint32 rbh_lamports_per_signature = 2;
+
+    FeeRateGovernor fee_rate_governor = 3;
+
+    /* The slot number of the block being executed */
+    uint64 slot = 4;
+
+    /* 0 <= parent_slot < slot */
+    uint64 parent_slot = 5;
+
+    uint64 capitalization = 6;
+
+    /* uint128: nanoseconds per slot */
+    bytes ns_per_slot = 7;
+
+    /*
+      Constraints (all f64, must be finite and non-negative):
+      initial: 0.0 - 0.15 (mainnet: 0.08)
+      terminal: 0.0 - initial (mainnet: 0.015)
+      taper: 0.0 - 1.0 (mainnet: 0.15)
+      foundation: 0.0 - 1.0 (mainnet: 0.05)
+      foundation_term: 0.0 - 100.0 (mainnet: 7.0)
+    */
+    Inflation inflation = 8;
+
+    /* 0 <= block_height <= slot */
+    uint64 block_height = 9;
+
+    /* POH (computed right before block execution) */
+    bytes poh = 10;
+
+    /* Parent bank hash */
+    bytes parent_bank_hash = 11;
+
+    /* Parent LT hash */
+    bytes parent_lt_hash = 12;
+
+    uint64 parent_signature_count = 13;
+
+    EpochSchedule epoch_schedule = 14;
+
+    Rent rent = 15;
+
+    FeatureSet features = 16;
+
+    repeated PrevVoteAccount vote_accounts_t_1 = 17;
+    repeated PrevVoteAccount vote_accounts_t_2 = 18;
+    repeated StakeDelegation stake_delegations_t_1 = 19;
+}
+
 message BlockContext {
     // All transactions in this microblock (can be 0)
     repeated SanitizedTransaction txns = 1;
@@ -17,14 +131,10 @@ message BlockContext {
     // Input account states
     repeated AcctState acct_states = 2;
 
-    // The blockhash queue
-    repeated bytes blockhash_queue = 3;
+    reserved 3, 4, 5;
 
-    // Slot context (contains slot number)
-    SlotContext slot_ctx = 4;
-
-    // Epoch context (contains feature info)
-    EpochContext epoch_ctx = 5;
+    // Bank fields for the block fuzzer
+    BlockBank bank = 6;
 }
 
 message LeaderScheduleEffects {
