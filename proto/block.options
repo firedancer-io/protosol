@@ -3,6 +3,7 @@ block.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
 
 fd_exec_test.PrevVoteAccount.address max_size:32 fixed_length:true
 fd_exec_test.PrevVoteAccount.node_pubkey max_size:32 fixed_length:true
+fd_exec_test.PrevVoteAccount.epoch_credits type:FT_POINTER
 
 fd_exec_test.StakeDelegation.stake_account max_size:32 fixed_length:true
 fd_exec_test.StakeDelegation.vote_account max_size:32 fixed_length:true

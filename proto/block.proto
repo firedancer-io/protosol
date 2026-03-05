@@ -18,6 +18,14 @@ message Inflation {
     double foundation_term = 5;
 }
 
+message EpochCredit {
+    uint64 epoch = 1;
+
+    uint64 credits = 2;
+
+    uint64 prev_credits = 3;
+}
+
 message PrevVoteAccount {
     bytes address = 1;
 
@@ -26,7 +34,11 @@ message PrevVoteAccount {
     uint64 stake = 3;
 
     uint32 commission = 4;
-  }
+
+    /* Epoch credits are only needed for recalculating partitioned
+       epoch rewards during the distribution phase. */
+    repeated EpochCredit epoch_credits = 5;
+}
 
 enum WarmupCooldownRate {
     RATE_025 = 0; // 0.25
