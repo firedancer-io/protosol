@@ -1,0 +1,4 @@
+gossip.proto package:"fd_exec_test"
+gossip.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
+
+fd_exec_test.GossipMessageBinary.data type:FT_POINTER
