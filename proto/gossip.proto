@@ -1,0 +1,19 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+import "metadata.proto";
+
+// Raw gossip wire message bytes for deserialization testing
+message GossipMessageBinary {
+  bytes data = 1;
+}
+
+// Whether a gossip message was accepted after deserialization + sanitize
+message AcceptsGossipMessage {
+  bool valid = 1;
+}
+
+message GossipMessageFixture {
+  FixtureMetadata metadata = 1;
+  GossipMessageBinary input = 2;
+  AcceptsGossipMessage output = 3;
+}
