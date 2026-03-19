@@ -1,0 +1,23 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+import "metadata.proto";
+
+// Snapshot deserialization input with explicit version selection
+message SnapshotContext {
+  // Snapshot format version (e.g. maps to DeserializableVersionedBank variants)
+  uint64 version = 1;
+
+  // Raw serialized snapshot bank data (bincode)
+  bytes data = 2;
+}
+
+// Deserialized snapshot bank fields for comparison
+message SnapshotEffects {
+  int32 result = 1;
+}
+
+message SnapshotFixture {
+  FixtureMetadata metadata = 1;
+  SnapshotContext input = 2;
+  SnapshotEffects output = 3;
+}
