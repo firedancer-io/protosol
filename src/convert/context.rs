@@ -11,13 +11,3 @@ impl From<&protos::EpochSchedule> for solana_epoch_schedule::EpochSchedule {
         }
     }
 }
-
-impl From<&protos::Rent> for solana_rent::Rent {
-    fn from(value: &protos::Rent) -> Self {
-        solana_rent::Rent {
-            lamports_per_byte_year: value.lamports_per_byte_year,
-            exemption_threshold: value.exemption_threshold,
-            burn_percent: value.burn_percent as u8,
-        }
-    }
-}

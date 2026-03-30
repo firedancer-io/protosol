@@ -115,7 +115,7 @@ message BlockBank {
 
     EpochSchedule epoch_schedule = 14;
 
-    Rent rent = 15;
+    reserved 15;
 
     FeatureSet features = 16;
 
