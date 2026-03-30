@@ -56,17 +56,6 @@ message EpochSchedule {
   uint64 first_normal_slot = 5;
 }
 
-message Rent {
-  // Rental rate in lamports/byte-year.
-  uint64 lamports_per_byte_year = 1;
-
-  // Amount of time (in years) a balance must include rent for the account to be rent exempt.
-  double exemption_threshold = 2;
-
-  // The percentage of collected rent that is burned.
-  uint32 burn_percent = 3;
-}
-
 // A single entry in the blockhash queue.
 message BlockhashQueueEntry {
   bytes blockhash = 1;
