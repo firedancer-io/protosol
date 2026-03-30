@@ -461,7 +461,6 @@ dependencies = [
  "solana-inflation",
  "solana-message",
  "solana-pubkey",
- "solana-rent",
 ]
 
 [[package]]
@@ -742,15 +741,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1b06bd918d60111ee1f97de817113e2040ca0cedb740099ee8d646233f6b906c"
 dependencies = [
  "solana-address",
-]
-
-[[package]]
-name = "solana-rent"
-version = "3.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b702d8c43711e3c8a9284a4f1bbc6a3de2553deb25b0c8142f9a44ef0ce5ddc1"
-dependencies = [
- "solana-sdk-macro",
 ]
 
 [[package]]
