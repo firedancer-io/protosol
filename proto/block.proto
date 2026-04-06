@@ -54,22 +54,6 @@ enum WarmupCooldownRate {
     RATE_009 = 1; // 0.09
 }
 
-message StakeDelegation {
-    bytes stake_account = 1;
-
-    bytes vote_account = 2;
-
-    uint64 stake = 3;
-
-    uint64 credits_observed = 4;
-
-    uint64 activation_epoch = 5;
-
-    uint64 deactivation_epoch = 6;
-
-    WarmupCooldownRate warmup_cooldown_rate = 7;
-}
-
 message BlockBank {
     /* Up to 300 (actually 301) most recent blockhashes (ordered from oldest to newest) */
     repeated BlockhashQueueEntry blockhash_queue = 1;
@@ -121,7 +105,7 @@ message BlockBank {
 
     repeated PrevVoteAccount vote_accounts_t_1 = 17;
     repeated PrevVoteAccount vote_accounts_t_2 = 18;
-    repeated StakeDelegation stake_delegations_t_1 = 19;
+    reserved 19;
 }
 
 message BlockContext {

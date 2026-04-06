@@ -277,23 +277,6 @@ pub struct PrevVoteAccount {
     pub version: i32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StakeDelegation {
-    #[prost(bytes = "vec", tag = "1")]
-    pub stake_account: ::prost::alloc::vec::Vec<u8>,
-    #[prost(bytes = "vec", tag = "2")]
-    pub vote_account: ::prost::alloc::vec::Vec<u8>,
-    #[prost(uint64, tag = "3")]
-    pub stake: u64,
-    #[prost(uint64, tag = "4")]
-    pub credits_observed: u64,
-    #[prost(uint64, tag = "5")]
-    pub activation_epoch: u64,
-    #[prost(uint64, tag = "6")]
-    pub deactivation_epoch: u64,
-    #[prost(enumeration = "WarmupCooldownRate", tag = "7")]
-    pub warmup_cooldown_rate: i32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BlockBank {
     /// Up to 300 (actually 301) most recent blockhashes (ordered from oldest to newest)
     #[prost(message, repeated, tag = "1")]
@@ -344,8 +327,6 @@ pub struct BlockBank {
     pub vote_accounts_t_1: ::prost::alloc::vec::Vec<PrevVoteAccount>,
     #[prost(message, repeated, tag = "18")]
     pub vote_accounts_t_2: ::prost::alloc::vec::Vec<PrevVoteAccount>,
-    #[prost(message, repeated, tag = "19")]
-    pub stake_delegations_t_1: ::prost::alloc::vec::Vec<StakeDelegation>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BlockContext {
