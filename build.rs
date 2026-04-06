@@ -109,6 +109,7 @@ mod regen {
                 files.push(path);
             }
         }
+        files.sort();
         Ok(files)
     }
 
@@ -156,9 +157,18 @@ mod regen {
     }
 
     /// Copy generated .rs files from OUT_DIR back to src/generated/ for check-in.
+    /// Cleans existing .rs files first to remove stale outputs from renamed/deleted schemas.
     pub fn copy_to_source(out_dir: &Path, manifest_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
         let generated_dir = manifest_dir.join("src").join("generated");
         fs::create_dir_all(&generated_dir)?;
+
+        // Remove existing generated files to avoid stale outputs
+        for entry in fs::read_dir(&generated_dir)? {
+            let path = entry?.path();
+            if path.extension().and_then(|e| e.to_str()) == Some("rs") {
+                fs::remove_file(&path)?;
+            }
+        }
 
         for entry in fs::read_dir(out_dir)? {
             let path = entry?.path();

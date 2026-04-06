@@ -1,5 +1,8 @@
 name: Build protosol
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
@@ -41,5 +44,5 @@ jobs:
 
       - name: Verify generated code is up to date
         run: |
-          cargo build --features regenerate
+          cargo build --locked --features regenerate
           git diff --exit-code src/generated/
