@@ -24,11 +24,12 @@ fn maybe_normalize_windows_path(path: &Path) -> PathBuf {
 /// Emit cargo link metadata for a directory of schema files.
 /// This sets `cargo:rerun-if-changed` and `cargo:{env_var}=` for downstream crates.
 fn emit_link_metadata(
+    manifest_dir: &Path,
     dir: &Path,
     env_var: &str,
     extension: &str,
 ) -> Result<PathBuf, Box<dyn std::error::Error>> {
-    let abs = env::current_dir()?
+    let abs = manifest_dir
         .join(dir)
         .canonicalize()
         .map(|p| maybe_normalize_windows_path(&p))?;
@@ -97,8 +98,8 @@ mod regen {
         );
     }
 
-    fn get_files(dir: &Path, extension: &str) -> Result<Vec<PathBuf>, Box<dyn std::error::Error>> {
-        let abs = env::current_dir()?
+    fn get_files(manifest_dir: &Path, dir: &Path, extension: &str) -> Result<Vec<PathBuf>, Box<dyn std::error::Error>> {
+        let abs = manifest_dir
             .join(dir)
             .canonicalize()
             .map(|p| maybe_normalize_windows_path(&p))?;
@@ -113,10 +114,10 @@ mod regen {
         Ok(files)
     }
 
-    pub fn compile_protos(out_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn compile_protos(manifest_dir: &Path, out_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
         let proto_dir = PathBuf::from("proto");
-        let proto_files = get_files(&proto_dir, "proto")?;
-        let abs_proto_dir = env::current_dir()?.join(&proto_dir).canonicalize()?;
+        let proto_files = get_files(manifest_dir, &proto_dir, "proto")?;
+        let abs_proto_dir = manifest_dir.join(&proto_dir).canonicalize()?;
 
         let protoc_path = get_protoc_path()?;
         let mut config = prost_build::Config::new();
@@ -133,9 +134,9 @@ mod regen {
         Ok(())
     }
 
-    pub fn compile_flatbuffers(out_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn compile_flatbuffers(manifest_dir: &Path, out_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
         let flatbuffer_dir = PathBuf::from("flatbuffers");
-        let flatbuffer_files = get_files(&flatbuffer_dir, "fbs")?;
+        let flatbuffer_files = get_files(manifest_dir, &flatbuffer_dir, "fbs")?;
 
         let flatc_path = get_flatc_path()?;
         let flatc = flatc_rust::Flatc::from_path(&flatc_path);
@@ -190,19 +191,20 @@ mod regen {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
+
     // Always emit link metadata for downstream crates
-    emit_link_metadata(Path::new("proto"), "PROTO_DIR", "proto")?;
-    emit_link_metadata(Path::new("flatbuffers"), "FLATBUFFERS_DIR", "fbs")?;
+    emit_link_metadata(&manifest_dir, Path::new("proto"), "PROTO_DIR", "proto")?;
+    emit_link_metadata(&manifest_dir, Path::new("flatbuffers"), "FLATBUFFERS_DIR", "fbs")?;
 
     // Regeneration: rebuild from proto/fbs sources directly into src/generated/
     #[cfg(feature = "regenerate")]
     {
-        let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
         let generated_dir = manifest_dir.join("src").join("generated");
         regen::print_pinned_versions(&manifest_dir);
         regen::clean_generated(&generated_dir)?;
-        regen::compile_protos(&generated_dir)?;
-        regen::compile_flatbuffers(&generated_dir)?;
+        regen::compile_protos(&manifest_dir, &generated_dir)?;
+        regen::compile_flatbuffers(&manifest_dir, &generated_dir)?;
         println!("cargo:warning=protosol: regenerated src/generated/ from proto/flatbuffers sources");
     }
 
