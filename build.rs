@@ -156,28 +156,15 @@ mod regen {
         Ok(())
     }
 
-    /// Copy generated .rs files from OUT_DIR back to src/generated/ for check-in.
-    /// Cleans existing .rs files first to remove stale outputs from renamed/deleted schemas.
-    pub fn copy_to_source(out_dir: &Path, manifest_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
-        let generated_dir = manifest_dir.join("src").join("generated");
-        fs::create_dir_all(&generated_dir)?;
-
-        // Remove existing generated files to avoid stale outputs
-        for entry in fs::read_dir(&generated_dir)? {
+    /// Remove existing .rs files from src/generated/ to avoid stale outputs.
+    pub fn clean_generated(generated_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
+        fs::create_dir_all(generated_dir)?;
+        for entry in fs::read_dir(generated_dir)? {
             let path = entry?.path();
             if path.extension().and_then(|e| e.to_str()) == Some("rs") {
                 fs::remove_file(&path)?;
             }
         }
-
-        for entry in fs::read_dir(out_dir)? {
-            let path = entry?.path();
-            if path.extension().and_then(|e| e.to_str()) == Some("rs") {
-                let dest = generated_dir.join(path.file_name().unwrap());
-                fs::copy(&path, &dest)?;
-            }
-        }
-
         Ok(())
     }
 
@@ -207,15 +194,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     emit_link_metadata(Path::new("proto"), "PROTO_DIR", "proto")?;
     emit_link_metadata(Path::new("flatbuffers"), "FLATBUFFERS_DIR", "fbs")?;
 
-    // Regeneration: rebuild from proto/fbs sources and update src/generated/
+    // Regeneration: rebuild from proto/fbs sources directly into src/generated/
     #[cfg(feature = "regenerate")]
     {
-        let out_dir = PathBuf::from(env::var("OUT_DIR")?);
         let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
+        let generated_dir = manifest_dir.join("src").join("generated");
         regen::print_pinned_versions(&manifest_dir);
-        regen::compile_protos(&out_dir)?;
-        regen::compile_flatbuffers(&out_dir)?;
-        regen::copy_to_source(&out_dir, &manifest_dir)?;
+        regen::clean_generated(&generated_dir)?;
+        regen::compile_protos(&generated_dir)?;
+        regen::compile_flatbuffers(&generated_dir)?;
         println!("cargo:warning=protosol: regenerated src/generated/ from proto/flatbuffers sources");
     }
 
