@@ -109,20 +109,25 @@ This crate is specifically designed for use with the anza-xyz/agave repository's
 - **Performance Testing**: Measure execution costs and resource usage
 - **Compatibility Testing**: Ensure different SVM implementations produce identical results
 
+## Usage
+
+Add to your `Cargo.toml`:
+
+```toml
+[dependencies]
+protosol = "5.2.0"
+```
+
+No system dependencies needed — pre-generated Rust code is included.
+
 ## Development
-
-### Prerequisites
-
-- Rust toolchain (stable)
-- CMake, Make, and a C++ compiler (for building protoc and flatc from source)
 
 ### Setup
 
 ```bash
 git clone --recurse-submodules https://github.com/firedancer-io/protosol.git
 cd protosol
-./deps.sh              # Builds protoc and flatc into opt/bin/
-cargo build
+cargo build                # Uses pre-generated code, no tools needed
 ```
 
 ### Pre-commit hooks
@@ -131,27 +136,31 @@ cargo build
 git config core.hooksPath .githooks
 ```
 
-This enables pre-commit checks for `cargo fmt`, `cargo clippy`, and `Cargo.lock` freshness.
+### Modifying proto/flatbuffers schemas
+
+If you change files in `proto/` or `flatbuffers/`, you must regenerate `src/generated/`:
+
+```bash
+./deps.sh    # Builds protoc + flatc from vendored submodules into opt/bin/
+cargo build --features regenerate
+```
+
+Pinned compiler versions are defined in `.gitmodules` — this is the single source of truth. The `deps.sh` script builds from these vendored submodules. Prerequisites for `deps.sh`: CMake, Make, C++ compiler.
 
 ### CI
 
-CI runs on every push and pull request. It checks:
+CI runs on every push and pull request:
 
 - `cargo fmt --check`
-- `cargo build --release --locked` (default and `solana-types` features, lockfile enforced)
+- `cargo build --release --locked` (default and `solana-types` features)
 - `cargo clippy --all-features --locked -- -D warnings`
-
-### Regenerating Protobuf / FlatBuffer Code
-
-Code is automatically generated during `cargo build`. To force regeneration:
-
-```bash
-cargo clean && cargo build
-```
+- Regenerates from source and verifies `src/generated/` is up to date
 
 ## File Structure
 
 ```
+src/generated/           # Pre-generated Rust code (checked in, no tools needed to build)
+
 proto/
 ├── block.proto          # Block execution context and effects
 ├── context.proto        # Account states and execution context
@@ -171,8 +180,8 @@ flatbuffers/
 └── metadata.fbs         # Test fixture metadata
 
 shlr/
-├── flatbuffers/         # Vendored flatbuffers (submodule)
-└── protobuf/            # Vendored protobuf (submodule)
+├── flatbuffers/         # Vendored flatbuffers compiler (submodule, pinned in .gitmodules)
+└── protobuf/            # Vendored protobuf compiler (submodule, pinned in .gitmodules)
 ```
 
 ## License

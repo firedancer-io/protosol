@@ -1,4 +1,3 @@
-extern crate flatc_rust;
 use std::{
     env, fs,
     path::{Path, PathBuf},
@@ -22,133 +21,215 @@ fn maybe_normalize_windows_path(path: &Path) -> PathBuf {
     }
 }
 
-/// Get the path to protoc, checking multiple sources:
-/// 1. PROTOC_EXECUTABLE environment variable
-/// 2. PROTOSOL_PROTOC environment variable
-/// 3. opt/bin/protoc relative to CARGO_MANIFEST_DIR (if it exists)
-/// 4. Panic if not found
-fn get_protoc_path() -> Result<PathBuf, Box<dyn std::error::Error>> {
-    // Check explicit PROTOC_EXECUTABLE env var first
-    if let Ok(path) = env::var("PROTOC_EXECUTABLE") {
-        return Ok(PathBuf::from(path));
-    }
-
-    // Check PROTOSOL_PROTOC env var
-    if let Ok(path) = env::var("PROTOSOL_PROTOC") {
-        return Ok(PathBuf::from(path));
-    }
-
-    // Check for opt/bin/protoc relative to manifest dir
-    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
-    let local_protoc = manifest_dir.join("opt").join("bin").join("protoc");
-    if local_protoc.exists() {
-        return Ok(local_protoc);
-    }
-
-    panic!("protoc not found");
-}
-
-/// Get the path to flatc, checking multiple sources:
-/// 1. FLATC_EXECUTABLE environment variable
-/// 2. PROTOSOL_FLATC environment variable
-/// 3. opt/bin/flatc relative to CARGO_MANIFEST_DIR (if it exists)
-/// 4. Panic if not found
-fn get_flatc_path() -> Result<PathBuf, Box<dyn std::error::Error>> {
-    // Check explicit FLATC_EXECUTABLE env var first
-    if let Ok(path) = env::var("FLATC_EXECUTABLE") {
-        return Ok(PathBuf::from(path));
-    }
-
-    // Check PROTOSOL_FLATC env var
-    if let Ok(path) = env::var("PROTOSOL_FLATC") {
-        return Ok(PathBuf::from(path));
-    }
-
-    // Check for opt/bin/flatc relative to manifest dir
-    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
-    let local_flatc = manifest_dir.join("opt").join("bin").join("flatc");
-    if local_flatc.exists() {
-        return Ok(local_flatc);
-    }
-
-    panic!("flatc not found");
-}
-
-fn monitor_and_get_files(
-    dir: &PathBuf,
+/// Emit cargo link metadata for a directory of schema files.
+/// This sets `cargo:rerun-if-changed` and `cargo:{env_var}=` for downstream crates.
+fn emit_link_metadata(
+    dir: &Path,
     env_var: &str,
     extension: &str,
-) -> Result<(Vec<PathBuf>, PathBuf), Box<dyn std::error::Error>> {
-    let abs = env::current_dir()
-        .expect("cwd")
+) -> Result<PathBuf, Box<dyn std::error::Error>> {
+    let abs = env::current_dir()?
         .join(dir)
         .canonicalize()
-        .map(|p| maybe_normalize_windows_path(&p))
-        .expect("canonicalize dir");
+        .map(|p| maybe_normalize_windows_path(&p))?;
 
     println!("cargo:rerun-if-changed={}", abs.display());
     println!("cargo:{}={}", env_var, abs.display());
 
-    let mut files = vec![];
     for entry in fs::read_dir(&abs)? {
         let path = entry?.path();
         if path.extension().and_then(|e| e.to_str()) == Some(extension) {
             println!("cargo:rerun-if-changed={}", path.display());
-            files.push(path);
         }
     }
 
-    Ok((files, abs))
+    Ok(abs)
 }
 
-fn compile_protos() -> Result<(), Box<dyn std::error::Error>> {
-    let proto_dir = PathBuf::from("proto");
-    let (proto_files, abs) = monitor_and_get_files(&proto_dir, "PROTO_DIR", "proto")?;
+/// Copy all .rs files from src/generated/ to OUT_DIR.
+#[cfg(not(feature = "regenerate"))]
+fn copy_pregenerated(manifest_dir: &Path, out_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
+    let generated_dir = manifest_dir.join("src").join("generated");
+    println!("cargo:rerun-if-changed={}", generated_dir.display());
 
-    let out_dir = PathBuf::from(env::var("OUT_DIR")?);
-    let mut config = prost_build::Config::new();
-    let protoc_path = get_protoc_path()?;
-    config.protoc_executable(protoc_path);
-    config.out_dir(&out_dir);
-    config.compile_protos(
-        &proto_files
-            .iter()
-            .map(|p| p.display().to_string())
-            .collect::<Vec<_>>(),
-        &[abs],
-    )?;
+    for entry in fs::read_dir(&generated_dir)? {
+        let path = entry?.path();
+        if path.extension().and_then(|e| e.to_str()) == Some("rs") {
+            let dest = out_dir.join(path.file_name().unwrap());
+            fs::copy(&path, &dest)?;
+        }
+    }
 
     Ok(())
 }
 
-fn compile_flatbuffers() -> Result<(), Box<dyn std::error::Error>> {
-    let flatbuffer_dir = PathBuf::from("flatbuffers");
-    let (flatbuffer_files, _) = monitor_and_get_files(&flatbuffer_dir, "FLATBUFFERS_DIR", "fbs")?;
+// --- Regeneration support (requires protoc + flatc) ---
 
-    let out_dir = PathBuf::from(env::var("OUT_DIR")?);
+#[cfg(feature = "regenerate")]
+mod regen {
+    use std::{env, fs, path::{Path, PathBuf}};
+    use super::maybe_normalize_windows_path;
 
-    // Use custom flatc from multiple sources or fall back to system
-    let flatc_path = get_flatc_path()?;
-    let flatc = flatc_rust::Flatc::from_path(&flatc_path);
-    flatc.check()?;
-    flatc.run(flatc_rust::Args {
-        lang: "rust",
-        inputs: flatbuffer_files
-            .iter()
-            .map(|p| p.as_path())
-            .collect::<Vec<_>>()
-            .as_slice(),
-        out_dir: out_dir.as_path(),
-        includes: &[flatbuffer_dir.as_path()],
-        extra: &["--gen-object-api", "--gen-compare"],
-        ..Default::default()
-    })?;
+    /// Get the path to protoc, checking multiple sources:
+    /// 1. PROTOC_EXECUTABLE environment variable
+    /// 2. PROTOSOL_PROTOC environment variable
+    /// 3. opt/bin/protoc relative to CARGO_MANIFEST_DIR
+    fn get_protoc_path() -> Result<PathBuf, Box<dyn std::error::Error>> {
+        if let Ok(path) = env::var("PROTOC_EXECUTABLE") {
+            return Ok(PathBuf::from(path));
+        }
+        if let Ok(path) = env::var("PROTOSOL_PROTOC") {
+            return Ok(PathBuf::from(path));
+        }
+        let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
+        let local_protoc = manifest_dir.join("opt").join("bin").join("protoc");
+        if local_protoc.exists() {
+            return Ok(local_protoc);
+        }
+        panic!(
+            "protoc not found. Install it via ./deps.sh or set PROTOC_EXECUTABLE. \
+             See .gitmodules for the pinned version."
+        );
+    }
 
-    Ok(())
+    /// Get the path to flatc, checking multiple sources:
+    /// 1. FLATC_EXECUTABLE environment variable
+    /// 2. PROTOSOL_FLATC environment variable
+    /// 3. opt/bin/flatc relative to CARGO_MANIFEST_DIR
+    fn get_flatc_path() -> Result<PathBuf, Box<dyn std::error::Error>> {
+        if let Ok(path) = env::var("FLATC_EXECUTABLE") {
+            return Ok(PathBuf::from(path));
+        }
+        if let Ok(path) = env::var("PROTOSOL_FLATC") {
+            return Ok(PathBuf::from(path));
+        }
+        let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
+        let local_flatc = manifest_dir.join("opt").join("bin").join("flatc");
+        if local_flatc.exists() {
+            return Ok(local_flatc);
+        }
+        panic!(
+            "flatc not found. Install it via ./deps.sh or set FLATC_EXECUTABLE. \
+             See .gitmodules for the pinned version."
+        );
+    }
+
+    fn get_files(dir: &Path, extension: &str) -> Result<Vec<PathBuf>, Box<dyn std::error::Error>> {
+        let abs = env::current_dir()?
+            .join(dir)
+            .canonicalize()
+            .map(|p| maybe_normalize_windows_path(&p))?;
+        let mut files = vec![];
+        for entry in fs::read_dir(&abs)? {
+            let path = entry?.path();
+            if path.extension().and_then(|e| e.to_str()) == Some(extension) {
+                files.push(path);
+            }
+        }
+        Ok(files)
+    }
+
+    pub fn compile_protos(out_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
+        let proto_dir = PathBuf::from("proto");
+        let proto_files = get_files(&proto_dir, "proto")?;
+        let abs_proto_dir = env::current_dir()?.join(&proto_dir).canonicalize()?;
+
+        let protoc_path = get_protoc_path()?;
+        let mut config = prost_build::Config::new();
+        config.protoc_executable(protoc_path);
+        config.out_dir(out_dir);
+        config.compile_protos(
+            &proto_files
+                .iter()
+                .map(|p| p.display().to_string())
+                .collect::<Vec<_>>(),
+            &[abs_proto_dir],
+        )?;
+
+        Ok(())
+    }
+
+    pub fn compile_flatbuffers(out_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
+        let flatbuffer_dir = PathBuf::from("flatbuffers");
+        let flatbuffer_files = get_files(&flatbuffer_dir, "fbs")?;
+
+        let flatc_path = get_flatc_path()?;
+        let flatc = flatc_rust::Flatc::from_path(&flatc_path);
+        flatc.check()?;
+        flatc.run(flatc_rust::Args {
+            lang: "rust",
+            inputs: flatbuffer_files
+                .iter()
+                .map(|p| p.as_path())
+                .collect::<Vec<_>>()
+                .as_slice(),
+            out_dir: out_dir.as_ref(),
+            includes: &[flatbuffer_dir.as_path()],
+            extra: &["--gen-object-api", "--gen-compare"],
+            ..Default::default()
+        })?;
+
+        Ok(())
+    }
+
+    /// Copy generated .rs files from OUT_DIR back to src/generated/ for check-in.
+    pub fn copy_to_source(out_dir: &Path, manifest_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
+        let generated_dir = manifest_dir.join("src").join("generated");
+        fs::create_dir_all(&generated_dir)?;
+
+        for entry in fs::read_dir(out_dir)? {
+            let path = entry?.path();
+            if path.extension().and_then(|e| e.to_str()) == Some("rs") {
+                let dest = generated_dir.join(path.file_name().unwrap());
+                fs::copy(&path, &dest)?;
+            }
+        }
+
+        Ok(())
+    }
+
+    /// Parse .gitmodules and print pinned versions as cargo warnings for traceability.
+    pub fn print_pinned_versions(manifest_dir: &Path) {
+        let gitmodules_path = manifest_dir.join(".gitmodules");
+        if let Ok(content) = fs::read_to_string(&gitmodules_path) {
+            let mut current_name = String::new();
+            for line in content.lines() {
+                let trimmed = line.trim();
+                if trimmed.starts_with("[submodule ") {
+                    current_name = trimmed
+                        .trim_start_matches("[submodule \"")
+                        .trim_end_matches("\"]")
+                        .to_string();
+                } else if trimmed.starts_with("branch = ") {
+                    let branch = trimmed.trim_start_matches("branch = ");
+                    println!("cargo:warning=protosol: {current_name} pinned to {branch} (from .gitmodules)");
+                }
+            }
+        }
+    }
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    compile_protos()?;
-    compile_flatbuffers()?;
+    let out_dir = PathBuf::from(env::var("OUT_DIR")?);
+    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
+
+    // Always emit link metadata for downstream crates
+    emit_link_metadata(Path::new("proto"), "PROTO_DIR", "proto")?;
+    emit_link_metadata(Path::new("flatbuffers"), "FLATBUFFERS_DIR", "fbs")?;
+
+    #[cfg(feature = "regenerate")]
+    {
+        regen::print_pinned_versions(&manifest_dir);
+        regen::compile_protos(&out_dir)?;
+        regen::compile_flatbuffers(&out_dir)?;
+        regen::copy_to_source(&out_dir, &manifest_dir)?;
+        println!("cargo:warning=protosol: regenerated src/generated/ from proto/flatbuffers sources");
+    }
+
+    #[cfg(not(feature = "regenerate"))]
+    {
+        copy_pregenerated(&manifest_dir, &out_dir)?;
+    }
+
     Ok(())
 }

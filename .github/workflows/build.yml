@@ -30,7 +30,7 @@ jobs:
       - name: Check formatting
         run: cargo fmt --check
 
-      - name: Build (release, default)
+      - name: Build (release, default — uses pre-generated code)
         run: cargo build --release --locked
 
       - name: Build (release, solana-types)
@@ -38,3 +38,8 @@ jobs:
 
       - name: Clippy
         run: cargo clippy --all-features --locked -- -D warnings
+
+      - name: Verify generated code is up to date
+        run: |
+          cargo build --features regenerate
+          git diff --exit-code src/generated/

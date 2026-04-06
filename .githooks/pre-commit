@@ -9,3 +9,12 @@ cargo metadata --locked >/dev/null
 
 echo "[pre-commit] Running clippy..."
 cargo clippy --all-features --locked -- -D warnings
+
+# Check if proto/fbs schemas changed but generated files didn't
+SCHEMA_CHANGED=$(git diff --cached --name-only -- proto/ flatbuffers/ | head -1)
+GEN_CHANGED=$(git diff --cached --name-only -- src/generated/ | head -1)
+if [ -n "$SCHEMA_CHANGED" ] && [ -z "$GEN_CHANGED" ]; then
+  echo "[pre-commit] ERROR: proto/flatbuffers schemas changed but src/generated/ was not updated."
+  echo "Run: cargo build --features regenerate"
+  exit 1
+fi

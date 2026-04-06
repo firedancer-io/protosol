@@ -10,10 +10,11 @@ keywords = ["solana", "protobuf", "sealevel", "fuzzing"]
 categories = ["encoding"]
 readme = "README.md"
 links = "protosol"
+exclude = ["shlr/", "opt/", ".github/", ".githooks/"]
 
 [build-dependencies]
-prost-build = "0.13.1"
-flatc-rust = "0.2.0"
+prost-build = { version = "0.13.1", optional = true }
+flatc-rust = { version = "0.2.0", optional = true }
 
 [dependencies]
 prost = "0.11.9"
@@ -26,6 +27,7 @@ solana-inflation = { version = "3.0.0", optional = true }
 solana-message = { version = "3.1.0", optional = true }
 
 [features]
+regenerate = ["prost-build", "flatc-rust"]
 solana-types = [
     "solana-account",
     "solana-pubkey",
