@@ -5,4 +5,4 @@
 [submodule "shlr/protobuf"]
 	path = shlr/protobuf
 	url = https://github.com/protocolbuffers/protobuf
-    branch = v34.0
+    branch = v34.1
