@@ -138,9 +138,8 @@ This enables pre-commit checks for `cargo fmt`, `cargo clippy`, and `Cargo.lock`
 CI runs on every push and pull request. It checks:
 
 - `cargo fmt --check`
-- `cargo update --workspace --locked` (Cargo.lock up to date)
-- `cargo build --release` (default and `solana-types` features)
-- `cargo clippy --all-features -- -D warnings`
+- `cargo build --release --locked` (default and `solana-types` features, lockfile enforced)
+- `cargo clippy --all-features --locked -- -D warnings`
 
 ### Regenerating Protobuf / FlatBuffer Code
 

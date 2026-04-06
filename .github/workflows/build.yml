@@ -30,14 +30,11 @@ jobs:
       - name: Check formatting
         run: cargo fmt --check
 
-      - name: Check Cargo.lock is up to date
-        run: cargo update --workspace --locked
-
       - name: Build (release, default)
-        run: cargo build --release
+        run: cargo build --release --locked
 
       - name: Build (release, solana-types)
-        run: cargo build --release -F solana-types
+        run: cargo build --release --locked -F solana-types
 
       - name: Clippy
-        run: cargo clippy --all-features -- -D warnings
+        run: cargo clippy --all-features --locked -- -D warnings
