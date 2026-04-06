@@ -142,7 +142,7 @@ If you change files in `proto/` or `flatbuffers/`, you must regenerate `src/gene
 
 ```bash
 ./deps.sh    # Builds protoc + flatc from vendored submodules into opt/bin/
-cargo build --features regenerate
+cargo build --features regenerate --locked
 ```
 
 The exact pinned compiler revisions come from the submodule commits recorded in this repository (`.gitmodules` records their URL and branch hint). The `deps.sh` script builds from these vendored submodules. Prerequisites for `deps.sh`: CMake, Make, C++ compiler.

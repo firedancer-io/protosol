@@ -2,6 +2,54 @@ pub mod protos {
     include!("generated/org.solana.sealevel.v1.rs");
 }
 
+#[allow(
+    unused_imports,
+    dead_code,
+    clippy::default_trait_access,
+    clippy::derivable_impls,
+    clippy::needless_lifetimes,
+    clippy::used_underscore_binding,
+    clippy::extra_unused_lifetimes,
+    clippy::missing_safety_doc,
+    unsafe_code
+)]
+pub mod context_generated {
+    include!("generated/context_generated.rs");
+    pub use self::org::solana::sealevel::v_2::*;
+}
+
+#[allow(
+    unused_imports,
+    dead_code,
+    clippy::default_trait_access,
+    clippy::derivable_impls,
+    clippy::needless_lifetimes,
+    clippy::used_underscore_binding,
+    clippy::extra_unused_lifetimes,
+    clippy::missing_safety_doc,
+    unsafe_code
+)]
+pub mod elf_generated {
+    include!("generated/elf_generated.rs");
+    pub use self::org::solana::sealevel::v_2::*;
+}
+
+#[allow(
+    unused_imports,
+    dead_code,
+    clippy::default_trait_access,
+    clippy::derivable_impls,
+    clippy::needless_lifetimes,
+    clippy::used_underscore_binding,
+    clippy::extra_unused_lifetimes,
+    clippy::missing_safety_doc,
+    unsafe_code
+)]
+pub mod metadata_generated {
+    include!("generated/metadata_generated.rs");
+    pub use self::org::solana::sealevel::v_2::*;
+}
+
 #[cfg(feature = "solana-types")]
 pub mod convert;
 

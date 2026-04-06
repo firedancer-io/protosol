@@ -51,8 +51,11 @@ fn emit_link_metadata(
 
 #[cfg(feature = "regenerate")]
 mod regen {
-    use std::{env, fs, path::{Path, PathBuf}};
     use super::maybe_normalize_windows_path;
+    use std::{
+        env, fs,
+        path::{Path, PathBuf},
+    };
 
     /// Get the path to protoc, checking multiple sources:
     /// 1. PROTOC_EXECUTABLE environment variable
@@ -98,7 +101,11 @@ mod regen {
         );
     }
 
-    fn get_files(manifest_dir: &Path, dir: &Path, extension: &str) -> Result<Vec<PathBuf>, Box<dyn std::error::Error>> {
+    fn get_files(
+        manifest_dir: &Path,
+        dir: &Path,
+        extension: &str,
+    ) -> Result<Vec<PathBuf>, Box<dyn std::error::Error>> {
         let abs = manifest_dir
             .join(dir)
             .canonicalize()
@@ -114,10 +121,16 @@ mod regen {
         Ok(files)
     }
 
-    pub fn compile_protos(manifest_dir: &Path, out_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn compile_protos(
+        manifest_dir: &Path,
+        out_dir: &Path,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let proto_dir = PathBuf::from("proto");
         let proto_files = get_files(manifest_dir, &proto_dir, "proto")?;
-        let abs_proto_dir = manifest_dir.join(&proto_dir).canonicalize()?;
+        let abs_proto_dir = manifest_dir
+            .join(&proto_dir)
+            .canonicalize()
+            .map(|p| maybe_normalize_windows_path(&p))?;
 
         let protoc_path = get_protoc_path()?;
         let mut config = prost_build::Config::new();
@@ -134,7 +147,10 @@ mod regen {
         Ok(())
     }
 
-    pub fn compile_flatbuffers(manifest_dir: &Path, out_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn compile_flatbuffers(
+        manifest_dir: &Path,
+        out_dir: &Path,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let flatbuffer_dir = PathBuf::from("flatbuffers");
         let flatbuffer_files = get_files(manifest_dir, &flatbuffer_dir, "fbs")?;
 
@@ -148,7 +164,7 @@ mod regen {
                 .map(|p| p.as_path())
                 .collect::<Vec<_>>()
                 .as_slice(),
-            out_dir: out_dir.as_ref(),
+            out_dir,
             includes: &[flatbuffer_dir.as_path()],
             extra: &["--gen-object-api", "--gen-compare"],
             ..Default::default()
@@ -183,7 +199,7 @@ mod regen {
                         .to_string();
                 } else if trimmed.starts_with("branch = ") {
                     let branch = trimmed.trim_start_matches("branch = ");
-                    println!("cargo:warning=protosol: {current_name} pinned to {branch} (from .gitmodules)");
+                    println!("cargo:warning=protosol: {current_name} branch hint {branch} (from .gitmodules)");
                 }
             }
         }
@@ -195,7 +211,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Always emit link metadata for downstream crates
     emit_link_metadata(&manifest_dir, Path::new("proto"), "PROTO_DIR", "proto")?;
-    emit_link_metadata(&manifest_dir, Path::new("flatbuffers"), "FLATBUFFERS_DIR", "fbs")?;
+    emit_link_metadata(
+        &manifest_dir,
+        Path::new("flatbuffers"),
+        "FLATBUFFERS_DIR",
+        "fbs",
+    )?;
 
     // Regeneration: rebuild from proto/fbs sources directly into src/generated/
     #[cfg(feature = "regenerate")]
@@ -205,7 +226,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         regen::clean_generated(&generated_dir)?;
         regen::compile_protos(&manifest_dir, &generated_dir)?;
         regen::compile_flatbuffers(&manifest_dir, &generated_dir)?;
-        println!("cargo:warning=protosol: regenerated src/generated/ from proto/flatbuffers sources");
+        println!(
+            "cargo:warning=protosol: regenerated src/generated/ from proto/flatbuffers sources"
+        );
     }
 
     Ok(())

@@ -15,6 +15,6 @@ SCHEMA_CHANGED=$(git diff --cached --name-only -- proto/ flatbuffers/ | head -1)
 GEN_CHANGED=$(git diff --cached --name-only -- src/generated/ | head -1)
 if [ -n "$SCHEMA_CHANGED" ] && [ -z "$GEN_CHANGED" ]; then
   echo "[pre-commit] ERROR: proto/flatbuffers schemas changed but src/generated/ was not updated."
-  echo "Run: cargo build --features regenerate"
+  echo "Run: ./deps.sh && cargo build --features regenerate --locked"
   exit 1
 fi
