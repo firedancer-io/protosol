@@ -1,5 +1,5 @@
 pub mod protos {
-    include!(concat!(env!("OUT_DIR"), "/org.solana.sealevel.v1.rs"));
+    include!("generated/org.solana.sealevel.v1.rs");
 }
 
 #[cfg(feature = "solana-types")]

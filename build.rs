@@ -46,23 +46,6 @@ fn emit_link_metadata(
     Ok(abs)
 }
 
-/// Copy all .rs files from src/generated/ to OUT_DIR.
-#[cfg(not(feature = "regenerate"))]
-fn copy_pregenerated(manifest_dir: &Path, out_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
-    let generated_dir = manifest_dir.join("src").join("generated");
-    println!("cargo:rerun-if-changed={}", generated_dir.display());
-
-    for entry in fs::read_dir(&generated_dir)? {
-        let path = entry?.path();
-        if path.extension().and_then(|e| e.to_str()) == Some("rs") {
-            let dest = out_dir.join(path.file_name().unwrap());
-            fs::copy(&path, &dest)?;
-        }
-    }
-
-    Ok(())
-}
-
 // --- Regeneration support (requires protoc + flatc) ---
 
 #[cfg(feature = "regenerate")]
@@ -210,25 +193,20 @@ mod regen {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let out_dir = PathBuf::from(env::var("OUT_DIR")?);
-    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
-
     // Always emit link metadata for downstream crates
     emit_link_metadata(Path::new("proto"), "PROTO_DIR", "proto")?;
     emit_link_metadata(Path::new("flatbuffers"), "FLATBUFFERS_DIR", "fbs")?;
 
+    // Regeneration: rebuild from proto/fbs sources and update src/generated/
     #[cfg(feature = "regenerate")]
     {
+        let out_dir = PathBuf::from(env::var("OUT_DIR")?);
+        let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
         regen::print_pinned_versions(&manifest_dir);
         regen::compile_protos(&out_dir)?;
         regen::compile_flatbuffers(&out_dir)?;
         regen::copy_to_source(&out_dir, &manifest_dir)?;
         println!("cargo:warning=protosol: regenerated src/generated/ from proto/flatbuffers sources");
-    }
-
-    #[cfg(not(feature = "regenerate"))]
-    {
-        copy_pregenerated(&manifest_dir, &out_dir)?;
     }
 
     Ok(())
