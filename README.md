@@ -111,32 +111,43 @@ This crate is specifically designed for use with the anza-xyz/agave repository's
 
 ## Development
 
-### Installing dependencies (builds flatc)
+### Prerequisites
+
+- Rust toolchain (stable)
+- CMake, Make, and a C++ compiler (for building protoc and flatc from source)
+
+### Setup
 
 ```bash
-git submodule update --init --recursive
-./deps.sh
-```
-
-### Building
-
-```bash
+git clone --recurse-submodules https://github.com/firedancer-io/protosol.git
+cd protosol
+./deps.sh              # Builds protoc and flatc into opt/bin/
 cargo build
 ```
 
-### Running Tests
+### Pre-commit hooks
 
 ```bash
-cargo test
+git config core.hooksPath .githooks
 ```
 
-### Regenerating Protobuf Code
+This enables pre-commit checks for `cargo fmt`, `cargo clippy`, and `Cargo.lock` freshness.
 
-The protobuf code is automatically generated during build. To force regeneration:
+### CI
+
+CI runs on every push and pull request. It checks:
+
+- `cargo fmt --check`
+- `cargo update --workspace --locked` (Cargo.lock up to date)
+- `cargo build --release` (default and `solana-types` features)
+- `cargo clippy --all-features -- -D warnings`
+
+### Regenerating Protobuf / FlatBuffer Code
+
+Code is automatically generated during `cargo build`. To force regeneration:
 
 ```bash
-cargo clean
-cargo build
+cargo clean && cargo build
 ```
 
 ## File Structure
@@ -145,16 +156,24 @@ cargo build
 proto/
 ├── block.proto          # Block execution context and effects
 ├── context.proto        # Account states and execution context
-├── txn.proto            # Transaction structures
-├── pack.proto           # Compute budget testing
+├── gossip.proto         # Gossip protocol structures
+├── invoke.proto         # Program invocation context
 ├── metadata.proto       # Test fixture metadata
+├── pack.proto           # Compute budget testing
+├── serialize.proto      # Serialization structures
+├── shred.proto          # Shred structures
+├── txn.proto            # Transaction structures
+├── vm.proto             # Virtual machine state
 └── *.options            # Nanopb configuration files
 
 flatbuffers/
-├── elf.fbs              # ELF VM program and state structures
 ├── context.fbs          # Account and execution context definitions
-├── metadata.fbs         # Test fixture metadata for Flatbuffers
+├── elf.fbs              # ELF VM program and state structures
+└── metadata.fbs         # Test fixture metadata
 
+shlr/
+├── flatbuffers/         # Vendored flatbuffers (submodule)
+└── protobuf/            # Vendored protobuf (submodule)
 ```
 
 ## License
