@@ -18,6 +18,8 @@ jobs:
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
 
       - name: Update submodules
         run: git submodule update --init --recursive
@@ -25,8 +27,17 @@ jobs:
       - name: Run deps.sh
         run: bash ./deps.sh
 
+      - name: Check formatting
+        run: cargo fmt --check
+
+      - name: Check Cargo.lock is up to date
+        run: cargo update --workspace --locked
+
       - name: Build (release, default)
         run: cargo build --release
 
       - name: Build (release, solana-types)
         run: cargo build --release -F solana-types
+
+      - name: Clippy
+        run: cargo clippy --all-features -- -D warnings
