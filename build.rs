@@ -153,6 +153,10 @@ mod regen {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let flatbuffer_dir = PathBuf::from("flatbuffers");
         let flatbuffer_files = get_files(manifest_dir, &flatbuffer_dir, "fbs")?;
+        let abs_flatbuffer_dir = manifest_dir
+            .join(&flatbuffer_dir)
+            .canonicalize()
+            .map(|p| maybe_normalize_windows_path(&p))?;
 
         let flatc_path = get_flatc_path()?;
         let flatc = flatc_rust::Flatc::from_path(&flatc_path);
@@ -165,7 +169,7 @@ mod regen {
                 .collect::<Vec<_>>()
                 .as_slice(),
             out_dir,
-            includes: &[flatbuffer_dir.as_path()],
+            includes: &[abs_flatbuffer_dir.as_path()],
             extra: &["--gen-object-api", "--gen-compare"],
             ..Default::default()
         })?;
