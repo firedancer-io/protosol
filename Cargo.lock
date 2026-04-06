@@ -175,8 +175,7 @@ checksum = "0ce7134b9999ecaf8bcd65542e436736ef32ddca1b3e06094cb6ec5755203b80"
 [[package]]
 name = "flatbuffers"
 version = "25.9.23"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "09b6620799e7340ebd9968d2e0708eb82cf1971e9a16821e2091b6d6e475eed5"
+source = "git+https://github.com/firedancer-io/flatbuffers?rev=6623cece6f758e37f5a30e9d41d030e24e0c62bb#6623cece6f758e37f5a30e9d41d030e24e0c62bb"
 dependencies = [
  "bitflags",
  "rustc_version",
@@ -395,10 +394,11 @@ dependencies = [
 
 [[package]]
 name = "prost-build"
-version = "0.13.5"
+version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "be769465445e8c1474e9c5dac2018218498557af32d9ed057325ec9a41ae81bf"
+checksum = "5bb182580f71dd070f88d01ce3de9f4da5021db7115d2e1c3605a754153b77c1"
 dependencies = [
+ "bytes",
  "heck",
  "itertools",
  "log",

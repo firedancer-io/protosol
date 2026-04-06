@@ -18,7 +18,7 @@ flatc-rust = { version = "0.2.0", optional = true }
 
 [dependencies]
 prost = "0.11.9"
-flatbuffers = "25.9.23"
+flatbuffers = { git = "https://github.com/firedancer-io/flatbuffers", rev = "6623cece6f758e37f5a30e9d41d030e24e0c62bb" }
 
 solana-account = { version = "3.4.0", optional = true }
 solana-pubkey = { version = "4.1.0", optional = true }
