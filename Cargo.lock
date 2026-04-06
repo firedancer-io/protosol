@@ -450,7 +450,7 @@ dependencies = [
 
 [[package]]
 name = "protosol"
-version = "5.1.0"
+version = "5.2.0"
 dependencies = [
  "flatbuffers",
  "flatc-rust",
