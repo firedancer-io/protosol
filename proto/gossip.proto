@@ -2,12 +2,12 @@ syntax = "proto3";
 package org.solana.sealevel.v1;
 import "metadata.proto";
 
-// Raw gossip wire message bytes for deserialization testing
+// v1: valid/invalid bool
+
 message GossipMessageBinary {
   bytes data = 1;
 }
 
-// Whether a gossip message was accepted after deserialization + sanitize
 message AcceptsGossipMessage {
   bool valid = 1;
 }
@@ -16,4 +16,148 @@ message GossipMessageFixture {
   FixtureMetadata metadata = 1;
   GossipMessageBinary input = 2;
   AcceptsGossipMessage output = 3;
+}
+
+// v2: rich effects
+
+message GossipFixture {
+  FixtureMetadata metadata = 1;
+  bytes input = 2;
+  GossipEffects output = 3;
+}
+
+message GossipEffects {
+  bool valid = 1;
+  GossipMsg msg = 2;
+}
+
+message GossipMsg {
+  oneof msg {
+    GossipPing ping = 1;
+    GossipPong pong = 2;
+    GossipPullRequest pull_request = 3;
+    GossipPullResponse pull_response = 4;
+    GossipPushMessage push_message = 5;
+    GossipPruneMessage prune_message = 6;
+  }
+}
+
+message GossipPing {
+  bytes from = 1;
+  bytes token = 2;
+  bytes signature = 3;
+}
+
+message GossipPong {
+  bytes from = 1;
+  bytes hash = 2;
+  bytes signature = 3;
+}
+
+message GossipPullRequest {
+  GossipCrdsFilter filter = 1;
+  GossipCrdsValue value = 2;
+}
+
+message GossipPullResponse {
+  bytes pubkey = 1;
+  repeated GossipCrdsValue values = 2;
+}
+
+message GossipPushMessage {
+  bytes pubkey = 1;
+  repeated GossipCrdsValue values = 2;
+}
+
+message GossipPruneMessage {
+  bytes pubkey = 1;
+  GossipPruneData data = 2;
+}
+
+message GossipPruneData {
+  bytes pubkey = 1;
+  repeated bytes prunes = 2;
+  bytes signature = 3;
+  bytes destination = 4;
+  uint64 wallclock = 5;
+}
+
+message GossipCrdsFilter {
+  GossipBloom filter = 1;
+  uint64 mask = 2;
+  uint32 mask_bits = 3;
+}
+
+message GossipBloom {
+  repeated uint64 keys = 1;
+  bytes bits = 2;
+  uint64 num_bits_set = 3;
+}
+
+message GossipCrdsValue {
+  bytes signature = 1;
+  GossipCrdsData data = 2;
+}
+
+message GossipCrdsData {
+  oneof data {
+    GossipContactInfo contact_info = 1;
+    GossipVote vote = 2;
+    GossipLowestSlot lowest_slot = 3;
+    GossipEpochSlots epoch_slots = 4;
+    GossipSnapshotHashes snapshot_hashes = 5;
+    GossipDuplicateShred duplicate_shred = 6;
+  }
+}
+
+message GossipContactInfo {
+  bytes pubkey = 1;
+  uint64 wallclock = 2;
+  uint64 outset = 3;
+  uint32 shred_version = 4;
+}
+
+message GossipVote {
+  uint32 index = 1;
+  bytes from = 2;
+  uint64 wallclock = 3;
+  bytes transaction = 4;
+}
+
+message GossipLowestSlot {
+  uint32 index = 1;
+  bytes from = 2;
+  uint64 lowest = 3;
+  uint64 wallclock = 4;
+}
+
+message GossipEpochSlots {
+  uint32 index = 1;
+  bytes from = 2;
+  uint64 wallclock = 3;
+}
+
+message GossipSnapshotHashes {
+  bytes from = 1;
+  uint64 full_slot = 2;
+  bytes full_hash = 3;
+  repeated GossipIncrementalHash incremental = 4;
+  uint64 wallclock = 5;
+}
+
+message GossipIncrementalHash {
+  uint64 slot = 1;
+  bytes hash = 2;
+}
+
+message GossipDuplicateShred {
+  uint32 index = 1;
+  bytes from = 2;
+  uint64 wallclock = 3;
+  uint64 slot = 4;
+  uint32 shred_index = 5;
+  uint32 shred_type = 6;
+  uint32 num_chunks = 7;
+  uint32 chunk_index = 8;
+  bytes chunk = 9;
 }
