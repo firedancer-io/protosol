@@ -447,13 +447,11 @@ impl WarmupCooldownRate {
         }
     }
 }
-/// Raw gossip wire message bytes for deserialization testing
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GossipMessageBinary {
     #[prost(bytes = "vec", tag = "1")]
     pub data: ::prost::alloc::vec::Vec<u8>,
 }
-/// Whether a gossip message was accepted after deserialization + sanitize
 #[derive(Clone, Copy, PartialEq, ::prost::Message)]
 pub struct AcceptsGossipMessage {
     #[prost(bool, tag = "1")]
@@ -467,6 +465,235 @@ pub struct GossipMessageFixture {
     pub input: ::core::option::Option<GossipMessageBinary>,
     #[prost(message, optional, tag = "3")]
     pub output: ::core::option::Option<AcceptsGossipMessage>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipFixture {
+    #[prost(message, optional, tag = "1")]
+    pub metadata: ::core::option::Option<FixtureMetadata>,
+    #[prost(bytes = "vec", tag = "2")]
+    pub input: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, optional, tag = "3")]
+    pub output: ::core::option::Option<GossipEffects>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipEffects {
+    #[prost(bool, tag = "1")]
+    pub valid: bool,
+    #[prost(message, optional, tag = "2")]
+    pub msg: ::core::option::Option<GossipMsg>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipMsg {
+    #[prost(oneof = "gossip_msg::Msg", tags = "1, 2, 3, 4, 5, 6")]
+    pub msg: ::core::option::Option<gossip_msg::Msg>,
+}
+/// Nested message and enum types in `GossipMsg`.
+pub mod gossip_msg {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Msg {
+        #[prost(message, tag = "1")]
+        Ping(super::GossipPing),
+        #[prost(message, tag = "2")]
+        Pong(super::GossipPong),
+        #[prost(message, tag = "3")]
+        PullRequest(super::GossipPullRequest),
+        #[prost(message, tag = "4")]
+        PullResponse(super::GossipPullResponse),
+        #[prost(message, tag = "5")]
+        PushMessage(super::GossipPushMessage),
+        #[prost(message, tag = "6")]
+        PruneMessage(super::GossipPruneMessage),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipPing {
+    #[prost(bytes = "vec", tag = "1")]
+    pub from: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "2")]
+    pub token: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "3")]
+    pub signature: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipPong {
+    #[prost(bytes = "vec", tag = "1")]
+    pub from: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "2")]
+    pub hash: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "3")]
+    pub signature: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipPullRequest {
+    #[prost(message, optional, tag = "1")]
+    pub filter: ::core::option::Option<GossipCrdsFilter>,
+    #[prost(message, optional, tag = "2")]
+    pub value: ::core::option::Option<GossipCrdsValue>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipPullResponse {
+    #[prost(bytes = "vec", tag = "1")]
+    pub pubkey: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, repeated, tag = "2")]
+    pub values: ::prost::alloc::vec::Vec<GossipCrdsValue>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipPushMessage {
+    #[prost(bytes = "vec", tag = "1")]
+    pub pubkey: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, repeated, tag = "2")]
+    pub values: ::prost::alloc::vec::Vec<GossipCrdsValue>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipPruneMessage {
+    #[prost(bytes = "vec", tag = "1")]
+    pub pubkey: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, optional, tag = "2")]
+    pub data: ::core::option::Option<GossipPruneData>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipPruneData {
+    #[prost(bytes = "vec", tag = "1")]
+    pub pubkey: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", repeated, tag = "2")]
+    pub prunes: ::prost::alloc::vec::Vec<::prost::alloc::vec::Vec<u8>>,
+    #[prost(bytes = "vec", tag = "3")]
+    pub signature: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "4")]
+    pub destination: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "5")]
+    pub wallclock: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipCrdsFilter {
+    #[prost(message, optional, tag = "1")]
+    pub filter: ::core::option::Option<GossipBloom>,
+    #[prost(uint64, tag = "2")]
+    pub mask: u64,
+    #[prost(uint32, tag = "3")]
+    pub mask_bits: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipBloom {
+    #[prost(uint64, repeated, tag = "1")]
+    pub keys: ::prost::alloc::vec::Vec<u64>,
+    #[prost(bytes = "vec", tag = "2")]
+    pub bits: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub num_bits_set: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipCrdsValue {
+    #[prost(bytes = "vec", tag = "1")]
+    pub signature: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, optional, tag = "2")]
+    pub data: ::core::option::Option<GossipCrdsData>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipCrdsData {
+    #[prost(oneof = "gossip_crds_data::Data", tags = "1, 2, 3, 4, 5, 6")]
+    pub data: ::core::option::Option<gossip_crds_data::Data>,
+}
+/// Nested message and enum types in `GossipCrdsData`.
+pub mod gossip_crds_data {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Data {
+        #[prost(message, tag = "1")]
+        ContactInfo(super::GossipContactInfo),
+        #[prost(message, tag = "2")]
+        Vote(super::GossipVote),
+        #[prost(message, tag = "3")]
+        LowestSlot(super::GossipLowestSlot),
+        #[prost(message, tag = "4")]
+        EpochSlots(super::GossipEpochSlots),
+        #[prost(message, tag = "5")]
+        SnapshotHashes(super::GossipSnapshotHashes),
+        #[prost(message, tag = "6")]
+        DuplicateShred(super::GossipDuplicateShred),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipContactInfo {
+    #[prost(bytes = "vec", tag = "1")]
+    pub pubkey: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "2")]
+    pub wallclock: u64,
+    #[prost(uint64, tag = "3")]
+    pub outset: u64,
+    #[prost(uint32, tag = "4")]
+    pub shred_version: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipVote {
+    #[prost(uint32, tag = "1")]
+    pub index: u32,
+    #[prost(bytes = "vec", tag = "2")]
+    pub from: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub wallclock: u64,
+    #[prost(bytes = "vec", tag = "4")]
+    pub transaction: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipLowestSlot {
+    #[prost(uint32, tag = "1")]
+    pub index: u32,
+    #[prost(bytes = "vec", tag = "2")]
+    pub from: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub lowest: u64,
+    #[prost(uint64, tag = "4")]
+    pub wallclock: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipEpochSlots {
+    #[prost(uint32, tag = "1")]
+    pub index: u32,
+    #[prost(bytes = "vec", tag = "2")]
+    pub from: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub wallclock: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipSnapshotHashes {
+    #[prost(bytes = "vec", tag = "1")]
+    pub from: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "2")]
+    pub full_slot: u64,
+    #[prost(bytes = "vec", tag = "3")]
+    pub full_hash: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, repeated, tag = "4")]
+    pub incremental: ::prost::alloc::vec::Vec<GossipIncrementalHash>,
+    #[prost(uint64, tag = "5")]
+    pub wallclock: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipIncrementalHash {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    #[prost(bytes = "vec", tag = "2")]
+    pub hash: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipDuplicateShred {
+    #[prost(uint32, tag = "1")]
+    pub index: u32,
+    #[prost(bytes = "vec", tag = "2")]
+    pub from: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub wallclock: u64,
+    #[prost(uint64, tag = "4")]
+    pub slot: u64,
+    #[prost(uint32, tag = "5")]
+    pub shred_index: u32,
+    #[prost(uint32, tag = "6")]
+    pub shred_type: u32,
+    #[prost(uint32, tag = "7")]
+    pub num_chunks: u32,
+    #[prost(uint32, tag = "8")]
+    pub chunk_index: u32,
+    #[prost(bytes = "vec", tag = "9")]
+    pub chunk: ::prost::alloc::vec::Vec<u8>,
 }
 #[derive(Clone, Copy, PartialEq, ::prost::Message)]
 pub struct InstrAcct {
