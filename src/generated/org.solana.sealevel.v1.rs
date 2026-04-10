@@ -764,36 +764,6 @@ pub struct InstrFixture {
     pub output: ::core::option::Option<InstrEffects>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PackComputeBudgetContext {
-    #[prost(bytes = "vec", repeated, tag = "1")]
-    pub instr_datas: ::prost::alloc::vec::Vec<::prost::alloc::vec::Vec<u8>>,
-    #[prost(message, optional, tag = "2")]
-    pub features: ::core::option::Option<FeatureSet>,
-}
-#[derive(Clone, Copy, PartialEq, ::prost::Message)]
-pub struct PackComputeBudgetEffects {
-    #[prost(uint64, tag = "1")]
-    pub compute_unit_limit: u64,
-    #[prost(uint64, tag = "2")]
-    pub rewards: u64,
-    #[prost(uint32, tag = "3")]
-    pub heap_sz: u32,
-    #[prost(uint32, tag = "4")]
-    pub loaded_acct_data_sz: u32,
-    /// To prevent empty effects when encoding a "skipped" effects
-    #[prost(uint32, tag = "5")]
-    pub is_empty: u32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PackComputeBudgetFixture {
-    #[prost(message, optional, tag = "1")]
-    pub metadata: ::core::option::Option<FixtureMetadata>,
-    #[prost(message, optional, tag = "2")]
-    pub input: ::core::option::Option<PackComputeBudgetContext>,
-    #[prost(message, optional, tag = "3")]
-    pub output: ::core::option::Option<PackComputeBudgetEffects>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VmMemRegion {
     #[prost(uint64, tag = "1")]
     pub vm_addr: u64,
@@ -808,64 +778,6 @@ pub struct InstrSerializeResult {
     pub result: i32,
     #[prost(message, repeated, tag = "2")]
     pub regions: ::prost::alloc::vec::Vec<VmMemRegion>,
-}
-/// raw bytes to test shred parsing
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ShredBinary {
-    #[prost(bytes = "vec", tag = "1")]
-    pub data: ::prost::alloc::vec::Vec<u8>,
-}
-#[derive(Clone, Copy, PartialEq, ::prost::Message)]
-pub struct DataHeader {
-    #[prost(uint32, tag = "1")]
-    pub parent_off: u32,
-    #[prost(uint32, tag = "2")]
-    pub flags: u32,
-    #[prost(uint32, tag = "3")]
-    pub size: u32,
-}
-#[derive(Clone, Copy, PartialEq, ::prost::Message)]
-pub struct CodeHeader {
-    #[prost(uint32, tag = "1")]
-    pub data_cnt: u32,
-    #[prost(uint32, tag = "2")]
-    pub code_cnt: u32,
-    #[prost(uint32, tag = "3")]
-    pub idx: u32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ParsedShred {
-    #[prost(string, tag = "1")]
-    pub signature: ::prost::alloc::string::String,
-    #[prost(uint32, tag = "2")]
-    pub variant: u32,
-    #[prost(uint64, tag = "3")]
-    pub slot: u64,
-    #[prost(uint32, tag = "4")]
-    pub idx: u32,
-    #[prost(uint32, tag = "5")]
-    pub version: u32,
-    #[prost(uint32, tag = "6")]
-    pub fec_set_idx: u32,
-    #[prost(oneof = "parsed_shred::ShredType", tags = "7, 8")]
-    pub shred_type: ::core::option::Option<parsed_shred::ShredType>,
-}
-/// Nested message and enum types in `ParsedShred`.
-pub mod parsed_shred {
-    #[derive(Clone, Copy, PartialEq, ::prost::Oneof)]
-    pub enum ShredType {
-        #[prost(message, tag = "7")]
-        Data(super::DataHeader),
-        #[prost(message, tag = "8")]
-        Code(super::CodeHeader),
-    }
-}
-/// If shred is accepted after parseing. This is all we are interested in
-/// between Firedancer and Agave.
-#[derive(Clone, Copy, PartialEq, ::prost::Message)]
-pub struct AcceptsShred {
-    #[prost(bool, tag = "1")]
-    pub valid: bool,
 }
 /// Describes an input data region. Agave's memory mapping sets up a series of
 /// memory mapped regions, which combine to make the input data region.
