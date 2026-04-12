@@ -448,6 +448,73 @@ impl WarmupCooldownRate {
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CostContext {
+    #[prost(message, optional, tag = "1")]
+    pub tx: ::core::option::Option<SanitizedTransaction>,
+    #[prost(message, optional, tag = "2")]
+    pub features: ::core::option::Option<FeatureSet>,
+    #[prost(enumeration = "TxnCostMode", tag = "3")]
+    pub mode: i32,
+    #[prost(uint64, tag = "4")]
+    pub actual_programs_execution_cost: u64,
+    #[prost(uint64, tag = "5")]
+    pub actual_loaded_accounts_data_size_bytes: u64,
+}
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct CostResult {
+    #[prost(bool, tag = "1")]
+    pub has_cost: bool,
+    #[prost(uint64, tag = "2")]
+    pub signature_cost: u64,
+    #[prost(uint64, tag = "3")]
+    pub write_lock_cost: u64,
+    #[prost(uint64, tag = "4")]
+    pub data_bytes_cost: u64,
+    #[prost(uint64, tag = "5")]
+    pub programs_execution_cost: u64,
+    #[prost(uint64, tag = "6")]
+    pub loaded_accounts_data_size_cost: u64,
+    #[prost(uint64, tag = "7")]
+    pub allocated_accounts_data_size: u64,
+    #[prost(uint64, tag = "8")]
+    pub total_cost: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CostFixture {
+    #[prost(message, optional, tag = "1")]
+    pub metadata: ::core::option::Option<FixtureMetadata>,
+    #[prost(message, optional, tag = "2")]
+    pub input: ::core::option::Option<CostContext>,
+    #[prost(message, optional, tag = "3")]
+    pub output: ::core::option::Option<CostResult>,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TxnCostMode {
+    Estimate = 0,
+    Actual = 1,
+}
+impl TxnCostMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Estimate => "ESTIMATE",
+            Self::Actual => "ACTUAL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ESTIMATE" => Some(Self::Estimate),
+            "ACTUAL" => Some(Self::Actual),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GossipMessageBinary {
     #[prost(bytes = "vec", tag = "1")]
     pub data: ::prost::alloc::vec::Vec<u8>,
