@@ -1,0 +1,36 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+
+import "context.proto";
+import "txn.proto";
+import "metadata.proto";
+
+enum TxnCostMode {
+  ESTIMATE = 0;
+  ACTUAL = 1;
+}
+
+message CostContext {
+  SanitizedTransaction tx = 1;
+  FeatureSet features = 2;
+  TxnCostMode mode = 3;
+  uint64 actual_programs_execution_cost = 4;
+  uint64 actual_loaded_accounts_data_size_bytes = 5;
+}
+
+message CostResult {
+  bool has_cost = 1;
+  uint64 signature_cost = 2;
+  uint64 write_lock_cost = 3;
+  uint64 data_bytes_cost = 4;
+  uint64 programs_execution_cost = 5;
+  uint64 loaded_accounts_data_size_cost = 6;
+  uint64 allocated_accounts_data_size = 7;
+  uint64 total_cost = 8;
+}
+
+message CostFixture {
+  FixtureMetadata metadata = 1;
+  CostContext input = 2;
+  CostResult output = 3;
+}
