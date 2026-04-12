@@ -1,0 +1,30 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+
+import "context.proto";
+import "metadata.proto";
+
+// A transaction instruction without account references
+message ProgramInstruction {
+  // The address of the program invoked (32 bytes)
+  bytes program_id = 1;
+
+  // The input data passed to program execution
+  bytes data = 2;
+}
+
+message CalcAllocatedAccountsDataSizeInput {
+  repeated ProgramInstruction instructions = 1;
+
+  FeatureSet features = 2;
+}
+
+message CalcAllocatedAccountsDataSizeOutput {
+  uint64 allocated_accounts_data_size = 1;
+}
+
+message CalcAllocatedAccountsDataSizeFixture {
+  FixtureMetadata metadata = 1;
+  CalcAllocatedAccountsDataSizeInput input = 2;
+  CalcAllocatedAccountsDataSizeOutput output = 3;
+}

@@ -447,6 +447,37 @@ impl WarmupCooldownRate {
         }
     }
 }
+/// A transaction instruction without account references
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProgramInstruction {
+    /// The address of the program invoked (32 bytes)
+    #[prost(bytes = "vec", tag = "1")]
+    pub program_id: ::prost::alloc::vec::Vec<u8>,
+    /// The input data passed to program execution
+    #[prost(bytes = "vec", tag = "2")]
+    pub data: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CalcAllocatedAccountsDataSizeInput {
+    #[prost(message, repeated, tag = "1")]
+    pub instructions: ::prost::alloc::vec::Vec<ProgramInstruction>,
+    #[prost(message, optional, tag = "2")]
+    pub features: ::core::option::Option<FeatureSet>,
+}
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct CalcAllocatedAccountsDataSizeOutput {
+    #[prost(uint64, tag = "1")]
+    pub allocated_accounts_data_size: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CalcAllocatedAccountsDataSizeFixture {
+    #[prost(message, optional, tag = "1")]
+    pub metadata: ::core::option::Option<FixtureMetadata>,
+    #[prost(message, optional, tag = "2")]
+    pub input: ::core::option::Option<CalcAllocatedAccountsDataSizeInput>,
+    #[prost(message, optional, tag = "3")]
+    pub output: ::core::option::Option<CalcAllocatedAccountsDataSizeOutput>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GossipMessageBinary {
     #[prost(bytes = "vec", tag = "1")]

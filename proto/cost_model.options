@@ -1,0 +1,7 @@
+cost_model.proto package:"fd_exec_test"
+cost_model.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
+
+fd_exec_test.ProgramInstruction.program_id max_size:32 fixed_length:true
+fd_exec_test.ProgramInstruction.data type:FT_POINTER
+
+fd_exec_test.CalcAllocatedAccountsDataSizeInput.instructions type:FT_POINTER
