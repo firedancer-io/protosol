@@ -1,0 +1,58 @@
+name: Publish to crates.io
+
+permissions:
+  contents: read
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
+
+      - name: Run deps.sh
+        run: bash ./deps.sh
+
+      - name: Check formatting
+        run: cargo fmt --check
+
+      - name: Build
+        run: cargo build --release --locked
+
+      - name: Clippy
+        run: cargo clippy --all-features --locked -- -D warnings
+
+      - name: Verify generated code is up to date
+        run: |
+          cargo build --locked --features regenerate
+          git diff --exit-code src/generated/
+
+      - name: Verify tag matches Cargo.toml version
+        run: |
+          TAG="${GITHUB_REF#refs/tags/v}"
+          VERSION="$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')"
+          if [ "$TAG" != "$VERSION" ]; then
+            echo "::error::Tag v$TAG does not match Cargo.toml version $VERSION"
+            exit 1
+          fi
+
+      - name: Publish
+        run: cargo publish --locked
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
