@@ -136,6 +136,7 @@ mod regen {
         let mut config = prost_build::Config::new();
         config.protoc_executable(protoc_path);
         config.out_dir(out_dir);
+        config.file_descriptor_set_path(out_dir.join("file_descriptor_set.bin"));
         config.compile_protos(
             &proto_files
                 .iter()
@@ -177,12 +178,16 @@ mod regen {
         Ok(())
     }
 
-    /// Remove existing .rs files from src/generated/ to avoid stale outputs.
+    /// Remove existing generated files from src/generated/ to avoid stale outputs.
     pub fn clean_generated(generated_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
         fs::create_dir_all(generated_dir)?;
         for entry in fs::read_dir(generated_dir)? {
             let path = entry?.path();
-            if path.extension().and_then(|e| e.to_str()) == Some("rs") {
+            let is_generated = path
+                .extension()
+                .and_then(|e| e.to_str())
+                .is_some_and(|ext| ext == "rs" || ext == "bin");
+            if is_generated {
                 fs::remove_file(&path)?;
             }
         }

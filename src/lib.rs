@@ -2,6 +2,12 @@ pub mod protos {
     include!("generated/org.solana.sealevel.v1.rs");
 }
 
+/// Pre-compiled FileDescriptorSet for all protobuf definitions.
+///
+/// This binary blob can be loaded by reflection libraries (e.g. prost-reflect's
+/// `DescriptorPool::decode`) to inspect message schemas at runtime.
+pub const FILE_DESCRIPTOR_SET_BYTES: &[u8] = include_bytes!("generated/file_descriptor_set.bin");
+
 #[allow(
     unused_imports,
     dead_code,
