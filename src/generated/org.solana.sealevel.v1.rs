@@ -514,6 +514,51 @@ impl TxnCostMode {
         }
     }
 }
+/// Context for an ELF loader fuzz target.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ElfLoaderCtx {
+    /// Raw ELF bytes to load.
+    #[prost(bytes = "vec", tag = "1")]
+    pub elf_data: ::prost::alloc::vec::Vec<u8>,
+    /// Active feature set at load time.
+    #[prost(message, optional, tag = "2")]
+    pub features: ::core::option::Option<FeatureSet>,
+    /// Whether deploy-time checks are enabled.
+    #[prost(bool, tag = "3")]
+    pub deploy_checks: bool,
+}
+/// Output of ELF loading.
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct ElfLoaderEffects {
+    /// Loader error code (0 = success).
+    #[prost(uint32, tag = "1")]
+    pub err_code: u32,
+    /// 8-byte XXH3 hash of the .rodata section.
+    #[prost(fixed64, tag = "2")]
+    pub rodata_hash: u64,
+    /// Number of valid text-section instructions.
+    #[prost(uint64, tag = "3")]
+    pub text_cnt: u64,
+    /// Byte offset of the text section.
+    #[prost(uint64, tag = "4")]
+    pub text_off: u64,
+    /// Entry-point program counter.
+    #[prost(uint64, tag = "5")]
+    pub entry_pc: u64,
+    /// 8-byte XXH3 hash of the validated call destinations bitmap.
+    #[prost(fixed64, tag = "6")]
+    pub calldests_hash: u64,
+}
+/// An ELF loader processing test fixture.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ElfLoaderFixture {
+    #[prost(message, optional, tag = "1")]
+    pub metadata: ::core::option::Option<FixtureMetadata>,
+    #[prost(message, optional, tag = "2")]
+    pub input: ::core::option::Option<ElfLoaderCtx>,
+    #[prost(message, optional, tag = "3")]
+    pub output: ::core::option::Option<ElfLoaderEffects>,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GossipFixture {
     #[prost(message, optional, tag = "1")]

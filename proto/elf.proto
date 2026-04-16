@@ -1,0 +1,45 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+
+import "context.proto";
+import "metadata.proto";
+
+// Context for an ELF loader fuzz target.
+message ELFLoaderCtx {
+  // Raw ELF bytes to load.
+  bytes elf_data = 1;
+
+  // Active feature set at load time.
+  FeatureSet features = 2;
+
+  // Whether deploy-time checks are enabled.
+  bool deploy_checks = 3;
+}
+
+// Output of ELF loading.
+message ELFLoaderEffects {
+  // Loader error code (0 = success).
+  uint32 err_code = 1;
+
+  // 8-byte XXH3 hash of the .rodata section.
+  fixed64 rodata_hash = 2;
+
+  // Number of valid text-section instructions.
+  uint64 text_cnt = 3;
+
+  // Byte offset of the text section.
+  uint64 text_off = 4;
+
+  // Entry-point program counter.
+  uint64 entry_pc = 5;
+
+  // 8-byte XXH3 hash of the validated call destinations bitmap.
+  fixed64 calldests_hash = 6;
+}
+
+// An ELF loader processing test fixture.
+message ELFLoaderFixture {
+  FixtureMetadata metadata = 1;
+  ELFLoaderCtx input = 2;
+  ELFLoaderEffects output = 3;
+}

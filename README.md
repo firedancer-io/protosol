@@ -1,6 +1,6 @@
 # Protosol
 
-Protocol buffer + flatbuffer definitions for the Solana Virtual Machine (SVM) testing harness in Agave. This crate provides Rust bindings for protobuf schemas used in fuzzing and testing the Solana blockchain's execution environment.
+Protocol buffer definitions for the Solana Virtual Machine (SVM) testing harness in Agave. This crate provides Rust bindings for protobuf schemas used in fuzzing and testing the Solana blockchain's execution environment.
 
 ## Overview
 
@@ -15,23 +15,6 @@ Protosol defines the data structures used to capture, serialize, and replay Sola
 - **Virtual Machine State**: SVM execution context, compute budgets, and program execution
 - **Account Management**: Account states, ownership, and data storage
 - **Consensus Context**: Slot information, epoch data, and leader schedules
-
-### Key Message Types
-
-#### Transaction Layer (`txn.proto`)
-- `SanitizedTransaction`: Complete transaction with message and signatures
-- `TransactionMessage`: Transaction payload with accounts and instructions
-- `CompiledInstruction`: Individual program instructions with account references
-- `MessageHeader`: Transaction metadata (signatures, read-only accounts)
-
-#### Block Layer (`block.proto`)
-- `BlockContext`: Input state for block execution (transactions, accounts, block hash queue)
-- `BlockEffects`: Output state after block execution (bank hash, costs, leader schedule)
-- `BlockFixture`: Complete test fixture combining input context and expected effects
-
-#### Execution Context (`context.proto`)
-- `AcctState`: Complete account state (address, lamports, data, owner)
-- `FeatureSet`: Enabled Solana features for execution
 
 ## Usage
 
@@ -115,7 +98,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-protosol = "5.2.0"
+protosol = "6.0.0"
 ```
 
 No system dependencies needed — pre-generated Rust code is included.
@@ -136,16 +119,16 @@ cargo build                # Uses pre-generated code, no tools needed
 git config core.hooksPath .githooks
 ```
 
-### Modifying proto/flatbuffers schemas
+### Modifying proto schemas
 
-If you change files in `proto/` or `flatbuffers/`, you must regenerate `src/generated/`:
+If you change files in `proto/`, you must regenerate `src/generated/`:
 
 ```bash
-./deps.sh    # Builds protoc + flatc from vendored submodules into opt/bin/
+./deps.sh    # Builds protoc from vendored submodule into opt/bin/
 cargo build --features regenerate --locked
 ```
 
-The exact pinned compiler revisions come from the submodule commits recorded in this repository (`.gitmodules` records their URL and branch hint). The `deps.sh` script builds from these vendored submodules. Prerequisites for `deps.sh`: CMake, Make, C++ compiler.
+The exact pinned compiler revision comes from the submodule commit recorded in this repository (`.gitmodules` records its URL and branch hint). The `deps.sh` script builds from this vendored submodule. Prerequisites for `deps.sh`: CMake, Make, C++ compiler.
 
 ### CI
 
@@ -164,6 +147,7 @@ src/generated/           # Pre-generated Rust code (checked in, no tools needed 
 proto/
 ├── block.proto          # Block execution context and effects
 ├── context.proto        # Account states and execution context
+├── elf.proto            # ELF loader fuzz fixtures
 ├── gossip.proto         # Gossip protocol structures
 ├── invoke.proto         # Program invocation context
 ├── metadata.proto       # Test fixture metadata
@@ -174,13 +158,7 @@ proto/
 ├── vm.proto             # Virtual machine state
 └── *.options            # Nanopb configuration files
 
-flatbuffers/
-├── context.fbs          # Account and execution context definitions
-├── elf.fbs              # ELF VM program and state structures
-└── metadata.fbs         # Test fixture metadata
-
 shlr/
-├── flatbuffers/         # Vendored flatbuffers compiler (submodule, pinned in .gitmodules)
 └── protobuf/            # Vendored protobuf compiler (submodule, pinned in .gitmodules)
 ```
 

@@ -1,5 +1,5 @@
 name: deps
-description: 'Build and cache dependencies (flatc, protoc)'
+description: 'Build and cache dependencies (protoc)'
 inputs:
   deps-script-path:
     description: 'Path of deps.sh script'

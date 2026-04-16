@@ -1,0 +1,4 @@
+elf.proto package:"fd_exec_test"
+elf.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
+
+fd_exec_test.ELFLoaderCtx.elf_data type:FT_POINTER
