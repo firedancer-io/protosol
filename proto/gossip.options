@@ -1,7 +1,6 @@
 gossip.proto package:"fd_exec_test"
 gossip.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
 
-fd_exec_test.GossipMessageBinary.data type:FT_POINTER
 fd_exec_test.GossipFixture.input type:FT_POINTER
 fd_exec_test.GossipPing.from type:FT_POINTER
 fd_exec_test.GossipPing.token type:FT_POINTER
