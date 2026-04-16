@@ -2,6 +2,24 @@ syntax = "proto3";
 package org.solana.sealevel.v1;
 import "metadata.proto";
 
+// v1: valid/invalid bool
+
+message GossipMessageBinary {
+  bytes data = 1;
+}
+
+message AcceptsGossipMessage {
+  bool valid = 1;
+}
+
+message GossipMessageFixture {
+  FixtureMetadata metadata = 1;
+  GossipMessageBinary input = 2;
+  AcceptsGossipMessage output = 3;
+}
+
+// v2: rich effects
+
 message GossipFixture {
   FixtureMetadata metadata = 1;
   bytes input = 2;

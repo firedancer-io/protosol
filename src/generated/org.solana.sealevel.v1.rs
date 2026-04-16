@@ -515,6 +515,25 @@ impl TxnCostMode {
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipMessageBinary {
+    #[prost(bytes = "vec", tag = "1")]
+    pub data: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct AcceptsGossipMessage {
+    #[prost(bool, tag = "1")]
+    pub valid: bool,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipMessageFixture {
+    #[prost(message, optional, tag = "1")]
+    pub metadata: ::core::option::Option<FixtureMetadata>,
+    #[prost(message, optional, tag = "2")]
+    pub input: ::core::option::Option<GossipMessageBinary>,
+    #[prost(message, optional, tag = "3")]
+    pub output: ::core::option::Option<AcceptsGossipMessage>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GossipFixture {
     #[prost(message, optional, tag = "1")]
     pub metadata: ::core::option::Option<FixtureMetadata>,
