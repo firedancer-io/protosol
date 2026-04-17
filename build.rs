@@ -47,7 +47,7 @@ fn emit_link_metadata(
     Ok(abs)
 }
 
-// --- Regeneration support (requires protoc + flatc) ---
+// --- Regeneration support (requires protoc) ---
 
 #[cfg(feature = "regenerate")]
 mod regen {
@@ -75,28 +75,6 @@ mod regen {
         }
         panic!(
             "protoc not found. Install it via ./deps.sh or set PROTOC_EXECUTABLE. \
-             See .gitmodules for the pinned version."
-        );
-    }
-
-    /// Get the path to flatc, checking multiple sources:
-    /// 1. FLATC_EXECUTABLE environment variable
-    /// 2. PROTOSOL_FLATC environment variable
-    /// 3. opt/bin/flatc relative to CARGO_MANIFEST_DIR
-    fn get_flatc_path() -> Result<PathBuf, Box<dyn std::error::Error>> {
-        if let Ok(path) = env::var("FLATC_EXECUTABLE") {
-            return Ok(PathBuf::from(path));
-        }
-        if let Ok(path) = env::var("PROTOSOL_FLATC") {
-            return Ok(PathBuf::from(path));
-        }
-        let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR")?);
-        let local_flatc = manifest_dir.join("opt").join("bin").join("flatc");
-        if local_flatc.exists() {
-            return Ok(local_flatc);
-        }
-        panic!(
-            "flatc not found. Install it via ./deps.sh or set FLATC_EXECUTABLE. \
              See .gitmodules for the pinned version."
         );
     }
@@ -148,36 +126,6 @@ mod regen {
         Ok(())
     }
 
-    pub fn compile_flatbuffers(
-        manifest_dir: &Path,
-        out_dir: &Path,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let flatbuffer_dir = PathBuf::from("flatbuffers");
-        let flatbuffer_files = get_files(manifest_dir, &flatbuffer_dir, "fbs")?;
-        let abs_flatbuffer_dir = manifest_dir
-            .join(&flatbuffer_dir)
-            .canonicalize()
-            .map(|p| maybe_normalize_windows_path(&p))?;
-
-        let flatc_path = get_flatc_path()?;
-        let flatc = flatc_rust::Flatc::from_path(&flatc_path);
-        flatc.check()?;
-        flatc.run(flatc_rust::Args {
-            lang: "rust",
-            inputs: flatbuffer_files
-                .iter()
-                .map(|p| p.as_path())
-                .collect::<Vec<_>>()
-                .as_slice(),
-            out_dir,
-            includes: &[abs_flatbuffer_dir.as_path()],
-            extra: &["--gen-object-api", "--gen-compare"],
-            ..Default::default()
-        })?;
-
-        Ok(())
-    }
-
     /// Remove existing generated files from src/generated/ to avoid stale outputs.
     pub fn clean_generated(generated_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
         fs::create_dir_all(generated_dir)?;
@@ -220,24 +168,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Always emit link metadata for downstream crates
     emit_link_metadata(&manifest_dir, Path::new("proto"), "PROTO_DIR", "proto")?;
-    emit_link_metadata(
-        &manifest_dir,
-        Path::new("flatbuffers"),
-        "FLATBUFFERS_DIR",
-        "fbs",
-    )?;
 
-    // Regeneration: rebuild from proto/fbs sources directly into src/generated/
+    // Regeneration: rebuild from proto sources directly into src/generated/
     #[cfg(feature = "regenerate")]
     {
         let generated_dir = manifest_dir.join("src").join("generated");
         regen::print_pinned_versions(&manifest_dir);
         regen::clean_generated(&generated_dir)?;
         regen::compile_protos(&manifest_dir, &generated_dir)?;
-        regen::compile_flatbuffers(&manifest_dir, &generated_dir)?;
-        println!(
-            "cargo:warning=protosol: regenerated src/generated/ from proto/flatbuffers sources"
-        );
+        println!("cargo:warning=protosol: regenerated src/generated/ from proto sources");
     }
 
     Ok(())

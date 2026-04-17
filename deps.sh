@@ -5,28 +5,6 @@ set -euo pipefail
 # Install prefix
 PREFIX="$(pwd)/opt"
 
-install_flatbuffers () {
-  mkdir -p "$PREFIX/build/flatbuffers"
-  echo "[+] Configuring flatbuffers (flatc only)"
-  cmake \
-    -S shlr/flatbuffers \
-    -B "$PREFIX/build/flatbuffers" \
-    -G"Unix Makefiles" \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX:PATH="$PREFIX" \
-    -DFLATBUFFERS_BUILD_TESTS=OFF \
-    -DFLATBUFFERS_BUILD_FLATC=ON \
-    -DFLATBUFFERS_BUILD_FLATLIB=OFF
-
-  echo "[+] Building flatc binary only"
-  make -C "$PREFIX/build/flatbuffers" flatc -j `nproc`
-
-  echo "[+] Installing flatc via cmake"
-  cmake --install "$PREFIX/build/flatbuffers" --config Release
-
-  echo "[+] Successfully installed flatc"
-}
-
 install_protobuf () {
   mkdir -p "$PREFIX/build/protobuf"
 
@@ -59,5 +37,4 @@ install_protobuf () {
 }
 
 mkdir -pv "$PREFIX"
-install_flatbuffers
 install_protobuf
