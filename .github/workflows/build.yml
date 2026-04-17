@@ -6,12 +6,16 @@ permissions:
 on:
   push:
     branches:
-      - "**"
+      - main
   pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,20 +31,18 @@ jobs:
       - name: Update submodules
         run: git submodule update --init --recursive
 
-      - name: Run deps.sh
-        run: bash ./deps.sh
+      - uses: ./.github/actions/deps
 
-      - name: Check formatting
-        run: cargo fmt --check
+      - name: Check lints and clippy
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --all-features --locked -- -D warnings
 
       - name: Build (release, default — uses pre-generated code)
         run: cargo build --release --locked
 
       - name: Build (release, solana-types)
         run: cargo build --release --locked -F solana-types
-
-      - name: Clippy
-        run: cargo clippy --all-features --locked -- -D warnings
 
       - name: Verify generated code is up to date
         run: |

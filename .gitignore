@@ -2,3 +2,4 @@
 target/
 **/*.rs.bk
 opt/
+deps-bundle.tar.zst
