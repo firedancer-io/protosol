@@ -8,3 +8,4 @@ fd_exec_test.InstrContext.data type:FT_POINTER
 
 fd_exec_test.InstrEffects.modified_accounts type:FT_POINTER
 fd_exec_test.InstrEffects.return_data type:FT_POINTER
+fd_exec_test.InstrEffects.log type:FT_POINTER
