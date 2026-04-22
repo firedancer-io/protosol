@@ -715,6 +715,55 @@ pub struct GossipContactInfo {
     pub outset: u64,
     #[prost(uint32, tag = "4")]
     pub shred_version: u32,
+    #[prost(uint32, tag = "5")]
+    pub version_major: u32,
+    #[prost(uint32, tag = "6")]
+    pub version_minor: u32,
+    #[prost(uint32, tag = "7")]
+    pub version_patch: u32,
+    #[prost(uint32, tag = "8")]
+    pub version_commit: u32,
+    #[prost(uint32, tag = "9")]
+    pub version_feature_set: u32,
+    #[prost(uint32, tag = "10")]
+    pub version_client: u32,
+    #[prost(message, repeated, tag = "11")]
+    pub addrs: ::prost::alloc::vec::Vec<GossipIpAddr>,
+    #[prost(message, repeated, tag = "12")]
+    pub sockets: ::prost::alloc::vec::Vec<GossipSocketEntry>,
+    #[prost(bytes = "vec", tag = "13")]
+    pub extensions: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct GossipIpAddr {
+    #[prost(oneof = "gossip_ip_addr::Addr", tags = "1, 2")]
+    pub addr: ::core::option::Option<gossip_ip_addr::Addr>,
+}
+/// Nested message and enum types in `GossipIpAddr`.
+pub mod gossip_ip_addr {
+    #[derive(Clone, Copy, PartialEq, ::prost::Oneof)]
+    pub enum Addr {
+        #[prost(fixed32, tag = "1")]
+        Ipv4(u32),
+        #[prost(message, tag = "2")]
+        Ipv6(super::GossipIpv6Addr),
+    }
+}
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct GossipIpv6Addr {
+    #[prost(fixed64, tag = "1")]
+    pub hi: u64,
+    #[prost(fixed64, tag = "2")]
+    pub lo: u64,
+}
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct GossipSocketEntry {
+    #[prost(uint32, tag = "1")]
+    pub key: u32,
+    #[prost(uint32, tag = "2")]
+    pub index: u32,
+    #[prost(uint32, tag = "3")]
+    pub offset: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GossipVote {
@@ -746,6 +795,27 @@ pub struct GossipEpochSlots {
     pub from: ::prost::alloc::vec::Vec<u8>,
     #[prost(uint64, tag = "3")]
     pub wallclock: u64,
+    #[prost(message, repeated, tag = "4")]
+    pub slots: ::prost::alloc::vec::Vec<GossipCompressedSlots>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GossipCompressedSlots {
+    #[prost(uint64, tag = "1")]
+    pub first_slot: u64,
+    #[prost(uint64, tag = "2")]
+    pub num: u64,
+    #[prost(oneof = "gossip_compressed_slots::Data", tags = "3, 4")]
+    pub data: ::core::option::Option<gossip_compressed_slots::Data>,
+}
+/// Nested message and enum types in `GossipCompressedSlots`.
+pub mod gossip_compressed_slots {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Data {
+        #[prost(bytes, tag = "3")]
+        Uncompressed(::prost::alloc::vec::Vec<u8>),
+        #[prost(bytes, tag = "4")]
+        Flate2(::prost::alloc::vec::Vec<u8>),
+    }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GossipSnapshotHashes {

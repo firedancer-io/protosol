@@ -97,6 +97,33 @@ message GossipContactInfo {
   uint64 wallclock = 2;
   uint64 outset = 3;
   uint32 shred_version = 4;
+  uint32 version_major = 5;
+  uint32 version_minor = 6;
+  uint32 version_patch = 7;
+  uint32 version_commit = 8;
+  uint32 version_feature_set = 9;
+  uint32 version_client = 10;
+  repeated GossipIpAddr addrs = 11;
+  repeated GossipSocketEntry sockets = 12;
+  bytes extensions = 13;
+}
+
+message GossipIpAddr {
+  oneof addr {
+    fixed32 ipv4 = 1;
+    GossipIpv6Addr ipv6 = 2;
+  }
+}
+
+message GossipIpv6Addr {
+  fixed64 hi = 1;
+  fixed64 lo = 2;
+}
+
+message GossipSocketEntry {
+  uint32 key = 1;
+  uint32 index = 2;
+  uint32 offset = 3;
 }
 
 message GossipVote {
@@ -117,6 +144,16 @@ message GossipEpochSlots {
   uint32 index = 1;
   bytes from = 2;
   uint64 wallclock = 3;
+  repeated GossipCompressedSlots slots = 4;
+}
+
+message GossipCompressedSlots {
+  uint64 first_slot = 1;
+  uint64 num = 2;
+  oneof data {
+    bytes uncompressed = 3;
+    bytes flate2 = 4;
+  }
 }
 
 message GossipSnapshotHashes {
