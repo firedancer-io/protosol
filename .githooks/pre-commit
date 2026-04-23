@@ -11,7 +11,7 @@ echo "[pre-commit] Running clippy..."
 cargo clippy --all-features --locked -- -D warnings
 
 # Check if proto schemas changed but generated files didn't
-SCHEMA_CHANGED=$(git diff --cached --name-only -- proto/ | head -1)
+SCHEMA_CHANGED=$(git diff --cached --name-only -- 'proto/*.proto' | head -1)
 GEN_CHANGED=$(git diff --cached --name-only -- src/generated/ | head -1)
 if [ -n "$SCHEMA_CHANGED" ] && [ -z "$GEN_CHANGED" ]; then
   echo "[pre-commit] ERROR: proto schemas changed but src/generated/ was not updated."
