@@ -21,10 +21,16 @@ fd_exec_test.GossipBloom.keys type:FT_POINTER
 fd_exec_test.GossipBloom.bits type:FT_POINTER
 fd_exec_test.GossipCrdsValue.signature type:FT_POINTER
 fd_exec_test.GossipContactInfo.pubkey type:FT_POINTER
+fd_exec_test.GossipContactInfo.addrs type:FT_POINTER
+fd_exec_test.GossipContactInfo.sockets type:FT_POINTER
+fd_exec_test.GossipContactInfo.extensions type:FT_POINTER
 fd_exec_test.GossipVote.from type:FT_POINTER
 fd_exec_test.GossipVote.transaction type:FT_POINTER
 fd_exec_test.GossipLowestSlot.from type:FT_POINTER
 fd_exec_test.GossipEpochSlots.from type:FT_POINTER
+fd_exec_test.GossipEpochSlots.slots type:FT_POINTER
+fd_exec_test.GossipCompressedSlots.uncompressed type:FT_POINTER
+fd_exec_test.GossipCompressedSlots.flate2 type:FT_POINTER
 fd_exec_test.GossipSnapshotHashes.from type:FT_POINTER
 fd_exec_test.GossipSnapshotHashes.full_hash type:FT_POINTER
 fd_exec_test.GossipSnapshotHashes.incremental type:FT_POINTER
