@@ -1,0 +1,16 @@
+bundle.proto package:"fd_exec_test"
+bundle.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
+
+fd_exec_test.BundleContext.txns type:FT_POINTER
+fd_exec_test.BundleContext.account_shared_data type:FT_POINTER
+
+fd_exec_test.BundleEffects.txn_results type:FT_POINTER
+fd_exec_test.BundleEffects.stake_deltas type:FT_POINTER
+fd_exec_test.BundleEffects.vote_updates type:FT_POINTER
+fd_exec_test.BundleEffects.new_votes type:FT_POINTER
+
+fd_exec_test.StakeDelta.address max_size:32 fixed_length:true
+
+fd_exec_test.VoteUpdate.address max_size:32 fixed_length:true
+
+fd_exec_test.NewVote.address max_size:32 fixed_length:true
