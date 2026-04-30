@@ -448,6 +448,60 @@ impl WarmupCooldownRate {
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StakeDelta {
+    #[prost(bytes = "vec", tag = "1")]
+    pub address: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "2")]
+    pub delta: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VoteUpdate {
+    #[prost(bytes = "vec", tag = "1")]
+    pub address: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "2")]
+    pub last_vote_slot: u64,
+    #[prost(uint64, tag = "3")]
+    pub last_vote_timestamp: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NewVote {
+    #[prost(bytes = "vec", tag = "1")]
+    pub address: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bool, tag = "2")]
+    pub is_tombstone: bool,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BundleContext {
+    #[prost(message, repeated, tag = "1")]
+    pub txns: ::prost::alloc::vec::Vec<SanitizedTransaction>,
+    #[prost(message, repeated, tag = "2")]
+    pub account_shared_data: ::prost::alloc::vec::Vec<AcctState>,
+    #[prost(message, optional, tag = "3")]
+    pub bank: ::core::option::Option<TxnBank>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BundleEffects {
+    #[prost(bool, tag = "1")]
+    pub has_error: bool,
+    #[prost(message, repeated, tag = "2")]
+    pub txn_results: ::prost::alloc::vec::Vec<TxnResult>,
+    #[prost(message, repeated, tag = "3")]
+    pub stake_deltas: ::prost::alloc::vec::Vec<StakeDelta>,
+    #[prost(message, repeated, tag = "4")]
+    pub vote_updates: ::prost::alloc::vec::Vec<VoteUpdate>,
+    #[prost(message, repeated, tag = "5")]
+    pub new_votes: ::prost::alloc::vec::Vec<NewVote>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BundleFixture {
+    #[prost(message, optional, tag = "1")]
+    pub metadata: ::core::option::Option<FixtureMetadata>,
+    #[prost(message, optional, tag = "2")]
+    pub input: ::core::option::Option<BundleContext>,
+    #[prost(message, optional, tag = "3")]
+    pub output: ::core::option::Option<BundleEffects>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CostContext {
     #[prost(message, optional, tag = "1")]
     pub tx: ::core::option::Option<SanitizedTransaction>,

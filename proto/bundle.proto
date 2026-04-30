@@ -1,0 +1,44 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+
+import "context.proto";
+import "txn.proto";
+import "metadata.proto";
+
+/* For now, this is Firedancer-specific. */
+
+message StakeDelta {
+  bytes address = 1;
+  uint64 delta = 2;
+}
+
+message VoteUpdate {
+  bytes address = 1;
+  uint64 last_vote_slot = 2;
+  uint64 last_vote_timestamp = 3;
+}
+
+message NewVote {
+  bytes address = 1;
+  bool is_tombstone = 2;
+}
+
+message BundleContext {
+  repeated SanitizedTransaction txns = 1;
+  repeated AcctState account_shared_data = 2;
+  TxnBank bank = 3;
+}
+
+message BundleEffects {
+  bool has_error = 1;
+  repeated TxnResult txn_results = 2;
+  repeated StakeDelta stake_deltas = 3;
+  repeated VoteUpdate vote_updates = 4;
+  repeated NewVote new_votes = 5;
+}
+
+message BundleFixture {
+  FixtureMetadata metadata = 1;
+  BundleContext input = 2;
+  BundleEffects output = 3;
+}
