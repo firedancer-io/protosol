@@ -149,7 +149,7 @@ proto/
 ├── context.proto        # Account states and execution context
 ├── elf.proto            # ELF loader fuzz fixtures
 ├── gossip.proto         # Gossip protocol structures
-├── invoke.proto         # Program invocation context
+├── instr.proto          # Instruction execution context
 ├── metadata.proto       # Test fixture metadata
 ├── pack.proto           # Compute budget testing
 ├── serialize.proto      # Serialization structures
