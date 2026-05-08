@@ -145,18 +145,18 @@ CI runs on every push and pull request:
 src/generated/           # Pre-generated Rust code (checked in, no tools needed to build)
 
 proto/
-├── block.proto          # Block execution context and effects
-├── context.proto        # Account states and execution context
-├── elf.proto            # ELF loader fuzz fixtures
-├── gossip.proto         # Gossip protocol structures
-├── instr.proto          # Instruction execution context
-├── metadata.proto       # Test fixture metadata
-├── pack.proto           # Compute budget testing
-├── serialize.proto      # Serialization structures
-├── shred.proto          # Shred structures
-├── txn.proto            # Transaction structures
-├── vm.proto             # Virtual machine state
-└── *.options            # Nanopb configuration files
+├── block.proto              # Block execution context and effects
+├── bundle.proto             # Bundle execution context and effects
+├── context.proto            # Account states and execution context
+├── cost.proto               # Compute budget testing
+├── elf.proto                # ELF loader fuzz fixtures
+├── gossip.proto             # Gossip protocol structures
+├── instr.proto              # Instruction execution context
+├── metadata.proto           # Test fixture metadata
+├── txn.proto                # Transaction structures
+├── vm.proto                 # Virtual machine state
+├── vm_serialization.proto   # VM serialization fuzzing
+└── *.options                # Nanopb configuration files
 
 shlr/
 └── protobuf/            # Vendored protobuf compiler (submodule, pinned in .gitmodules)

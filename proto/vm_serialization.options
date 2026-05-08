@@ -1,0 +1,5 @@
+vm_serialization.proto package:"fd_exec_test"
+vm_serialization.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
+
+fd_exec_test.VMSerializationEffects.vm_input_memory_regions type:FT_POINTER
+fd_exec_test.VMSerializationEffects.serialized_account_metadata type:FT_POINTER

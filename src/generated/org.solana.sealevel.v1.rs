@@ -980,22 +980,6 @@ pub struct InstrFixture {
     #[prost(message, optional, tag = "3")]
     pub output: ::core::option::Option<InstrEffects>,
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VmMemRegion {
-    #[prost(uint64, tag = "1")]
-    pub vm_addr: u64,
-    #[prost(bytes = "vec", tag = "2")]
-    pub content: ::prost::alloc::vec::Vec<u8>,
-    #[prost(bool, tag = "3")]
-    pub is_writable: bool,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct InstrSerializeResult {
-    #[prost(int32, tag = "1")]
-    pub result: i32,
-    #[prost(message, repeated, tag = "2")]
-    pub regions: ::prost::alloc::vec::Vec<VmMemRegion>,
-}
 /// Describes an input data region. Agave's memory mapping sets up a series of
 /// memory mapped regions, which combine to make the input data region.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1220,4 +1204,54 @@ impl ErrKind {
             _ => None,
         }
     }
+}
+/// Describes a VM input memory region for serialization fuzzing.
+/// This is separate from InputDataRegion in vm.proto.
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct VmInputMemoryRegion {
+    #[prost(uint64, tag = "1")]
+    pub vm_address: u64,
+    #[prost(uint64, tag = "2")]
+    pub region_size: u64,
+    #[prost(bool, tag = "3")]
+    pub is_writable: bool,
+}
+/// Per-account metadata containing VM addresses for serialized account fields.
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct VmSerializedAccountMetadata {
+    #[prost(uint64, tag = "1")]
+    pub original_data_len: u64,
+    #[prost(uint64, tag = "2")]
+    pub vm_data_addr: u64,
+    #[prost(uint64, tag = "3")]
+    pub vm_key_addr: u64,
+    #[prost(uint64, tag = "4")]
+    pub vm_lamports_addr: u64,
+    #[prost(uint64, tag = "5")]
+    pub vm_owner_addr: u64,
+}
+/// The effects of VM serialization.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VmSerializationEffects {
+    #[prost(bool, tag = "1")]
+    pub has_error: bool,
+    /// Hash of the raw serialized memory of the VM
+    #[prost(fixed64, tag = "2")]
+    pub serialized_memory_hash: u64,
+    #[prost(message, repeated, tag = "3")]
+    pub vm_input_memory_regions: ::prost::alloc::vec::Vec<VmInputMemoryRegion>,
+    #[prost(message, repeated, tag = "4")]
+    pub serialized_account_metadata: ::prost::alloc::vec::Vec<
+        VmSerializedAccountMetadata,
+    >,
+}
+/// A VM serialization test fixture.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VmSerializationFixture {
+    #[prost(message, optional, tag = "1")]
+    pub metadata: ::core::option::Option<FixtureMetadata>,
+    #[prost(message, optional, tag = "2")]
+    pub input: ::core::option::Option<InstrContext>,
+    #[prost(message, optional, tag = "3")]
+    pub output: ::core::option::Option<VmSerializationEffects>,
 }
