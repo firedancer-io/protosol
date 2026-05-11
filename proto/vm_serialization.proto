@@ -1,0 +1,37 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+import "instr.proto";
+import "metadata.proto";
+
+// Describes a VM input memory region for serialization fuzzing.
+// This is separate from InputDataRegion in vm.proto.
+message VMInputMemoryRegion {
+  uint64 vm_address = 1;
+  uint64 region_size = 2;
+  bool is_writable = 3;
+}
+
+// Per-account metadata containing VM addresses for serialized account fields.
+message VMSerializedAccountMetadata {
+  uint64 original_data_len = 1;
+  uint64 vm_data_addr = 2;
+  uint64 vm_key_addr = 3;
+  uint64 vm_lamports_addr = 4;
+  uint64 vm_owner_addr = 5;
+}
+
+// The effects of VM serialization.
+message VMSerializationEffects {
+  bool has_error = 1;
+  // Hash of the raw serialized memory of the VM
+  fixed64 serialized_memory_hash = 2;
+  repeated VMInputMemoryRegion vm_input_memory_regions = 3;
+  repeated VMSerializedAccountMetadata serialized_account_metadata = 4;
+}
+
+// A VM serialization test fixture.
+message VMSerializationFixture {
+  FixtureMetadata metadata = 1;
+  InstrContext input = 2;
+  VMSerializationEffects output = 3;
+}
