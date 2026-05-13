@@ -14,8 +14,8 @@ message CostContext {
   SanitizedTransaction tx = 1;
   FeatureSet features = 2;
   TxnCostMode mode = 3;
-  uint64 actual_programs_execution_cost = 4;
-  uint64 actual_loaded_accounts_data_size_bytes = 5;
+  uint32 actual_programs_execution_cost = 4;
+  uint32 actual_loaded_accounts_data_size_bytes = 5;
 }
 
 message CostResult {
