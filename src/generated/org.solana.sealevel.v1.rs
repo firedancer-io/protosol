@@ -509,10 +509,10 @@ pub struct CostContext {
     pub features: ::core::option::Option<FeatureSet>,
     #[prost(enumeration = "TxnCostMode", tag = "3")]
     pub mode: i32,
-    #[prost(uint64, tag = "4")]
-    pub actual_programs_execution_cost: u64,
-    #[prost(uint64, tag = "5")]
-    pub actual_loaded_accounts_data_size_bytes: u64,
+    #[prost(uint32, tag = "4")]
+    pub actual_programs_execution_cost: u32,
+    #[prost(uint32, tag = "5")]
+    pub actual_loaded_accounts_data_size_bytes: u32,
 }
 #[derive(Clone, Copy, PartialEq, ::prost::Message)]
 pub struct CostResult {
