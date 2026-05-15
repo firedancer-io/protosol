@@ -268,7 +268,7 @@ pub struct PrevVoteAccount {
     #[prost(uint64, tag = "3")]
     pub stake: u64,
     #[prost(uint32, tag = "4")]
-    pub commission: u32,
+    pub commission_bps: u32,
     /// Epoch credits are only needed for recalculating partitioned
     /// epoch rewards during the distribution phase.
     #[prost(message, repeated, tag = "5")]
