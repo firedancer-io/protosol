@@ -980,6 +980,101 @@ pub struct InstrFixture {
     #[prost(message, optional, tag = "3")]
     pub output: ::core::option::Option<InstrEffects>,
 }
+/// Any features that needed to be fuzzed should be manually added here.
+/// Once they're cleaned up / activated on all clusters, they can be
+/// removed via a reserved tag.
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct ShredFeatures {
+    #[prost(bool, tag = "1")]
+    pub discard_unexpected_data_complete_shreds: bool,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ShredParseContext {
+    /// Raw bytes for each shred.
+    #[prost(bytes = "vec", repeated, tag = "1")]
+    pub shreds: ::prost::alloc::vec::Vec<::prost::alloc::vec::Vec<u8>>,
+    #[prost(uint64, tag = "2")]
+    pub root_slot: u64,
+    #[prost(uint32, tag = "3")]
+    pub shred_version: u32,
+    #[prost(message, optional, tag = "4")]
+    pub features: ::core::option::Option<ShredFeatures>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FecSetParseResult {
+    /// Did the FEC set complete?
+    #[prost(bool, tag = "1")]
+    pub completed: bool,
+    /// Merkle root if completed. Exactly 32 bytes.
+    #[prost(bytes = "vec", tag = "2")]
+    pub merkle_root: ::prost::alloc::vec::Vec<u8>,
+    /// Chained merkle root, if completed. Exactly 32 bytes.
+    #[prost(bytes = "vec", tag = "3")]
+    pub chained_merkle_root: ::prost::alloc::vec::Vec<u8>,
+    /// Concatenated data shred payloads if completed.
+    #[prost(bytes = "vec", tag = "4")]
+    pub payload: ::prost::alloc::vec::Vec<u8>,
+    /// Parsed header fields from shred
+    #[prost(uint64, tag = "5")]
+    pub slot: u64,
+    #[prost(uint32, tag = "6")]
+    pub fec_set_index: u32,
+    #[prost(uint32, tag = "7")]
+    pub parent_offset: u32,
+    #[prost(uint32, tag = "8")]
+    pub shred_version: u32,
+    #[prost(uint32, tag = "9")]
+    pub num_data_shreds: u32,
+    #[prost(uint32, tag = "10")]
+    pub num_coding_shreds: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ShredParseEffects {
+    /// Did any part of the pipeline reject the block?
+    #[prost(enumeration = "BlockParseResult", tag = "1")]
+    pub block_parse_result: i32,
+    /// Parsing results for each shred
+    #[prost(bool, repeated, tag = "2")]
+    pub shred_results: ::prost::alloc::vec::Vec<bool>,
+    /// Parsing results for each FEC set
+    #[prost(message, repeated, tag = "3")]
+    pub fec_set_results: ::prost::alloc::vec::Vec<FecSetParseResult>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ShredParseFixture {
+    #[prost(message, optional, tag = "1")]
+    pub metadata: ::core::option::Option<FixtureMetadata>,
+    #[prost(message, optional, tag = "2")]
+    pub input: ::core::option::Option<ShredParseContext>,
+    #[prost(message, optional, tag = "3")]
+    pub output: ::core::option::Option<ShredParseEffects>,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum BlockParseResult {
+    Accepted = 0,
+    RejectedInvalidHeader = 1,
+}
+impl BlockParseResult {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Accepted => "ACCEPTED",
+            Self::RejectedInvalidHeader => "REJECTED_INVALID_HEADER",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ACCEPTED" => Some(Self::Accepted),
+            "REJECTED_INVALID_HEADER" => Some(Self::RejectedInvalidHeader),
+            _ => None,
+        }
+    }
+}
 /// Describes an input data region. Agave's memory mapping sets up a series of
 /// memory mapped regions, which combine to make the input data region.
 #[derive(Clone, PartialEq, ::prost::Message)]
