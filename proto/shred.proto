@@ -1,0 +1,74 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+
+import "metadata.proto";
+
+/* Protobuf definitions for the shred parsing differential fuzzer.  The
+   testing scope includes:
+
+   * Basic shred parsing/header validation
+   * FEC set parsing/reassembly/reordering/equivocation handling
+   * Reed-Solomon recovery for data/coding shreds
+   * Block validation checks (e.g. verifying ticks)
+   * Transaction descriptor parsing checks
+
+   For the sake of coverage and throughput, checks such as signature
+   verification are assumed to be stubbed out, i.e. merkle hashes and
+   transaction signatures are mocked and not computed from the payloads. */
+
+/* Any features that needed to be fuzzed should be manually added here.
+   Once they're cleaned up / activated on all clusters, they can be
+   removed via a reserved tag. */
+message ShredFeatures {
+  bool discard_unexpected_data_complete_shreds = 1;
+}
+
+enum BlockParseResult {
+  ACCEPTED = 0;
+  REJECTED_INVALID_HEADER = 1;
+}
+
+message ShredParseContext {
+  // Raw bytes for each shred.
+  repeated bytes shreds = 1;
+  uint64 root_slot = 2;
+  uint32 shred_version = 3;
+  ShredFeatures features = 4;
+}
+
+message FECSetParseResult {
+  // Did the FEC set complete?
+  bool completed = 1;
+  // Merkle root if completed. Exactly 32 bytes.
+  bytes merkle_root = 2;
+  // Chained merkle root, if completed. Exactly 32 bytes.
+  bytes chained_merkle_root = 3;
+  // Concatenated data shred payloads if completed.
+  bytes payload = 4;
+
+  // Parsed header fields from shred
+  uint64 slot = 5;
+  uint32 fec_set_index = 6;
+  uint32 parent_offset = 7;
+  uint32 shred_version = 8;
+  uint32 num_data_shreds = 9;
+  uint32 num_coding_shreds = 10;
+}
+
+
+message ShredParseEffects {
+  /* Did any part of the pipeline reject the block? */
+  BlockParseResult block_parse_result = 1;
+
+  /* Parsing results for each shred */
+  repeated bool shred_results = 2;
+
+  /* Parsing results for each FEC set */
+  repeated FECSetParseResult fec_set_results = 3;
+}
+
+message ShredParseFixture {
+  FixtureMetadata metadata = 1;
+  ShredParseContext input = 2;
+  ShredParseEffects output = 3;
+}
