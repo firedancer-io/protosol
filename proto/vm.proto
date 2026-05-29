@@ -118,8 +118,7 @@ message SyscallEffects {
     // Current number of stack frames pushed
     uint64 frame_count = 7;
 
-    // Syscall log
-    bytes log = 8;
+    reserved 8;
 
     bytes rodata = 9;
 
