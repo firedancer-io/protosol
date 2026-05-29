@@ -1191,9 +1191,6 @@ pub struct SyscallEffects {
     /// Current number of stack frames pushed
     #[prost(uint64, tag = "7")]
     pub frame_count: u64,
-    /// Syscall log
-    #[prost(bytes = "vec", tag = "8")]
-    pub log: ::prost::alloc::vec::Vec<u8>,
     #[prost(bytes = "vec", tag = "9")]
     pub rodata: ::prost::alloc::vec::Vec<u8>,
     /// VM state
