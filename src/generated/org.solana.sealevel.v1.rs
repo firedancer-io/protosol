@@ -989,16 +989,25 @@ pub struct ShredFeatures {
     pub discard_unexpected_data_complete_shreds: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ShredEntry {
+    /// Raw bytes for each shred
+    #[prost(bytes = "vec", tag = "1")]
+    pub payload: ::prost::alloc::vec::Vec<u8>,
+    /// FEC set's own merkle root (used to maintain linkage between shreds
+    /// from child FEC sets which are dumped from ledgers)
+    #[prost(bytes = "vec", tag = "2")]
+    pub fec_merkle_root: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ShredParseContext {
-    /// Raw bytes for each shred.
-    #[prost(bytes = "vec", repeated, tag = "1")]
-    pub shreds: ::prost::alloc::vec::Vec<::prost::alloc::vec::Vec<u8>>,
     #[prost(uint64, tag = "2")]
     pub root_slot: u64,
     #[prost(uint32, tag = "3")]
     pub shred_version: u32,
     #[prost(message, optional, tag = "4")]
     pub features: ::core::option::Option<ShredFeatures>,
+    #[prost(message, repeated, tag = "5")]
+    pub shreds: ::prost::alloc::vec::Vec<ShredEntry>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FecSetParseResult {
