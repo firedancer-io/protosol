@@ -1,9 +1,6 @@
 shred.proto package:"fd_exec_test"
 shred.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
 
-fd_exec_test.ShredEntry.payload type:FT_POINTER
-fd_exec_test.ShredEntry.fec_merkle_root max_size:32 fixed_length:true
-
 fd_exec_test.ShredParseContext.shreds type:FT_POINTER
 
 fd_exec_test.ShredParseEffects.shred_results type:FT_POINTER

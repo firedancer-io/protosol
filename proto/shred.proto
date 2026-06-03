@@ -28,20 +28,12 @@ enum BlockParseResult {
   REJECTED_INVALID_HEADER = 1;
 }
 
-message ShredEntry {
-  // Raw bytes for each shred
-  bytes payload = 1;
-  // FEC set's own merkle root (used to maintain linkage between shreds
-  // from child FEC sets which are dumped from ledgers)
-  bytes fec_merkle_root = 2;
-}
-
 message ShredParseContext {
-  reserved 1;
+  // Raw bytes for each shred.
+  repeated bytes shreds = 1;
   uint64 root_slot = 2;
   uint32 shred_version = 3;
   ShredFeatures features = 4;
-  repeated ShredEntry shreds = 5;
 }
 
 message FECSetParseResult {
