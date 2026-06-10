@@ -150,8 +150,6 @@ pub struct TxnBank {
     pub fee_rate_governor: ::core::option::Option<FeeRateGovernor>,
     #[prost(uint64, tag = "4")]
     pub total_epoch_stake: u64,
-    #[prost(message, optional, tag = "5")]
-    pub epoch_schedule: ::core::option::Option<EpochSchedule>,
     #[prost(message, optional, tag = "7")]
     pub features: ::core::option::Option<FeatureSet>,
 }
@@ -319,8 +317,6 @@ pub struct BlockBank {
     pub parent_lt_hash: ::prost::alloc::vec::Vec<u8>,
     #[prost(uint64, tag = "13")]
     pub parent_signature_count: u64,
-    #[prost(message, optional, tag = "14")]
-    pub epoch_schedule: ::core::option::Option<EpochSchedule>,
     #[prost(message, optional, tag = "16")]
     pub features: ::core::option::Option<FeatureSet>,
     #[prost(message, repeated, tag = "17")]

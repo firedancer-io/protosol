@@ -97,9 +97,7 @@ message BlockBank {
 
     uint64 parent_signature_count = 13;
 
-    EpochSchedule epoch_schedule = 14;
-
-    reserved 15;
+    reserved 14, 15;
 
     FeatureSet features = 16;
 
