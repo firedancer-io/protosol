@@ -68,9 +68,7 @@ message TxnBank {
 
   uint64 total_epoch_stake = 4;
 
-  EpochSchedule epoch_schedule = 5;
-
-  reserved 6;
+  reserved 5, 6;
 
   FeatureSet features = 7;
 
