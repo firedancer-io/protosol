@@ -1,6 +1,6 @@
 [package]
 name = "protosol"
-version = "9.0.0"
+version = "9.0.1"
 edition = "2021"
 license = "Apache-2.0"
 description = "Protobuf definitions for the SVM fuzzing project."
@@ -21,7 +21,6 @@ prost = "0.11.9"
 solana-account = { version = ">=4.0.0, <5.0.0", optional = true }
 solana-pubkey = { version = ">=4.0.0, <5.0.0", optional = true }
 solana-message = { version = ">=4.0.0, <5.0.0", optional = true }
-solana-epoch-schedule = { version = ">=3.0.0, <4.0.0", optional = true }
 solana-inflation = { version = ">=3.0.0, <4.0.0", optional = true }
 
 [features]
@@ -29,7 +28,6 @@ regenerate = ["prost-build"]
 solana-types = [
     "solana-account",
     "solana-pubkey",
-    "solana-epoch-schedule",
     "solana-inflation",
     "solana-message",
 ]

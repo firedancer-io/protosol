@@ -39,25 +39,6 @@ pub struct FeeRateGovernor {
     #[prost(uint32, tag = "5")]
     pub burn_percent: u32,
 }
-#[derive(Clone, Copy, PartialEq, ::prost::Message)]
-pub struct EpochSchedule {
-    /// The maximum number of slots in each epoch.
-    #[prost(uint64, tag = "1")]
-    pub slots_per_epoch: u64,
-    /// A number of slots before beginning of an epoch to calculate
-    /// a leader schedule for that epoch.
-    #[prost(uint64, tag = "2")]
-    pub leader_schedule_slot_offset: u64,
-    /// Whether epochs start short and grow.
-    #[prost(bool, tag = "3")]
-    pub warmup: bool,
-    /// The first epoch after the warmup period.
-    #[prost(uint64, tag = "4")]
-    pub first_normal_epoch: u64,
-    /// The first slot after the warmup period.
-    #[prost(uint64, tag = "5")]
-    pub first_normal_slot: u64,
-}
 /// A single entry in the blockhash queue.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BlockhashQueueEntry {

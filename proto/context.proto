@@ -38,24 +38,6 @@ message FeeRateGovernor {
   uint32 burn_percent = 5;
 }
 
-message EpochSchedule {
-  // The maximum number of slots in each epoch.
-  uint64 slots_per_epoch = 1;
-
-  // A number of slots before beginning of an epoch to calculate
-  // a leader schedule for that epoch.
-  uint64 leader_schedule_slot_offset = 2;
-
-  // Whether epochs start short and grow.
-  bool warmup = 3;
-
-  // The first epoch after the warmup period.
-  uint64 first_normal_epoch = 4;
-
-  // The first slot after the warmup period.
-  uint64 first_normal_slot = 5;
-}
-
 // A single entry in the blockhash queue.
 message BlockhashQueueEntry {
   bytes blockhash = 1;
