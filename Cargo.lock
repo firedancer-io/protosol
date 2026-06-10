@@ -477,12 +477,11 @@ dependencies = [
 
 [[package]]
 name = "protosol"
-version = "9.0.0"
+version = "9.0.1"
 dependencies = [
  "prost 0.11.9",
  "prost-build",
  "solana-account",
- "solana-epoch-schedule",
  "solana-inflation",
  "solana-message",
  "solana-pubkey",
@@ -684,15 +683,6 @@ name = "solana-define-syscall"
 version = "5.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "21e14a4f604117f379840956a8fc8695e4c84f5b0ebed192f31f60d9b85d581d"
-
-[[package]]
-name = "solana-epoch-schedule"
-version = "3.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9ce264b7b42322325947c4136a09460bf5c73d9aa8262c9b0a2064be63ba8639"
-dependencies = [
- "solana-sdk-macro",
-]
 
 [[package]]
 name = "solana-hash"
