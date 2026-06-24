@@ -162,15 +162,9 @@ pub struct TxnResult {
     /// Whether this transaction was executed
     #[prost(bool, tag = "1")]
     pub executed: bool,
-    /// Whether there was a sanitization error
-    #[prost(bool, tag = "2")]
-    pub sanitization_error: bool,
-    /// If an executed transaction has no error
-    #[prost(bool, tag = "5")]
-    pub is_ok: bool,
     /// The transaction status (error code)
     #[prost(uint32, tag = "6")]
-    pub status: u32,
+    pub txn_error: u32,
     /// The instruction error, if any
     #[prost(uint32, tag = "7")]
     pub instruction_error: u32,

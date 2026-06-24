@@ -100,15 +100,11 @@ message FeeDetails {
 message TxnResult {
   // Whether this transaction was executed
   bool executed = 1;
-  // Whether there was a sanitization error
-  bool sanitization_error = 2;
 
-  reserved 3, 4;
+  reserved 2, 3, 4, 5;
 
-  // If an executed transaction has no error
-  bool is_ok = 5;
   // The transaction status (error code)
-  uint32 status = 6;
+  uint32 txn_error = 6;
   // The instruction error, if any
   uint32 instruction_error = 7;
   // The instruction error index, if any
