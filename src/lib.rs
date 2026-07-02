@@ -2,6 +2,9 @@ pub mod protos {
     include!("generated/org.solana.sealevel.v1.rs");
 }
 
+/// Version of the `protosol` crate, sourced from Cargo package metadata.
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 /// Pre-compiled FileDescriptorSet for all protobuf definitions.
 ///
 /// This binary blob can be loaded by reflection libraries (e.g. prost-reflect's
@@ -13,7 +16,7 @@ pub mod convert;
 
 #[cfg(test)]
 mod tests {
-    use crate::protos;
+    use crate::{protos, VERSION};
 
     #[test]
     fn can_create_txn() {
@@ -26,5 +29,10 @@ mod tests {
                 ..Default::default()
             }
         );
+    }
+
+    #[test]
+    fn exports_crate_version() {
+        assert_eq!(VERSION, env!("CARGO_PKG_VERSION"));
     }
 }
