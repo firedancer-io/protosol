@@ -98,7 +98,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-protosol = "6.0.0"
+protosol = "10.0.0"
 ```
 
 No system dependencies needed — pre-generated Rust code is included.

@@ -207,8 +207,6 @@ pub struct TxnFixture {
 pub struct CostTracker {
     #[prost(uint64, tag = "1")]
     pub block_cost: u64,
-    #[prost(uint64, tag = "2")]
-    pub vote_cost: u64,
 }
 #[derive(Clone, Copy, PartialEq, ::prost::Message)]
 pub struct Inflation {

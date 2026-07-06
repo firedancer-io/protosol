@@ -1,6 +1,6 @@
 [package]
 name = "protosol"
-version = "9.1.1"
+version = "10.0.0"
 edition = "2021"
 license = "Apache-2.0"
 description = "Protobuf definitions for the SVM fuzzing project."
