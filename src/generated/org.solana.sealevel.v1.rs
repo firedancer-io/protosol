@@ -421,7 +421,7 @@ pub struct StakeDelta {
     #[prost(bytes = "vec", tag = "1")]
     pub address: ::prost::alloc::vec::Vec<u8>,
     #[prost(uint64, tag = "2")]
-    pub delta: u64,
+    pub new_stake: u64,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VoteUpdate {

@@ -9,7 +9,7 @@ import "metadata.proto";
 
 message StakeDelta {
   bytes address = 1;
-  uint64 delta = 2;
+  uint64 new_stake = 2;
 }
 
 message VoteUpdate {
