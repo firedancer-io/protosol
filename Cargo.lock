@@ -477,7 +477,7 @@ dependencies = [
 
 [[package]]
 name = "protosol"
-version = "10.0.0"
+version = "10.1.0"
 dependencies = [
  "prost 0.11.9",
  "prost-build",
