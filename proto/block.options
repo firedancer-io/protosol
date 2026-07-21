@@ -4,6 +4,8 @@ block.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
 fd_exec_test.PrevVoteAccount.address max_size:32 fixed_length:true
 fd_exec_test.PrevVoteAccount.node_pubkey max_size:32 fixed_length:true
 fd_exec_test.PrevVoteAccount.epoch_credits type:FT_POINTER
+fd_exec_test.PrevVoteAccount.inflation_rewards_collector max_size:32
+fd_exec_test.PrevVoteAccount.block_revenue_collector max_size:32
 
 fd_exec_test.BlockBank.blockhash_queue type:FT_POINTER
 fd_exec_test.BlockBank.ns_per_slot max_size:16 fixed_length:true

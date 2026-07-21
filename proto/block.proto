@@ -46,6 +46,12 @@ message PrevVoteAccount {
     repeated EpochCredit epoch_credits = 5;
 
     VoteAccountVersion version = 6;
+
+    /* SIMD-0232 collector accounts.  Empty/absent means the default
+       collector applies (the vote account address for inflation
+       rewards, node_pubkey for block revenue). */
+    bytes inflation_rewards_collector = 7;
+    bytes block_revenue_collector = 8;
 }
 
 enum WarmupCooldownRate {
