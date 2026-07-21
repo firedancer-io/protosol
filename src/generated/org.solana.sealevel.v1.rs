@@ -246,6 +246,13 @@ pub struct PrevVoteAccount {
     pub epoch_credits: ::prost::alloc::vec::Vec<EpochCredit>,
     #[prost(enumeration = "VoteAccountVersion", tag = "6")]
     pub version: i32,
+    /// SIMD-0232 collector accounts.  Empty/absent means the default
+    /// collector applies (the vote account address for inflation
+    /// rewards, node_pubkey for block revenue).
+    #[prost(bytes = "vec", tag = "7")]
+    pub inflation_rewards_collector: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "8")]
+    pub block_revenue_collector: ::prost::alloc::vec::Vec<u8>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BlockBank {
