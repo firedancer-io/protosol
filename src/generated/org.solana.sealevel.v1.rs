@@ -1323,3 +1323,347 @@ pub struct VmSerializationFixture {
     #[prost(message, optional, tag = "3")]
     pub output: ::core::option::Option<VmSerializationEffects>,
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorBlockId {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    #[prost(bytes = "vec", tag = "2")]
+    pub block_hash: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorBlockVote {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    #[prost(bytes = "vec", tag = "2")]
+    pub block_hash: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub signer: u64,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorSlotVote {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    #[prost(uint64, tag = "2")]
+    pub signer: u64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorVote {
+    #[prost(oneof = "votor_vote::Vote", tags = "1, 2, 3, 4, 5")]
+    pub vote: ::core::option::Option<votor_vote::Vote>,
+}
+/// Nested message and enum types in `VotorVote`.
+pub mod votor_vote {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Vote {
+        #[prost(message, tag = "1")]
+        Notar(super::VotorBlockVote),
+        #[prost(message, tag = "2")]
+        NotarFallback(super::VotorBlockVote),
+        #[prost(message, tag = "3")]
+        Skip(super::VotorSlotVote),
+        #[prost(message, tag = "4")]
+        SkipFallback(super::VotorSlotVote),
+        #[prost(message, tag = "5")]
+        FinalVote(super::VotorSlotVote),
+    }
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorValidator {
+    #[prost(uint64, tag = "1")]
+    pub stake: u64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorBlock {
+    #[prost(message, optional, tag = "1")]
+    pub block: ::core::option::Option<VotorBlockId>,
+    #[prost(message, optional, tag = "2")]
+    pub parent: ::core::option::Option<VotorBlockId>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorAction {
+    #[prost(oneof = "votor_action::Action", tags = "1, 2, 3")]
+    pub action: ::core::option::Option<votor_action::Action>,
+}
+/// Nested message and enum types in `VotorAction`.
+pub mod votor_action {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Action {
+        #[prost(message, tag = "1")]
+        Vote(super::VotorVote),
+        #[prost(message, tag = "2")]
+        Block(super::VotorBlock),
+        #[prost(bool, tag = "3")]
+        Standstill(bool),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VotorContext {
+    #[prost(message, repeated, tag = "1")]
+    pub validators: ::prost::alloc::vec::Vec<VotorValidator>,
+    #[prost(bytes = "vec", tag = "2")]
+    pub key_seed: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub own_id: u64,
+    #[prost(uint64, tag = "4")]
+    pub slot_offset: u64,
+    #[prost(message, repeated, tag = "5")]
+    pub actions: ::prost::alloc::vec::Vec<VotorAction>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorAggSig {
+    #[prost(uint64, repeated, tag = "2")]
+    pub signers: ::prost::alloc::vec::Vec<u64>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorBlockCert {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    #[prost(bytes = "vec", tag = "2")]
+    pub block_hash: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, optional, tag = "3")]
+    pub agg_sig: ::core::option::Option<VotorAggSig>,
+    #[prost(uint64, tag = "4")]
+    pub stake: u64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorNotarFallbackCert {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    #[prost(bytes = "vec", tag = "2")]
+    pub block_hash: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, optional, tag = "3")]
+    pub agg_sig_notar: ::core::option::Option<VotorAggSig>,
+    #[prost(message, optional, tag = "4")]
+    pub agg_sig_notar_fallback: ::core::option::Option<VotorAggSig>,
+    #[prost(uint64, tag = "5")]
+    pub stake: u64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorSkipCert {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    #[prost(message, optional, tag = "2")]
+    pub agg_sig_skip: ::core::option::Option<VotorAggSig>,
+    #[prost(message, optional, tag = "3")]
+    pub agg_sig_skip_fallback: ::core::option::Option<VotorAggSig>,
+    #[prost(uint64, tag = "4")]
+    pub stake: u64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorFinalCert {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    #[prost(message, optional, tag = "2")]
+    pub agg_sig: ::core::option::Option<VotorAggSig>,
+    #[prost(uint64, tag = "3")]
+    pub stake: u64,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorCert {
+    #[prost(oneof = "votor_cert::Cert", tags = "1, 2, 3, 4, 5")]
+    pub cert: ::core::option::Option<votor_cert::Cert>,
+}
+/// Nested message and enum types in `VotorCert`.
+pub mod votor_cert {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Cert {
+        #[prost(message, tag = "1")]
+        Notar(super::VotorBlockCert),
+        #[prost(message, tag = "2")]
+        NotarFallback(super::VotorNotarFallbackCert),
+        #[prost(message, tag = "3")]
+        Skip(super::VotorSkipCert),
+        #[prost(message, tag = "4")]
+        FastFinal(super::VotorBlockCert),
+        #[prost(message, tag = "5")]
+        FinalCert(super::VotorFinalCert),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorParentReady {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    #[prost(message, optional, tag = "2")]
+    pub parent: ::core::option::Option<VotorBlockId>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VotorStandstill {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    #[prost(message, repeated, tag = "2")]
+    pub certs: ::prost::alloc::vec::Vec<VotorCert>,
+    #[prost(message, repeated, tag = "3")]
+    pub votes: ::prost::alloc::vec::Vec<VotorVote>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VotorPoolEvent {
+    #[prost(oneof = "votor_pool_event::Event", tags = "1, 2, 3, 4, 5")]
+    pub event: ::core::option::Option<votor_pool_event::Event>,
+}
+/// Nested message and enum types in `VotorPoolEvent`.
+pub mod votor_pool_event {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Event {
+        #[prost(message, tag = "1")]
+        ParentReady(super::VotorParentReady),
+        #[prost(message, tag = "2")]
+        SafeToNotar(super::VotorBlockId),
+        #[prost(uint64, tag = "3")]
+        SafeToSkip(u64),
+        #[prost(message, tag = "4")]
+        CertCreated(super::VotorCert),
+        #[prost(message, tag = "5")]
+        Standstill(super::VotorStandstill),
+    }
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct VotorSlashable {
+    #[prost(enumeration = "VotorSlashableOffence", tag = "1")]
+    pub offence: i32,
+    #[prost(uint64, tag = "2")]
+    pub validator: u64,
+    #[prost(uint64, tag = "3")]
+    pub slot: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VotorActionResult {
+    #[prost(enumeration = "VotorAddVoteError", tag = "1")]
+    pub error: i32,
+    #[prost(message, optional, tag = "2")]
+    pub slashable: ::core::option::Option<VotorSlashable>,
+    #[prost(message, repeated, tag = "3")]
+    pub pool_events: ::prost::alloc::vec::Vec<VotorPoolEvent>,
+    #[prost(message, repeated, tag = "4")]
+    pub repair_requests: ::prost::alloc::vec::Vec<VotorBlockId>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VotorEffects {
+    #[prost(enumeration = "VotorRunStatus", tag = "1")]
+    pub status: i32,
+    #[prost(message, repeated, tag = "2")]
+    pub results: ::prost::alloc::vec::Vec<VotorActionResult>,
+    #[prost(uint64, tag = "3")]
+    pub finalized_slot: u64,
+    #[prost(uint64, tag = "4")]
+    pub first_unpruned_slot: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VotorFixture {
+    #[prost(message, optional, tag = "1")]
+    pub metadata: ::core::option::Option<FixtureMetadata>,
+    #[prost(message, optional, tag = "2")]
+    pub input: ::core::option::Option<VotorContext>,
+    #[prost(message, optional, tag = "3")]
+    pub output: ::core::option::Option<VotorEffects>,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum VotorAddVoteError {
+    Ok = 0,
+    SlotOutOfBounds = 1,
+    Duplicate = 2,
+    Slashable = 3,
+    UnknownSigner = 4,
+}
+impl VotorAddVoteError {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Ok => "VOTOR_ADD_VOTE_ERROR_OK",
+            Self::SlotOutOfBounds => "VOTOR_ADD_VOTE_ERROR_SLOT_OUT_OF_BOUNDS",
+            Self::Duplicate => "VOTOR_ADD_VOTE_ERROR_DUPLICATE",
+            Self::Slashable => "VOTOR_ADD_VOTE_ERROR_SLASHABLE",
+            Self::UnknownSigner => "VOTOR_ADD_VOTE_ERROR_UNKNOWN_SIGNER",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "VOTOR_ADD_VOTE_ERROR_OK" => Some(Self::Ok),
+            "VOTOR_ADD_VOTE_ERROR_SLOT_OUT_OF_BOUNDS" => Some(Self::SlotOutOfBounds),
+            "VOTOR_ADD_VOTE_ERROR_DUPLICATE" => Some(Self::Duplicate),
+            "VOTOR_ADD_VOTE_ERROR_SLASHABLE" => Some(Self::Slashable),
+            "VOTOR_ADD_VOTE_ERROR_UNKNOWN_SIGNER" => Some(Self::UnknownSigner),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum VotorSlashableOffence {
+    Unset = 0,
+    NotarDifferentHash = 1,
+    SkipAndNotarize = 2,
+    SkipAndFinalize = 3,
+    NotarFallbackAndFinalize = 4,
+}
+impl VotorSlashableOffence {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unset => "VOTOR_SLASHABLE_OFFENCE_UNSET",
+            Self::NotarDifferentHash => "VOTOR_SLASHABLE_OFFENCE_NOTAR_DIFFERENT_HASH",
+            Self::SkipAndNotarize => "VOTOR_SLASHABLE_OFFENCE_SKIP_AND_NOTARIZE",
+            Self::SkipAndFinalize => "VOTOR_SLASHABLE_OFFENCE_SKIP_AND_FINALIZE",
+            Self::NotarFallbackAndFinalize => {
+                "VOTOR_SLASHABLE_OFFENCE_NOTAR_FALLBACK_AND_FINALIZE"
+            }
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "VOTOR_SLASHABLE_OFFENCE_UNSET" => Some(Self::Unset),
+            "VOTOR_SLASHABLE_OFFENCE_NOTAR_DIFFERENT_HASH" => {
+                Some(Self::NotarDifferentHash)
+            }
+            "VOTOR_SLASHABLE_OFFENCE_SKIP_AND_NOTARIZE" => Some(Self::SkipAndNotarize),
+            "VOTOR_SLASHABLE_OFFENCE_SKIP_AND_FINALIZE" => Some(Self::SkipAndFinalize),
+            "VOTOR_SLASHABLE_OFFENCE_NOTAR_FALLBACK_AND_FINALIZE" => {
+                Some(Self::NotarFallbackAndFinalize)
+            }
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum VotorRunStatus {
+    Unset = 0,
+    Ok = 1,
+    Panic = 2,
+    InvalidInput = 3,
+    Timeout = 4,
+}
+impl VotorRunStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unset => "VOTOR_RUN_STATUS_UNSET",
+            Self::Ok => "VOTOR_RUN_STATUS_OK",
+            Self::Panic => "VOTOR_RUN_STATUS_PANIC",
+            Self::InvalidInput => "VOTOR_RUN_STATUS_INVALID_INPUT",
+            Self::Timeout => "VOTOR_RUN_STATUS_TIMEOUT",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "VOTOR_RUN_STATUS_UNSET" => Some(Self::Unset),
+            "VOTOR_RUN_STATUS_OK" => Some(Self::Ok),
+            "VOTOR_RUN_STATUS_PANIC" => Some(Self::Panic),
+            "VOTOR_RUN_STATUS_INVALID_INPUT" => Some(Self::InvalidInput),
+            "VOTOR_RUN_STATUS_TIMEOUT" => Some(Self::Timeout),
+            _ => None,
+        }
+    }
+}
