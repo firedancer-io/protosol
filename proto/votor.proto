@@ -1,0 +1,168 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+
+import "metadata.proto";
+
+message VotorBlockId {
+  uint64 slot = 1;
+  bytes block_hash = 2;
+}
+
+message VotorBlockVote {
+  uint64 slot = 1;
+  bytes block_hash = 2;
+  uint64 signer = 3;
+}
+
+message VotorSlotVote {
+  uint64 slot = 1;
+  uint64 signer = 2;
+}
+
+message VotorVote {
+  oneof vote {
+    VotorBlockVote notar = 1;
+    VotorBlockVote notar_fallback = 2;
+    VotorSlotVote skip = 3;
+    VotorSlotVote skip_fallback = 4;
+    VotorSlotVote final_vote = 5;
+  }
+}
+
+message VotorValidator {
+  uint64 stake = 1;
+}
+
+message VotorBlock {
+  VotorBlockId block = 1;
+  VotorBlockId parent = 2;
+}
+
+message VotorAction {
+  oneof action {
+    VotorVote vote = 1;
+    VotorBlock block = 2;
+    bool standstill = 3;
+  }
+}
+
+message VotorContext {
+  repeated VotorValidator validators = 1;
+  bytes key_seed = 2;
+  uint64 own_id = 3;
+  uint64 slot_offset = 4;
+  repeated VotorAction actions = 5;
+}
+
+message VotorAggSig {
+  repeated uint64 signers = 2;
+}
+
+message VotorBlockCert {
+  uint64 slot = 1;
+  bytes block_hash = 2;
+  VotorAggSig agg_sig = 3;
+  uint64 stake = 4;
+}
+
+message VotorNotarFallbackCert {
+  uint64 slot = 1;
+  bytes block_hash = 2;
+  VotorAggSig agg_sig_notar = 3;
+  VotorAggSig agg_sig_notar_fallback = 4;
+  uint64 stake = 5;
+}
+
+message VotorSkipCert {
+  uint64 slot = 1;
+  VotorAggSig agg_sig_skip = 2;
+  VotorAggSig agg_sig_skip_fallback = 3;
+  uint64 stake = 4;
+}
+
+message VotorFinalCert {
+  uint64 slot = 1;
+  VotorAggSig agg_sig = 2;
+  uint64 stake = 3;
+}
+
+message VotorCert {
+  oneof cert {
+    VotorBlockCert notar = 1;
+    VotorNotarFallbackCert notar_fallback = 2;
+    VotorSkipCert skip = 3;
+    VotorBlockCert fast_final = 4;
+    VotorFinalCert final_cert = 5;
+  }
+}
+
+message VotorParentReady {
+  uint64 slot = 1;
+  VotorBlockId parent = 2;
+}
+
+message VotorStandstill {
+  uint64 slot = 1;
+  repeated VotorCert certs = 2;
+  repeated VotorVote votes = 3;
+}
+
+message VotorPoolEvent {
+  oneof event {
+    VotorParentReady parent_ready = 1;
+    VotorBlockId safe_to_notar = 2;
+    uint64 safe_to_skip = 3;
+    VotorCert cert_created = 4;
+    VotorStandstill standstill = 5;
+  }
+}
+
+enum VotorAddVoteError {
+  VOTOR_ADD_VOTE_ERROR_OK = 0;
+  VOTOR_ADD_VOTE_ERROR_SLOT_OUT_OF_BOUNDS = 1;
+  VOTOR_ADD_VOTE_ERROR_DUPLICATE = 2;
+  VOTOR_ADD_VOTE_ERROR_SLASHABLE = 3;
+  VOTOR_ADD_VOTE_ERROR_UNKNOWN_SIGNER = 4;
+}
+
+enum VotorSlashableOffence {
+  VOTOR_SLASHABLE_OFFENCE_UNSET = 0;
+  VOTOR_SLASHABLE_OFFENCE_NOTAR_DIFFERENT_HASH = 1;
+  VOTOR_SLASHABLE_OFFENCE_SKIP_AND_NOTARIZE = 2;
+  VOTOR_SLASHABLE_OFFENCE_SKIP_AND_FINALIZE = 3;
+  VOTOR_SLASHABLE_OFFENCE_NOTAR_FALLBACK_AND_FINALIZE = 4;
+}
+
+message VotorSlashable {
+  VotorSlashableOffence offence = 1;
+  uint64 validator = 2;
+  uint64 slot = 3;
+}
+
+message VotorActionResult {
+  VotorAddVoteError error = 1;
+  VotorSlashable slashable = 2;
+  repeated VotorPoolEvent pool_events = 3;
+  repeated VotorBlockId repair_requests = 4;
+}
+
+enum VotorRunStatus {
+  VOTOR_RUN_STATUS_UNSET = 0;
+  VOTOR_RUN_STATUS_OK = 1;
+  VOTOR_RUN_STATUS_PANIC = 2;
+  VOTOR_RUN_STATUS_INVALID_INPUT = 3;
+  VOTOR_RUN_STATUS_TIMEOUT = 4;
+}
+
+message VotorEffects {
+  VotorRunStatus status = 1;
+  repeated VotorActionResult results = 2;
+  uint64 finalized_slot = 3;
+  uint64 first_unpruned_slot = 4;
+}
+
+message VotorFixture {
+  FixtureMetadata metadata = 1;
+  VotorContext input = 2;
+  VotorEffects output = 3;
+}

@@ -1,0 +1,24 @@
+votor.proto package:"fd_exec_test"
+votor.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
+
+fd_exec_test.VotorBlockId.block_hash max_size:32 fixed_length:true
+
+fd_exec_test.VotorBlockVote.block_hash max_size:32 fixed_length:true
+
+fd_exec_test.VotorContext.validators type:FT_POINTER
+fd_exec_test.VotorContext.key_seed max_size:32 fixed_length:true
+fd_exec_test.VotorContext.actions type:FT_POINTER
+
+fd_exec_test.VotorAggSig.signers type:FT_POINTER
+
+fd_exec_test.VotorBlockCert.block_hash max_size:32 fixed_length:true
+
+fd_exec_test.VotorNotarFallbackCert.block_hash max_size:32 fixed_length:true
+
+fd_exec_test.VotorStandstill.certs type:FT_POINTER
+fd_exec_test.VotorStandstill.votes type:FT_POINTER
+
+fd_exec_test.VotorActionResult.pool_events type:FT_POINTER
+fd_exec_test.VotorActionResult.repair_requests type:FT_POINTER
+
+fd_exec_test.VotorEffects.results type:FT_POINTER
