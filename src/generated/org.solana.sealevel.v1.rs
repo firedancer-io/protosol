@@ -960,10 +960,7 @@ pub struct InstrFixture {
 /// Once they're cleaned up / activated on all clusters, they can be
 /// removed via a reserved tag.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ShredFeatures {
-    #[prost(bool, tag = "1")]
-    pub discard_unexpected_data_complete_shreds: bool,
-}
+pub struct ShredFeatures {}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ShredParseContext {
     /// Raw bytes for each shred.
