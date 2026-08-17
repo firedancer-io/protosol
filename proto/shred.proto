@@ -20,7 +20,7 @@ import "metadata.proto";
    Once they're cleaned up / activated on all clusters, they can be
    removed via a reserved tag. */
 message ShredFeatures {
-  bool discard_unexpected_data_complete_shreds = 1;
+  reserved "discard_unexpected_data_complete_shreds";
 }
 
 enum BlockParseResult {
