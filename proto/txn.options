@@ -23,4 +23,3 @@ fd_exec_test.TxnContext.account_shared_data type:FT_POINTER
 fd_exec_test.TxnResult.modified_accounts type:FT_POINTER
 fd_exec_test.TxnResult.rollback_accounts type:FT_POINTER
 
-fd_exec_test.TxnResult.return_data type:FT_POINTER

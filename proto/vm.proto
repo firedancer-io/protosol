@@ -9,8 +9,10 @@ import "metadata.proto";
 message InputDataRegion {
   // Offset from the start of the input data segment (0x400000000)
   uint64 offset = 1;
-  // Content of the memory region
-  bytes content = 2;
+  reserved 2;
+  reserved "content";
+
+  fixed64 content_hash = 4;
   // If the memory region is writable or not
   bool is_writable = 3;
 }
@@ -108,10 +110,11 @@ message SyscallEffects {
     // CU's remaining
     uint64 cu_avail = 3;
 
-    // Memory regions
-    bytes heap = 4;
-    bytes stack = 5;
-    reserved 6;
+    reserved 4, 5, 6;
+    reserved "heap", "stack";
+
+    fixed64 heap_hash = 13;
+    fixed64 stack_hash = 14;
 
     repeated InputDataRegion input_data_regions = 11;
 
@@ -120,7 +123,10 @@ message SyscallEffects {
 
     reserved 8;
 
-    bytes rodata = 9;
+    reserved 9;
+    reserved "rodata";
+
+    fixed64 rodata_hash = 15;
 
     // VM state
     uint64 pc = 10;

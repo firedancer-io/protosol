@@ -43,6 +43,7 @@ impl From<KeyedAccountSharedData> for AcctState {
             data: value.1.data().to_vec(),
             executable: value.1.executable(),
             owner: value.1.owner().to_bytes().to_vec(),
+            ..Default::default()
         }
     }
 }

@@ -55,8 +55,10 @@ message InstrEffects {
 
   uint64 cu_avail = 4;
 
-  // Instruction return data.
-  bytes return_data = 5;
+  reserved 5;
+  reserved "return_data";
+
+  fixed64 return_data_hash = 6;
 }
 
 // An instruction processing test fixture.
