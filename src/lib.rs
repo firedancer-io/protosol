@@ -11,6 +11,8 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 /// `DescriptorPool::decode`) to inspect message schemas at runtime.
 pub const FILE_DESCRIPTOR_SET_BYTES: &[u8] = include_bytes!("generated/file_descriptor_set.bin");
 
+mod accessors;
+
 #[cfg(feature = "solana-types")]
 pub mod convert;
 
