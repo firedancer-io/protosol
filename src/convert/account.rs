@@ -2,13 +2,13 @@ use solana_account::{Account, AccountSharedData, ReadableAccount, WritableAccoun
 use solana_pubkey::Pubkey;
 
 use super::KeyedAccountSharedData;
-use crate::protos::AcctState;
+use crate::protos::{acct_state::DataRepr, AcctState};
 
 impl From<&AcctState> for AccountSharedData {
     fn from(input: &AcctState) -> Self {
         let mut account_data = AccountSharedData::default();
         account_data.set_lamports(input.lamports);
-        account_data.set_data_from_slice(input.data.as_slice());
+        account_data.set_data_from_slice(input.data());
         account_data.set_owner(Pubkey::new_from_array(
             input.owner.clone().try_into().unwrap(),
         ));
@@ -26,7 +26,10 @@ impl From<AcctState> for (Pubkey, Account) {
             pubkey,
             Account {
                 lamports: input.lamports,
-                data: input.data,
+                data: match input.data_repr {
+                    Some(DataRepr::Data(data)) => data,
+                    _ => Vec::new(),
+                },
                 owner,
                 executable: input.executable,
                 rent_epoch: u64::MAX,
@@ -40,10 +43,9 @@ impl From<KeyedAccountSharedData> for AcctState {
         AcctState {
             address: value.0.to_bytes().to_vec(),
             lamports: value.1.lamports(),
-            data: value.1.data().to_vec(),
+            data_repr: Some(DataRepr::Data(value.1.data().to_vec())),
             executable: value.1.executable(),
             owner: value.1.owner().to_bytes().to_vec(),
-            ..Default::default()
         }
     }
 }

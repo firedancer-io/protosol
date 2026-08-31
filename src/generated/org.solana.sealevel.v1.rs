@@ -16,18 +16,27 @@ pub struct AcctState {
     pub address: ::prost::alloc::vec::Vec<u8>,
     #[prost(uint64, tag = "2")]
     pub lamports: u64,
-    /// Account data is limited to 10 MiB on Solana mainnet as of 2024-Feb.
-    /// Inputs carry the contents here; effects carry `data_hash` instead.
-    #[prost(bytes = "vec", tag = "3")]
-    pub data: ::prost::alloc::vec::Vec<u8>,
     #[prost(bool, tag = "4")]
     pub executable: bool,
     /// Address of the program that owns this account.  (32 bytes)
     #[prost(bytes = "vec", tag = "6")]
     pub owner: ::prost::alloc::vec::Vec<u8>,
-    /// 8-byte XXH64 hash (seed 0) of the account data, or 0 if empty.
-    #[prost(fixed64, tag = "8")]
-    pub data_hash: u64,
+    #[prost(oneof = "acct_state::DataRepr", tags = "8, 9")]
+    pub data_repr: ::core::option::Option<acct_state::DataRepr>,
+}
+/// Nested message and enum types in `AcctState`.
+pub mod acct_state {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum DataRepr {
+        /// 8-byte XXH64 hash (seed 0) of the account data, or 0 if empty.
+        /// Carried by effects.
+        #[prost(fixed64, tag = "8")]
+        DataHash(u64),
+        /// Account data is limited to 10 MiB on Solana mainnet as of 2024-Feb.
+        /// Carried by inputs.
+        #[prost(bytes, tag = "9")]
+        Data(::prost::alloc::vec::Vec<u8>),
+    }
 }
 /// Fee rate governor parameters
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
