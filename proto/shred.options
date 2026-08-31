@@ -8,4 +8,3 @@ fd_exec_test.ShredParseEffects.fec_set_results type:FT_POINTER
 
 fd_exec_test.FECSetParseResult.merkle_root max_size:32 fixed_length:true
 fd_exec_test.FECSetParseResult.chained_merkle_root max_size:32 fixed_length:true
-fd_exec_test.FECSetParseResult.payload type:FT_POINTER

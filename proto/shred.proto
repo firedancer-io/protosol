@@ -43,8 +43,12 @@ message FECSetParseResult {
   bytes merkle_root = 2;
   // Chained merkle root, if completed. Exactly 32 bytes.
   bytes chained_merkle_root = 3;
-  // Concatenated data shred payloads if completed.
-  bytes payload = 4;
+  reserved 4;
+  reserved "payload";
+
+  // 8-byte XXH64 hash (seed 0) of the concatenated data shred payloads if
+  // completed, or 0 if empty.
+  fixed64 payload_hash = 11;
 
   // Parsed header fields from shred
   uint64 slot = 5;

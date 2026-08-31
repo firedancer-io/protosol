@@ -17,6 +17,7 @@ message AcctState {
   uint64 lamports = 2;
 
   // Account data is limited to 10 MiB on Solana mainnet as of 2024-Feb.
+  // Inputs carry the contents here; effects carry `data_hash` instead.
   bytes data = 3;
 
   bool executable = 4;
@@ -27,6 +28,9 @@ message AcctState {
   bytes owner = 6;
 
   reserved 7;
+
+  // 8-byte XXH64 hash (seed 0) of the account data, or 0 if empty.
+  fixed64 data_hash = 8;
 }
 
 // Fee rate governor parameters
