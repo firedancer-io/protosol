@@ -29,6 +29,7 @@ message AcctState {
 
   reserved 7;
 
+  // 8-byte XXH64 hash (seed 0) of the account data, or 0 if empty.
   fixed64 data_hash = 8;
 }
 

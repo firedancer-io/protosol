@@ -46,6 +46,8 @@ message FECSetParseResult {
   reserved 4;
   reserved "payload";
 
+  // 8-byte XXH64 hash (seed 0) of the concatenated data shred payloads if
+  // completed, or 0 if empty.
   fixed64 payload_hash = 11;
 
   // Parsed header fields from shred

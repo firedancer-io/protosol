@@ -115,6 +115,7 @@ message TxnResult {
   reserved 10;
   reserved "return_data";
 
+  // 8-byte XXH64 hash (seed 0) of the transaction return data, or 0 if empty.
   fixed64 return_data_hash = 16;
   // Number of executed compute units
   uint64 executed_units = 11;

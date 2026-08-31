@@ -58,6 +58,7 @@ message InstrEffects {
   reserved 5;
   reserved "return_data";
 
+  // 8-byte XXH64 hash (seed 0) of the instruction return data, or 0 if empty.
   fixed64 return_data_hash = 6;
 }
 

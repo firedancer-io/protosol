@@ -21,7 +21,7 @@ message ELFLoaderEffects {
   // Loader error code (0 = success).
   uint32 err_code = 1;
 
-  // 8-byte XXH3 hash of the .rodata section.
+  // 8-byte XXH64 hash (seed 0) of the .rodata section.
   fixed64 rodata_hash = 2;
 
   // Number of valid text-section instructions.
@@ -33,7 +33,7 @@ message ELFLoaderEffects {
   // Entry-point program counter.
   uint64 entry_pc = 5;
 
-  // 8-byte XXH3 hash of the validated call destinations bitmap.
+  // 8-byte XXH64 hash (seed 0) of the validated call destinations bitmap.
   fixed64 calldests_hash = 6;
 }
 

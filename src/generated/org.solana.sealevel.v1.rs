@@ -25,6 +25,7 @@ pub struct AcctState {
     /// Address of the program that owns this account.  (32 bytes)
     #[prost(bytes = "vec", tag = "6")]
     pub owner: ::prost::alloc::vec::Vec<u8>,
+    /// 8-byte XXH64 hash (seed 0) of the account data, or 0 if empty.
     #[prost(fixed64, tag = "8")]
     pub data_hash: u64,
 }
@@ -177,6 +178,7 @@ pub struct TxnResult {
     /// Custom error, if any
     #[prost(uint32, tag = "9")]
     pub custom_error: u32,
+    /// 8-byte XXH64 hash (seed 0) of the transaction return data, or 0 if empty.
     #[prost(fixed64, tag = "16")]
     pub return_data_hash: u64,
     /// Number of executed compute units
@@ -565,7 +567,7 @@ pub struct ElfLoaderEffects {
     /// Loader error code (0 = success).
     #[prost(uint32, tag = "1")]
     pub err_code: u32,
-    /// 8-byte XXH3 hash of the .rodata section.
+    /// 8-byte XXH64 hash (seed 0) of the .rodata section.
     #[prost(fixed64, tag = "2")]
     pub rodata_hash: u64,
     /// Number of valid text-section instructions.
@@ -577,7 +579,7 @@ pub struct ElfLoaderEffects {
     /// Entry-point program counter.
     #[prost(uint64, tag = "5")]
     pub entry_pc: u64,
-    /// 8-byte XXH3 hash of the validated call destinations bitmap.
+    /// 8-byte XXH64 hash (seed 0) of the validated call destinations bitmap.
     #[prost(fixed64, tag = "6")]
     pub calldests_hash: u64,
 }
@@ -944,6 +946,7 @@ pub struct InstrEffects {
     pub modified_accounts: ::prost::alloc::vec::Vec<AcctState>,
     #[prost(uint64, tag = "4")]
     pub cu_avail: u64,
+    /// 8-byte XXH64 hash (seed 0) of the instruction return data, or 0 if empty.
     #[prost(fixed64, tag = "6")]
     pub return_data_hash: u64,
 }
@@ -985,6 +988,8 @@ pub struct FecSetParseResult {
     /// Chained merkle root, if completed. Exactly 32 bytes.
     #[prost(bytes = "vec", tag = "3")]
     pub chained_merkle_root: ::prost::alloc::vec::Vec<u8>,
+    /// 8-byte XXH64 hash (seed 0) of the concatenated data shred payloads if
+    /// completed, or 0 if empty.
     #[prost(fixed64, tag = "11")]
     pub payload_hash: u64,
     /// Parsed header fields from shred
@@ -1055,6 +1060,7 @@ pub struct InputDataRegion {
     /// Offset from the start of the input data segment (0x400000000)
     #[prost(uint64, tag = "1")]
     pub offset: u64,
+    /// 8-byte XXH64 hash (seed 0) of the memory region content, or 0 if empty.
     #[prost(fixed64, tag = "4")]
     pub content_hash: u64,
     /// If the memory region is writable or not
@@ -1153,6 +1159,7 @@ pub struct SyscallEffects {
     /// CU's remaining
     #[prost(uint64, tag = "3")]
     pub cu_avail: u64,
+    /// 8-byte XXH64 hashes (seed 0) of the VM memory regions, or 0 if empty.
     #[prost(fixed64, tag = "13")]
     pub heap_hash: u64,
     #[prost(fixed64, tag = "14")]
@@ -1162,6 +1169,7 @@ pub struct SyscallEffects {
     /// Current number of stack frames pushed
     #[prost(uint64, tag = "7")]
     pub frame_count: u64,
+    /// 8-byte XXH64 hash (seed 0) of the rodata segment, or 0 if empty.
     #[prost(fixed64, tag = "15")]
     pub rodata_hash: u64,
     /// VM state
