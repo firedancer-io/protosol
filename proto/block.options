@@ -20,3 +20,7 @@ fd_exec_test.BlockContext.acct_states type:FT_POINTER
 
 fd_exec_test.BlockEffects.bank_hash max_size:32 fixed_length:true
 fd_exec_test.LeaderScheduleEffects.leader_schedule_hash max_size:16 fixed_length:true
+
+fd_exec_test.BlockEffects.stake_delegations type:FT_POINTER
+fd_exec_test.StakeDelegation.stake_account max_size:32 fixed_length:true
+fd_exec_test.StakeDelegation.vote_account max_size:32 fixed_length:true
