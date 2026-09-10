@@ -44,6 +44,8 @@ let txn = protos::SanitizedTransaction {
         recent_blockhash: vec![/* blockhash */],
         instructions: vec![/* instructions */],
         address_table_lookups: vec![],
+        version: protos::TransactionVersion::V1 as i32,
+        v1_config: None,
     }),
     signatures: vec![vec![/* signature bytes */]],
 };

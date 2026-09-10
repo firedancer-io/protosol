@@ -27,10 +27,28 @@ message MessageAddressTableLookup {
   repeated uint32 readonly_indexes = 3;
 }
 
+// Transaction message version
+enum TransactionVersion {
+  TRANSACTION_VERSION_V0 = 0;
+  TRANSACTION_VERSION_LEGACY = 1;
+  TRANSACTION_VERSION_V1 = 2;
+}
+
+// Transaction V1 configuration
+message TransactionConfig {
+  // Mask bits 0 and 1 (8 bytes, little-endian).
+  optional uint64 priority_fee = 1;
+  // Mask bit 2 (4 bytes, little-endian).
+  optional uint32 compute_unit_limit = 2;
+  // Mask bit 3 (4 bytes, little-endian).
+  optional uint32 loaded_accounts_data_size_limit = 3;
+  // Mask bit 4 (4 bytes, little-endian). Must be a multiple of 1024 in [32 KiB, 256 KiB].
+  optional uint32 heap_size = 4;
+}
+
 // Message contains the transaction data
 message TransactionMessage {
-  // Whether this is a legacy message or not
-  bool is_legacy = 1;
+  reserved 1;
 
   MessageHeader header = 2;
 
@@ -45,6 +63,12 @@ message TransactionMessage {
 
   // Not available in legacy message
   repeated MessageAddressTableLookup address_table_lookups = 7;
+
+  // The message version
+  TransactionVersion version = 8;
+
+  // Transaction V1 configuration. Ignored for non-V1 transactions.
+  TransactionConfig v1_config = 9;
 }
 
 // A valid verified transaction
