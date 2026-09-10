@@ -34,18 +34,12 @@ mod tests {
     }
 
     #[test]
-    #[allow(deprecated)]
     fn version_and_config_roundtrip() {
         use prost::Message;
-        // Pre-16.0.0 style message: version defaults to V0 and is_legacy carries
-        // the legacy/V0 distinction.
-        let legacy = protos::TransactionMessage {
-            ..Default::default()
-        };
-        let decoded =
-            protos::TransactionMessage::decode(legacy.encode_to_vec().as_slice()).unwrap();
+        let v0 = protos::TransactionMessage::default();
+        let decoded = protos::TransactionMessage::decode(v0.encode_to_vec().as_slice()).unwrap();
         assert_eq!(decoded.version(), protos::TransactionVersion::V0);
-        assert!(decoded.is_legacy && decoded.v1_config.is_none());
+        assert!(decoded.v1_config.is_none());
 
         let bare = protos::TransactionMessage {
             version: protos::TransactionVersion::V1 as i32,
