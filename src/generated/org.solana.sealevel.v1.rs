@@ -98,12 +98,25 @@ pub struct MessageAddressTableLookup {
     #[prost(uint32, repeated, tag = "3")]
     pub readonly_indexes: ::prost::alloc::vec::Vec<u32>,
 }
+/// Transaction V1 configuration
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TransactionConfig {
+    /// Mask bits 0 and 1 (8 bytes, little-endian).
+    #[prost(uint64, optional, tag = "1")]
+    pub priority_fee: ::core::option::Option<u64>,
+    /// Mask bit 2 (4 bytes, little-endian).
+    #[prost(uint32, optional, tag = "2")]
+    pub compute_unit_limit: ::core::option::Option<u32>,
+    /// Mask bit 3 (4 bytes, little-endian).
+    #[prost(uint32, optional, tag = "3")]
+    pub loaded_accounts_data_size_limit: ::core::option::Option<u32>,
+    /// Mask bit 4 (4 bytes, little-endian). Must be a multiple of 1024 in \[32 KiB, 256 KiB\].
+    #[prost(uint32, optional, tag = "4")]
+    pub heap_size: ::core::option::Option<u32>,
+}
 /// Message contains the transaction data
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransactionMessage {
-    /// Whether this is a legacy message or not
-    #[prost(bool, tag = "1")]
-    pub is_legacy: bool,
     #[prost(message, optional, tag = "2")]
     pub header: ::core::option::Option<MessageHeader>,
     /// Vector of pubkeys
@@ -118,6 +131,12 @@ pub struct TransactionMessage {
     /// Not available in legacy message
     #[prost(message, repeated, tag = "7")]
     pub address_table_lookups: ::prost::alloc::vec::Vec<MessageAddressTableLookup>,
+    /// The message version
+    #[prost(enumeration = "TransactionVersion", tag = "8")]
+    pub version: i32,
+    /// Transaction V1 configuration. Ignored for non-V1 transactions.
+    #[prost(message, optional, tag = "9")]
+    pub v1_config: ::core::option::Option<TransactionConfig>,
 }
 /// A valid verified transaction
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -215,6 +234,36 @@ pub struct TxnFixture {
     /// Effects
     #[prost(message, optional, tag = "3")]
     pub output: ::core::option::Option<TxnResult>,
+}
+/// Transaction message version
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TransactionVersion {
+    V0 = 0,
+    Legacy = 1,
+    V1 = 2,
+}
+impl TransactionVersion {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::V0 => "TRANSACTION_VERSION_V0",
+            Self::Legacy => "TRANSACTION_VERSION_LEGACY",
+            Self::V1 => "TRANSACTION_VERSION_V1",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "TRANSACTION_VERSION_V0" => Some(Self::V0),
+            "TRANSACTION_VERSION_LEGACY" => Some(Self::Legacy),
+            "TRANSACTION_VERSION_V1" => Some(Self::V1),
+            _ => None,
+        }
+    }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CostTracker {

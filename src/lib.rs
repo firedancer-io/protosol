@@ -34,6 +34,38 @@ mod tests {
     }
 
     #[test]
+    fn version_and_config_roundtrip() {
+        use prost::Message;
+        let v0 = protos::TransactionMessage::default();
+        let decoded = protos::TransactionMessage::decode(v0.encode_to_vec().as_slice()).unwrap();
+        assert_eq!(decoded.version(), protos::TransactionVersion::V0);
+        assert!(decoded.v1_config.is_none());
+
+        let bare = protos::TransactionMessage {
+            version: protos::TransactionVersion::V1 as i32,
+            ..Default::default()
+        };
+        let decoded = protos::TransactionMessage::decode(bare.encode_to_vec().as_slice()).unwrap();
+        assert_eq!(decoded.version(), protos::TransactionVersion::V1);
+        assert!(decoded.v1_config.is_none());
+
+        let v1 = protos::TransactionMessage {
+            version: protos::TransactionVersion::V1 as i32,
+            v1_config: Some(protos::TransactionConfig {
+                priority_fee: Some(0),
+                compute_unit_limit: None,
+                loaded_accounts_data_size_limit: Some(0),
+                heap_size: Some(32 * 1024),
+            }),
+            ..Default::default()
+        };
+        let decoded = protos::TransactionMessage::decode(v1.encode_to_vec().as_slice()).unwrap();
+        assert_eq!(decoded, v1);
+        assert_eq!(decoded.v1_config.as_ref().unwrap().priority_fee, Some(0));
+        assert_eq!(decoded.v1_config.as_ref().unwrap().compute_unit_limit, None);
+    }
+
+    #[test]
     fn exports_crate_version() {
         assert_eq!(VERSION, env!("CARGO_PKG_VERSION"));
     }
