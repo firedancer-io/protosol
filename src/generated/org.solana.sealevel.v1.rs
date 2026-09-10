@@ -399,7 +399,27 @@ pub struct LeaderScheduleEffects {
     #[prost(bytes = "vec", tag = "6")]
     pub leader_schedule_hash: ::prost::alloc::vec::Vec<u8>,
 }
+/// Post-block stakes cache entry (not covered by the bank hash).
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct StakeDelegation {
+    #[prost(bytes = "vec", tag = "1")]
+    pub stake_account: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "2")]
+    pub vote_account: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "3")]
+    pub stake: u64,
+    #[prost(uint64, tag = "4")]
+    pub activation_epoch: u64,
+    #[prost(uint64, tag = "5")]
+    pub deactivation_epoch: u64,
+    #[prost(uint64, tag = "6")]
+    pub credits_observed: u64,
+    #[prost(uint64, tag = "7")]
+    pub lamports: u64,
+    #[prost(uint64, tag = "8")]
+    pub data_len: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BlockEffects {
     /// If block execution failed
     #[prost(bool, tag = "1")]
@@ -416,6 +436,9 @@ pub struct BlockEffects {
     /// Leader schedule
     #[prost(message, optional, tag = "5")]
     pub leader_schedule: ::core::option::Option<LeaderScheduleEffects>,
+    /// Sorted by stake_account; empty when has_error
+    #[prost(message, repeated, tag = "6")]
+    pub stake_delegations: ::prost::alloc::vec::Vec<StakeDelegation>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BlockFixture {

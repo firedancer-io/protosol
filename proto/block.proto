@@ -145,6 +145,25 @@ message LeaderScheduleEffects {
     bytes leader_schedule_hash = 6;
 }
 
+// Post-block stakes cache entry (not covered by the bank hash).
+message StakeDelegation {
+    bytes stake_account = 1;
+
+    bytes vote_account = 2;
+
+    uint64 stake = 3;
+
+    uint64 activation_epoch = 4;
+
+    uint64 deactivation_epoch = 5;
+
+    uint64 credits_observed = 6;
+
+    uint64 lamports = 7;
+
+    uint64 data_len = 8;
+}
+
 message BlockEffects {
     // If block execution failed
     bool has_error = 1;
@@ -160,6 +179,9 @@ message BlockEffects {
 
     // Leader schedule
     LeaderScheduleEffects leader_schedule = 5;
+
+    // Sorted by stake_account; empty when has_error
+    repeated StakeDelegation stake_delegations = 6;
 }
 
 message BlockFixture {
