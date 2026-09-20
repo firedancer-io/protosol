@@ -1,0 +1,93 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+
+import "metadata.proto";
+
+// Differential harness for repair (sol_compat_repair_v1).
+
+message RepairSlotDescV1 {
+  uint64 slot = 1;
+  // Parent registered before any shreds arrive (cf. shred_parent_slot).
+  uint64 parent_slot = 2;
+  uint32 fec_set_cnt = 3;
+  // Data shreds per FEC set; must be 32 (DATA_SHREDS_PER_FEC_BLOCK).
+  uint32 shreds_per_fec = 4;
+  // Parent actually embedded in delivered shreds, if it disagrees with
+  // parent_slot (equivocation).
+  optional uint64 shred_parent_slot = 5;
+}
+
+message RepairGapShredV1 {
+  uint64 slot = 1;
+  uint32 shred_idx = 2;
+}
+
+message RepairGapFecSetV1 {
+  uint64 slot = 1;
+  uint32 fec_set_idx = 2;
+}
+
+// Determined at startup, before any repair round runs.
+message RepairGapV1 {
+  oneof gap {
+    RepairGapShredV1 shred = 1;
+    RepairGapFecSetV1 fec_set = 2;
+    // All shreds in the slot, not just one FEC set.
+    uint64 slot = 3;
+  }
+}
+
+message RepairPeerV1 {
+  // 2..255; peer 1 always exists.
+  uint32 peer_id = 1;
+  // If set, simulate a repair response with this RTT (ns), aging the peer into
+  // the fast/slow list.
+  optional int64 rtt_ns = 2;
+}
+
+message RepairContextV1 {
+  uint64 root_slot = 1;
+  repeated RepairSlotDescV1 slots = 2;
+  repeated RepairGapV1 gaps = 3;
+  // Max repair requests per round (default 32).
+  optional uint32 max_requests_per_round = 4;
+  // Override fd_forest slot_max (must be a power of two); models pool pressure
+  // to reach the eviction path's force-root escape hatch.
+  optional uint64 slot_max_override = 5;
+  // Override fd_reqlim dedup_max (default 1024).
+  optional uint64 dedup_max_override = 6;
+  // Insert slots in this order (indices into `slots`) instead of natural order.
+  repeated uint32 insertion_order = 7;
+  // Advance the root to this slot after the first gap shred is delivered.
+  optional uint64 publish_slot = 8;
+  // Slots whose non-gap shreds are delivered as turbine source (sets ref_tick=1
+  // on FD's side).
+  repeated uint64 turbine_slots = 9;
+  // Slots >= this are subject to the turbine throttle.
+  optional uint64 turbine_slot0 = 10;
+  repeated RepairPeerV1 peers = 11;
+  // Simulated ms elapsed since a slot's first shred, for repair-eligibility
+  // throttles; unset = fully elapsed.
+  optional uint64 elapsed_ms = 12;
+}
+
+message RepairShredIdV1 {
+  uint64 slot = 1;
+  uint32 shred_idx = 2;
+}
+
+message RepairEffectsV1 {
+  // True if the internal driver reached completion within its round budget.
+  bool converged = 1;
+  // Sorted by (slot, shred_idx).
+  repeated RepairShredIdV1 recovered = 2;
+  // Slots dropped by the implementation (e.g. FD bounded-pool eviction); sorted
+  // ascending.
+  repeated uint64 dropped_slots = 3;
+}
+
+message RepairFixtureV1 {
+  FixtureMetadata metadata = 1;
+  RepairContextV1 input = 2;
+  RepairEffectsV1 output = 3;
+}
