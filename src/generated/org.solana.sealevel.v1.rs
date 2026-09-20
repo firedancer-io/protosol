@@ -1173,6 +1173,299 @@ pub struct RepairFixtureV1 {
     #[prost(message, optional, tag = "3")]
     pub output: ::core::option::Option<RepairEffectsV1>,
 }
+/// The responder serves shreds from this.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct RepairChainSlot {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    #[prost(uint64, tag = "2")]
+    pub parent_slot: u64,
+    /// Number of FEC sets, 1..=8; each is exactly 32 data shreds.
+    #[prost(uint32, tag = "3")]
+    pub fec_set_cnt: u32,
+}
+/// Inject part of one FEC set regardless of whether it was requested -- the
+/// adversarial channel: arrival ordering, equivocating versions, premature slot
+/// completion, orphan creation.  Unit is a FEC set, not a shred, since that's
+/// the unit both implementations work in. fec_set_idx and slot_complete are
+/// derived (fec_idx*32; index == fec_set_cnt*32-1), not stored.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DeliverShred {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    /// Parent these shreds CLAIM; may disagree with the chain (equivocation), not
+    /// clamped.
+    #[prost(uint64, tag = "2")]
+    pub parent_slot: u64,
+    /// 0-based.
+    #[prost(uint32, tag = "3")]
+    pub fec_idx: u32,
+    /// Bit i selects shred i of the FEC set (absolute index fec_idx*32 + i); a
+    /// cleared bit is a gap.
+    #[prost(uint32, tag = "4")]
+    pub shred_mask: u32,
+    /// Byte-version of the block these shreds belong to (its merkle root);
+    /// differing versions model equivocation.
+    #[prost(uint32, tag = "5")]
+    pub version: u32,
+    /// FEC-set count of the version these shreds belong to; unset = ground truth's
+    /// count. Models false slot completion.
+    #[prost(uint32, optional, tag = "6")]
+    pub fec_set_cnt: ::core::option::Option<u32>,
+    /// Sets ref_tick (1 if turbine, 0 if repair), FD's per-shred receipt-time feed
+    /// into eligibility timing.
+    #[prost(enumeration = "RepairShredSource", tag = "7")]
+    pub src: i32,
+    /// Peer these shreds are attributed to; must be in setup.peer_ids.
+    #[prost(uint32, tag = "8")]
+    pub peer_id: u32,
+    /// Coding shreds count toward the Reed-Solomon recovery threshold.
+    #[prost(enumeration = "RepairShredKind", tag = "9")]
+    pub kind: i32,
+}
+/// Feeds the implementation's own outbound requests through the ground-truth
+/// responder, answering up to `max_n`.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ServeRequests {
+    #[prost(uint32, tag = "1")]
+    pub max_n: u32,
+}
+/// Consensus signal: the slot was confirmed at `level` (gates FD's
+/// chain_confirmed / confirmed_bid bookkeeping).
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Confirm {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    /// Byte-version of the block that was confirmed.
+    #[prost(uint32, tag = "2")]
+    pub version: u32,
+    #[prost(uint32, tag = "3")]
+    pub level: u32,
+}
+/// Advance the root, as a consensus-driven root change would.  Not clamped;
+/// the repair driver gates the actual advance.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SetRoot {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+}
+/// Fields apply independently.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PeerFault {
+    #[prost(uint32, tag = "1")]
+    pub peer_id: u32,
+    /// If set, record a repair response with this RTT (ns), aging the peer into
+    /// the fast/slow list.
+    #[prost(int64, optional, tag = "2")]
+    pub rtt_ns: ::core::option::Option<i64>,
+    /// If true, drop requests hashing to this peer, by a predicate both targets
+    /// run identically.
+    #[prost(bool, tag = "3")]
+    pub unresponsive: bool,
+}
+/// Simulate wall-clock time passing for both sides' repair-eligibility
+/// throttles, by back-dating timestamps (never sleeping).
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct AdvanceTime {
+    #[prost(uint64, tag = "1")]
+    pub ms: u64,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct RepairEvent {
+    #[prost(oneof = "repair_event::Event", tags = "1, 2, 3, 4, 5, 6")]
+    pub event: ::core::option::Option<repair_event::Event>,
+}
+/// Nested message and enum types in `RepairEvent`.
+pub mod repair_event {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Event {
+        #[prost(message, tag = "1")]
+        Deliver(super::DeliverShred),
+        #[prost(message, tag = "2")]
+        Serve(super::ServeRequests),
+        #[prost(message, tag = "3")]
+        Confirm(super::Confirm),
+        #[prost(message, tag = "4")]
+        SetRoot(super::SetRoot),
+        #[prost(message, tag = "5")]
+        Fault(super::PeerFault),
+        #[prost(message, tag = "6")]
+        Time(super::AdvanceTime),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RepairContextV2 {
+    #[prost(uint64, tag = "1")]
+    pub root_slot: u64,
+    /// FD forest pool size, rounded up to a power of two; 0 = default. Not clamped
+    /// to the trace's slot count -- models pool pressure to reach the eviction
+    /// path's force-root escape hatch.
+    #[prost(uint32, tag = "2")]
+    pub slot_max: u32,
+    /// fd_reqlim dedup map size (power of two). 0 selects a default.
+    #[prost(uint32, tag = "3")]
+    pub dedup_max: u32,
+    /// 2..=255; peer 1 always exists.
+    #[prost(uint32, repeated, tag = "4")]
+    pub peer_ids: ::prost::alloc::vec::Vec<u32>,
+    #[prost(message, repeated, tag = "5")]
+    pub chain: ::prost::alloc::vec::Vec<RepairChainSlot>,
+    #[prost(message, repeated, tag = "6")]
+    pub events: ::prost::alloc::vec::Vec<RepairEvent>,
+    /// Slots >= this are subject to FD's turbine grace period; unset leaves the
+    /// throttle inactive.
+    #[prost(uint64, optional, tag = "7")]
+    pub turbine_slot0: ::core::option::Option<u64>,
+}
+/// One slot's observable state; deliberately raw (indices, not a derived "is
+/// complete" bit).
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct RepairSlotState {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    #[prost(uint64, tag = "2")]
+    pub parent_slot: u64,
+    /// Highest contiguous buffered data shred index; UINT32_MAX if none.
+    #[prost(uint32, tag = "3")]
+    pub buffered_idx: u32,
+    /// Index carrying SLOT_COMPLETE; UINT32_MAX if not yet known.
+    #[prost(uint32, tag = "4")]
+    pub complete_idx: u32,
+    /// Every FEC set in the slot has been chain-verified.
+    #[prost(bool, tag = "5")]
+    pub chain_confirmed: bool,
+}
+/// The implementation's live state after one event; `slots` is the set the hard
+/// check diffs against the other target.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RepairSnapshot {
+    /// Index into RepairContextV2.events of the event that produced this snapshot.
+    #[prost(uint32, tag = "1")]
+    pub event_idx: u32,
+    #[prost(uint64, tag = "2")]
+    pub root: u64,
+    /// Sorted ascending by slot.
+    #[prost(message, repeated, tag = "3")]
+    pub slots: ::prost::alloc::vec::Vec<RepairSlotState>,
+    /// Diagnostic only: most recent ServeRequests fetched nothing new on this
+    /// side.
+    #[prost(bool, tag = "4")]
+    pub settled: bool,
+}
+/// One outbound repair request; metric only, never equality-checked.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct RepairRequest {
+    #[prost(enumeration = "RepairRequestKind", tag = "1")]
+    pub kind: i32,
+    #[prost(uint64, tag = "2")]
+    pub slot: u64,
+    #[prost(uint32, tag = "3")]
+    pub shred_idx: u32,
+    #[prost(uint32, tag = "4")]
+    pub event_idx: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RepairEffectsV2 {
+    #[prost(message, repeated, tag = "1")]
+    pub snapshots: ::prost::alloc::vec::Vec<RepairSnapshot>,
+    /// Metrics tier, never equality-checked.
+    #[prost(message, repeated, tag = "2")]
+    pub requests: ::prost::alloc::vec::Vec<RepairRequest>,
+    /// Slots dropped without the root advancing past them (FD bounded-pool
+    /// eviction); sorted ascending.
+    #[prost(uint64, repeated, tag = "3")]
+    pub evicted_slots: ::prost::alloc::vec::Vec<u64>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RepairFixtureV2 {
+    #[prost(message, optional, tag = "1")]
+    pub metadata: ::core::option::Option<FixtureMetadata>,
+    #[prost(message, optional, tag = "2")]
+    pub input: ::core::option::Option<RepairContextV2>,
+    #[prost(message, optional, tag = "3")]
+    pub output: ::core::option::Option<RepairEffectsV2>,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum RepairShredSource {
+    RepairSrcTurbine = 0,
+    RepairSrcRepair = 1,
+}
+impl RepairShredSource {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::RepairSrcTurbine => "REPAIR_SRC_TURBINE",
+            Self::RepairSrcRepair => "REPAIR_SRC_REPAIR",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "REPAIR_SRC_TURBINE" => Some(Self::RepairSrcTurbine),
+            "REPAIR_SRC_REPAIR" => Some(Self::RepairSrcRepair),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum RepairShredKind {
+    RepairShredData = 0,
+    RepairShredCode = 1,
+}
+impl RepairShredKind {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::RepairShredData => "REPAIR_SHRED_DATA",
+            Self::RepairShredCode => "REPAIR_SHRED_CODE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "REPAIR_SHRED_DATA" => Some(Self::RepairShredData),
+            "REPAIR_SHRED_CODE" => Some(Self::RepairShredCode),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum RepairRequestKind {
+    RepairReqShred = 0,
+    RepairReqHighestShred = 1,
+    RepairReqOrphan = 2,
+}
+impl RepairRequestKind {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::RepairReqShred => "REPAIR_REQ_SHRED",
+            Self::RepairReqHighestShred => "REPAIR_REQ_HIGHEST_SHRED",
+            Self::RepairReqOrphan => "REPAIR_REQ_ORPHAN",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "REPAIR_REQ_SHRED" => Some(Self::RepairReqShred),
+            "REPAIR_REQ_HIGHEST_SHRED" => Some(Self::RepairReqHighestShred),
+            "REPAIR_REQ_ORPHAN" => Some(Self::RepairReqOrphan),
+            _ => None,
+        }
+    }
+}
 /// Any features that needed to be fuzzed should be manually added here.
 /// Once they're cleaned up / activated on all clusters, they can be
 /// removed via a reserved tag.
