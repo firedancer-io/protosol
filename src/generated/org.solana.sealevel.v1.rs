@@ -315,6 +315,11 @@ pub struct PrevVoteAccount {
     pub inflation_rewards_collector: ::prost::alloc::vec::Vec<u8>,
     #[prost(bytes = "vec", tag = "8")]
     pub block_revenue_collector: ::prost::alloc::vec::Vec<u8>,
+    /// SIMD-0123 block revenue sharing
+    #[prost(uint32, tag = "9")]
+    pub block_revenue_commission_bps: u32,
+    #[prost(uint64, tag = "10")]
+    pub pending_delegator_rewards: u64,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BlockBank {
