@@ -52,6 +52,10 @@ message PrevVoteAccount {
        rewards, node_pubkey for block revenue). */
     bytes inflation_rewards_collector = 7;
     bytes block_revenue_collector = 8;
+
+    /* SIMD-0123 block revenue sharing */
+    uint32 block_revenue_commission_bps = 9;
+    uint64 pending_delegator_rewards = 10;
 }
 
 enum WarmupCooldownRate {
