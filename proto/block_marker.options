@@ -1,0 +1,26 @@
+block_marker.proto package:"fd_exec_test"
+block_marker.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
+
+fd_exec_test.BlockMarkerContext.data type:FT_POINTER
+
+fd_exec_test.BlockMarkerBitmap.signers type:FT_POINTER
+
+fd_exec_test.BlockMarkerVotesAggregate.signature max_size:96 fixed_length:true
+
+fd_exec_test.BlockMarkerFinalizationCert.block_id max_size:32 fixed_length:true
+
+fd_exec_test.BlockMarkerSkipRewardCert.signature max_size:96 fixed_length:true
+
+fd_exec_test.BlockMarkerNotarRewardCert.block_id max_size:32 fixed_length:true
+fd_exec_test.BlockMarkerNotarRewardCert.signature max_size:96 fixed_length:true
+
+fd_exec_test.BlockMarkerHeader.parent_block_id max_size:32 fixed_length:true
+
+fd_exec_test.BlockMarkerUpdateParent.new_parent_block_id max_size:32 fixed_length:true
+
+fd_exec_test.BlockMarkerFooter.bank_hash max_size:32 fixed_length:true
+fd_exec_test.BlockMarkerFooter.block_user_agent max_size:255
+
+fd_exec_test.BlockMarkerGenesisCert.block_id max_size:32 fixed_length:true
+fd_exec_test.BlockMarkerGenesisCert.signature max_size:192 fixed_length:true
+fd_exec_test.BlockMarkerGenesisCert.bitmap type:FT_POINTER

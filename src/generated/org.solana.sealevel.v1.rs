@@ -514,6 +514,177 @@ impl WarmupCooldownRate {
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BlockMarkerContext {
+    /// Raw bytes of one data batch
+    #[prost(bytes = "vec", tag = "1")]
+    pub data: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BlockMarkerBitmap {
+    /// Number of validator ranks the bitmap covers.
+    #[prost(uint32, tag = "1")]
+    pub bit_cnt: u32,
+    /// Ranks whose bit is set, ascending.
+    #[prost(uint32, repeated, tag = "2")]
+    pub signers: ::prost::alloc::vec::Vec<u32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BlockMarkerVotesAggregate {
+    /// Compressed BLS signature.  Exactly 96 bytes.
+    #[prost(bytes = "vec", tag = "1")]
+    pub signature: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, optional, tag = "2")]
+    pub bitmap: ::core::option::Option<BlockMarkerBitmap>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BlockMarkerFinalizationCert {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    /// Exactly 32 bytes.
+    #[prost(bytes = "vec", tag = "2")]
+    pub block_id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, optional, tag = "3")]
+    pub final_aggregate: ::core::option::Option<BlockMarkerVotesAggregate>,
+    /// Unset for fast finalization.
+    #[prost(message, optional, tag = "4")]
+    pub notar_aggregate: ::core::option::Option<BlockMarkerVotesAggregate>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BlockMarkerSkipRewardCert {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    /// Compressed BLS signature.  Exactly 96 bytes.
+    #[prost(bytes = "vec", tag = "2")]
+    pub signature: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, optional, tag = "3")]
+    pub bitmap: ::core::option::Option<BlockMarkerBitmap>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BlockMarkerNotarRewardCert {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    /// Exactly 32 bytes.
+    #[prost(bytes = "vec", tag = "2")]
+    pub block_id: ::prost::alloc::vec::Vec<u8>,
+    /// Compressed BLS signature.  Exactly 96 bytes.
+    #[prost(bytes = "vec", tag = "3")]
+    pub signature: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, optional, tag = "4")]
+    pub bitmap: ::core::option::Option<BlockMarkerBitmap>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BlockMarkerHeader {
+    #[prost(uint64, tag = "1")]
+    pub parent_slot: u64,
+    /// Exactly 32 bytes.
+    #[prost(bytes = "vec", tag = "2")]
+    pub parent_block_id: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BlockMarkerUpdateParent {
+    #[prost(uint64, tag = "1")]
+    pub new_parent_slot: u64,
+    /// Exactly 32 bytes.
+    #[prost(bytes = "vec", tag = "2")]
+    pub new_parent_block_id: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BlockMarkerFooter {
+    /// Exactly 32 bytes.
+    #[prost(bytes = "vec", tag = "1")]
+    pub bank_hash: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "2")]
+    pub block_producer_time_nanos: u64,
+    /// At most 255 bytes.
+    #[prost(bytes = "vec", tag = "3")]
+    pub block_user_agent: ::prost::alloc::vec::Vec<u8>,
+    /// Each is unset when the footer does not carry it.
+    #[prost(message, optional, tag = "4")]
+    pub block_final_cert: ::core::option::Option<BlockMarkerFinalizationCert>,
+    #[prost(message, optional, tag = "5")]
+    pub skip_reward_cert: ::core::option::Option<BlockMarkerSkipRewardCert>,
+    #[prost(message, optional, tag = "6")]
+    pub notar_reward_cert: ::core::option::Option<BlockMarkerNotarRewardCert>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BlockMarkerGenesisCert {
+    #[prost(uint64, tag = "1")]
+    pub slot: u64,
+    /// Exactly 32 bytes.
+    #[prost(bytes = "vec", tag = "2")]
+    pub block_id: ::prost::alloc::vec::Vec<u8>,
+    /// Uncompressed BLS signature.  Exactly 192 bytes.
+    #[prost(bytes = "vec", tag = "3")]
+    pub signature: ::prost::alloc::vec::Vec<u8>,
+    /// Raw bitmap bytes, not decoded.
+    #[prost(bytes = "vec", tag = "4")]
+    pub bitmap: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BlockMarkerEffects {
+    #[prost(enumeration = "BlockMarkerParseResult", tag = "1")]
+    pub result: i32,
+    /// Set iff result is ACCEPTED.
+    #[prost(oneof = "block_marker_effects::Marker", tags = "2, 3, 4, 5")]
+    pub marker: ::core::option::Option<block_marker_effects::Marker>,
+}
+/// Nested message and enum types in `BlockMarkerEffects`.
+pub mod block_marker_effects {
+    /// Set iff result is ACCEPTED.
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Marker {
+        #[prost(message, tag = "2")]
+        Footer(super::BlockMarkerFooter),
+        #[prost(message, tag = "3")]
+        Header(super::BlockMarkerHeader),
+        #[prost(message, tag = "4")]
+        UpdateParent(super::BlockMarkerUpdateParent),
+        #[prost(message, tag = "5")]
+        GenesisCert(super::BlockMarkerGenesisCert),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BlockMarkerFixture {
+    #[prost(message, optional, tag = "1")]
+    pub metadata: ::core::option::Option<FixtureMetadata>,
+    #[prost(message, optional, tag = "2")]
+    pub input: ::core::option::Option<BlockMarkerContext>,
+    #[prost(message, optional, tag = "3")]
+    pub output: ::core::option::Option<BlockMarkerEffects>,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum BlockMarkerParseResult {
+    Accepted = 0,
+    /// The component is a marker but failed to deserialize.
+    Rejected = 1,
+    /// The component's entry count is nonzero (or data is shorter than the
+    /// entry count), so it is an entry batch, not a marker.
+    NotAMarker = 2,
+}
+impl BlockMarkerParseResult {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Accepted => "BLOCK_MARKER_PARSE_RESULT_ACCEPTED",
+            Self::Rejected => "BLOCK_MARKER_PARSE_RESULT_REJECTED",
+            Self::NotAMarker => "BLOCK_MARKER_PARSE_RESULT_NOT_A_MARKER",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "BLOCK_MARKER_PARSE_RESULT_ACCEPTED" => Some(Self::Accepted),
+            "BLOCK_MARKER_PARSE_RESULT_REJECTED" => Some(Self::Rejected),
+            "BLOCK_MARKER_PARSE_RESULT_NOT_A_MARKER" => Some(Self::NotAMarker),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct StakeDelta {
     #[prost(bytes = "vec", tag = "1")]
     pub address: ::prost::alloc::vec::Vec<u8>,
