@@ -1,0 +1,126 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+
+import "metadata.proto";
+
+/* Protobuf definitions for the Alpenglow block marker differential
+   fuzzer.  The testing scope is deserialization of a single block
+   component that carries a BlockMarker (BlockComponent with a zero
+   entry count followed by a VersionedBlockMarker), i.e.:
+
+   * BlockComponent / VersionedBlockMarker / BlockMarkerV1 framing and
+     LengthPrefixed length checks
+   * BlockHeaderV1, UpdateParentV1, BlockFooterV1 and
+     GenesisCertBlockMarker field decoding
+   * Base2 signer bitmap decoding for every certificate in the footer
+
+   Checks that need bank state (parent slot, clock bounds, reward slot
+   ranges, stake / rank maps, BLS signature verification) are out of
+   scope.  Signatures are reported as raw bytes and never verified.
+
+   Bitmaps are decoded against a fixed validator cap of 2000 (the VAT
+   cap), not the epoch's rank map size. */
+
+message BlockMarkerContext {
+  // Raw bytes of one data batch
+  bytes data = 1;
+}
+
+enum BlockMarkerParseResult {
+  BLOCK_MARKER_PARSE_RESULT_ACCEPTED = 0;
+  // The component is a marker but failed to deserialize.
+  BLOCK_MARKER_PARSE_RESULT_REJECTED = 1;
+  // The component's entry count is nonzero (or data is shorter than the
+  // entry count), so it is an entry batch, not a marker.
+  BLOCK_MARKER_PARSE_RESULT_NOT_A_MARKER = 2;
+}
+
+message BlockMarkerBitmap {
+  // Number of validator ranks the bitmap covers.
+  uint32 bit_cnt = 1;
+  // Ranks whose bit is set, ascending.
+  repeated uint32 signers = 2;
+}
+
+message BlockMarkerVotesAggregate {
+  // Compressed BLS signature.  Exactly 96 bytes.
+  bytes signature = 1;
+  BlockMarkerBitmap bitmap = 2;
+}
+
+message BlockMarkerFinalizationCert {
+  uint64 slot = 1;
+  // Exactly 32 bytes.
+  bytes block_id = 2;
+  BlockMarkerVotesAggregate final_aggregate = 3;
+  // Unset for fast finalization.
+  BlockMarkerVotesAggregate notar_aggregate = 4;
+}
+
+message BlockMarkerSkipRewardCert {
+  uint64 slot = 1;
+  // Compressed BLS signature.  Exactly 96 bytes.
+  bytes signature = 2;
+  BlockMarkerBitmap bitmap = 3;
+}
+
+message BlockMarkerNotarRewardCert {
+  uint64 slot = 1;
+  // Exactly 32 bytes.
+  bytes block_id = 2;
+  // Compressed BLS signature.  Exactly 96 bytes.
+  bytes signature = 3;
+  BlockMarkerBitmap bitmap = 4;
+}
+
+message BlockMarkerHeader {
+  uint64 parent_slot = 1;
+  // Exactly 32 bytes.
+  bytes parent_block_id = 2;
+}
+
+message BlockMarkerUpdateParent {
+  uint64 new_parent_slot = 1;
+  // Exactly 32 bytes.
+  bytes new_parent_block_id = 2;
+}
+
+message BlockMarkerFooter {
+  // Exactly 32 bytes.
+  bytes bank_hash = 1;
+  uint64 block_producer_time_nanos = 2;
+  // At most 255 bytes.
+  bytes block_user_agent = 3;
+  // Each is unset when the footer does not carry it.
+  BlockMarkerFinalizationCert block_final_cert = 4;
+  BlockMarkerSkipRewardCert skip_reward_cert = 5;
+  BlockMarkerNotarRewardCert notar_reward_cert = 6;
+}
+
+message BlockMarkerGenesisCert {
+  uint64 slot = 1;
+  // Exactly 32 bytes.
+  bytes block_id = 2;
+  // Uncompressed BLS signature.  Exactly 192 bytes.
+  bytes signature = 3;
+  // Raw bitmap bytes, not decoded.
+  bytes bitmap = 4;
+}
+
+message BlockMarkerEffects {
+  BlockMarkerParseResult result = 1;
+
+  // Set iff result is ACCEPTED.
+  oneof marker {
+    BlockMarkerFooter footer = 2;
+    BlockMarkerHeader header = 3;
+    BlockMarkerUpdateParent update_parent = 4;
+    BlockMarkerGenesisCert genesis_cert = 5;
+  }
+}
+
+message BlockMarkerFixture {
+  FixtureMetadata metadata = 1;
+  BlockMarkerContext input = 2;
+  BlockMarkerEffects output = 3;
+}
