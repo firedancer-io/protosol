@@ -1,0 +1,266 @@
+syntax = "proto3";
+package org.solana.sealevel.v1;
+
+import "metadata.proto";
+
+// Differential harness for repair (sol_compat_repair_v1).
+
+message RepairSlotDescV1 {
+  uint64 slot = 1;
+  // Parent registered before any shreds arrive (cf. shred_parent_slot).
+  uint64 parent_slot = 2;
+  uint32 fec_set_cnt = 3;
+  // Data shreds per FEC set; must be 32 (DATA_SHREDS_PER_FEC_BLOCK).
+  uint32 shreds_per_fec = 4;
+  // Parent actually embedded in delivered shreds, if it disagrees with
+  // parent_slot (equivocation).
+  optional uint64 shred_parent_slot = 5;
+}
+
+message RepairGapShredV1 {
+  uint64 slot = 1;
+  uint32 shred_idx = 2;
+}
+
+message RepairGapFecSetV1 {
+  uint64 slot = 1;
+  uint32 fec_set_idx = 2;
+}
+
+// Determined at startup, before any repair round runs.
+message RepairGapV1 {
+  oneof gap {
+    RepairGapShredV1 shred = 1;
+    RepairGapFecSetV1 fec_set = 2;
+    // All shreds in the slot, not just one FEC set.
+    uint64 slot = 3;
+  }
+}
+
+message RepairPeerV1 {
+  // 2..255; peer 1 always exists.
+  uint32 peer_id = 1;
+  // If set, simulate a repair response with this RTT (ns), aging the peer into
+  // the fast/slow list.
+  optional int64 rtt_ns = 2;
+}
+
+message RepairContextV1 {
+  uint64 root_slot = 1;
+  repeated RepairSlotDescV1 slots = 2;
+  repeated RepairGapV1 gaps = 3;
+  // Max repair requests per round (default 32).
+  optional uint32 max_requests_per_round = 4;
+  // Override fd_forest slot_max (must be a power of two); models pool pressure
+  // to reach the eviction path's force-root escape hatch.
+  optional uint64 slot_max_override = 5;
+  // Override fd_reqlim dedup_max (default 1024).
+  optional uint64 dedup_max_override = 6;
+  // Insert slots in this order (indices into `slots`) instead of natural order.
+  repeated uint32 insertion_order = 7;
+  // Advance the root to this slot after the first gap shred is delivered.
+  optional uint64 publish_slot = 8;
+  // Slots whose non-gap shreds are delivered as turbine source (sets ref_tick=1
+  // on FD's side).
+  repeated uint64 turbine_slots = 9;
+  // Slots >= this are subject to the turbine throttle.
+  optional uint64 turbine_slot0 = 10;
+  repeated RepairPeerV1 peers = 11;
+  // Simulated ms elapsed since a slot's first shred, for repair-eligibility
+  // throttles; unset = fully elapsed.
+  optional uint64 elapsed_ms = 12;
+}
+
+message RepairShredIdV1 {
+  uint64 slot = 1;
+  uint32 shred_idx = 2;
+}
+
+message RepairEffectsV1 {
+  // True if the internal driver reached completion within its round budget.
+  bool converged = 1;
+  // Sorted by (slot, shred_idx).
+  repeated RepairShredIdV1 recovered = 2;
+  // Slots dropped by the implementation (e.g. FD bounded-pool eviction); sorted
+  // ascending.
+  repeated uint64 dropped_slots = 3;
+}
+
+message RepairFixtureV1 {
+  FixtureMetadata metadata = 1;
+  RepairContextV1 input = 2;
+  RepairEffectsV1 output = 3;
+}
+
+// Differential harness for repair (sol_compat_repair_v2). The context contains
+// ground truth information (`setup`) plus an ordered `RepairEvent` trace that
+// describes the test scenario.
+
+// The responder serves shreds from this.
+message RepairChainSlot {
+  uint64 slot = 1;
+  uint64 parent_slot = 2;
+  // Number of FEC sets, 1..=8; each is exactly 32 data shreds.
+  uint32 fec_set_cnt = 3;
+}
+
+enum RepairShredSource {
+  REPAIR_SRC_TURBINE = 0;
+  REPAIR_SRC_REPAIR  = 1;
+}
+
+enum RepairShredKind {
+  REPAIR_SHRED_DATA = 0;
+  REPAIR_SHRED_CODE = 1;
+}
+
+// Inject part of one FEC set regardless of whether it was requested -- the
+// adversarial channel: arrival ordering, equivocating versions, premature slot
+// completion, orphan creation.  Unit is a FEC set, not a shred, since that's
+// the unit both implementations work in. fec_set_idx and slot_complete are
+// derived (fec_idx*32; index == fec_set_cnt*32-1), not stored.
+message DeliverShred {
+  uint64 slot = 1;
+  // Parent these shreds CLAIM; may disagree with the chain (equivocation), not
+  // clamped.
+  uint64 parent_slot = 2;
+  // 0-based.
+  uint32 fec_idx = 3;
+  // Bit i selects shred i of the FEC set (absolute index fec_idx*32 + i); a
+  // cleared bit is a gap.
+  uint32 shred_mask = 4;
+  // Byte-version of the block these shreds belong to (its merkle root);
+  // differing versions model equivocation.
+  uint32 version = 5;
+  // FEC-set count of the version these shreds belong to; unset = ground truth's
+  // count. Models false slot completion.
+  optional uint32 fec_set_cnt = 6;
+  // Sets ref_tick (1 if turbine, 0 if repair), FD's per-shred receipt-time feed
+  // into eligibility timing.
+  RepairShredSource src = 7;
+  // Peer these shreds are attributed to; must be in setup.peer_ids.
+  uint32 peer_id = 8;
+  // Coding shreds count toward the Reed-Solomon recovery threshold.
+  RepairShredKind kind = 9;
+}
+
+// Feeds the implementation's own outbound requests through the ground-truth
+// responder, answering up to `max_n`.
+message ServeRequests {
+  uint32 max_n = 1;
+}
+
+// Consensus signal: the slot was confirmed at `level` (gates FD's
+// chain_confirmed / confirmed_bid bookkeeping).
+message Confirm {
+  uint64 slot = 1;
+  // Byte-version of the block that was confirmed.
+  uint32 version = 2;
+  uint32 level = 3;
+}
+
+// Advance the root, as a consensus-driven root change would.  Not clamped;
+// the repair driver gates the actual advance.
+message SetRoot {
+  uint64 slot = 1;
+}
+
+// Fields apply independently.
+message PeerFault {
+  uint32 peer_id = 1;
+  // If set, record a repair response with this RTT (ns), aging the peer into
+  // the fast/slow list.
+  optional int64 rtt_ns = 2;
+  // If true, drop requests hashing to this peer, by a predicate both targets
+  // run identically.
+  bool unresponsive = 3;
+}
+
+// Simulate wall-clock time passing for both sides' repair-eligibility
+// throttles, by back-dating timestamps (never sleeping).
+message AdvanceTime {
+  uint64 ms = 1;
+}
+
+message RepairEvent {
+  oneof event {
+    DeliverShred  deliver  = 1;
+    ServeRequests serve    = 2;
+    Confirm       confirm  = 3;
+    SetRoot       set_root = 4;
+    PeerFault     fault    = 5;
+    AdvanceTime   time     = 6;
+  }
+}
+
+message RepairContextV2 {
+  uint64 root_slot = 1;
+  // FD forest pool size, rounded up to a power of two; 0 = default. Not clamped
+  // to the trace's slot count -- models pool pressure to reach the eviction
+  // path's force-root escape hatch.
+  uint32 slot_max = 2;
+  // fd_reqlim dedup map size (power of two). 0 selects a default.
+  uint32 dedup_max = 3;
+  // 2..=255; peer 1 always exists.
+  repeated uint32 peer_ids = 4;
+  repeated RepairChainSlot chain = 5;
+  repeated RepairEvent events = 6;
+  // Slots >= this are subject to FD's turbine grace period; unset leaves the
+  // throttle inactive.
+  optional uint64 turbine_slot0 = 7;
+}
+
+// One slot's observable state; deliberately raw (indices, not a derived "is
+// complete" bit).
+message RepairSlotState {
+  uint64 slot = 1;
+  uint64 parent_slot = 2;
+  // Highest contiguous buffered data shred index; UINT32_MAX if none.
+  uint32 buffered_idx = 3;
+  // Index carrying SLOT_COMPLETE; UINT32_MAX if not yet known.
+  uint32 complete_idx = 4;
+  // Every FEC set in the slot has been chain-verified.
+  bool chain_confirmed = 5;
+}
+
+// The implementation's live state after one event; `slots` is the set the hard
+// check diffs against the other target.
+message RepairSnapshot {
+  // Index into RepairContextV2.events of the event that produced this snapshot.
+  uint32 event_idx = 1;
+  uint64 root = 2;
+  // Sorted ascending by slot.
+  repeated RepairSlotState slots = 3;
+  // Diagnostic only: most recent ServeRequests fetched nothing new on this
+  // side.
+  bool settled = 4;
+}
+
+enum RepairRequestKind {
+  REPAIR_REQ_SHRED         = 0;
+  REPAIR_REQ_HIGHEST_SHRED = 1;
+  REPAIR_REQ_ORPHAN        = 2;
+}
+
+// One outbound repair request; metric only, never equality-checked.
+message RepairRequest {
+  RepairRequestKind kind = 1;
+  uint64 slot = 2;
+  uint32 shred_idx = 3;
+  uint32 event_idx = 4;
+}
+
+message RepairEffectsV2 {
+  repeated RepairSnapshot snapshots = 1;
+  // Metrics tier, never equality-checked.
+  repeated RepairRequest requests = 2;
+  // Slots dropped without the root advancing past them (FD bounded-pool
+  // eviction); sorted ascending.
+  repeated uint64 evicted_slots = 3;
+}
+
+message RepairFixtureV2 {
+  FixtureMetadata metadata = 1;
+  RepairContextV2 input = 2;
+  RepairEffectsV2 output = 3;
+}

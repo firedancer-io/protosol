@@ -1,0 +1,21 @@
+repair.proto package:"fd_exec_test"
+repair.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
+
+fd_exec_test.RepairContextV1.slots type:FT_POINTER
+fd_exec_test.RepairContextV1.gaps type:FT_POINTER
+fd_exec_test.RepairContextV1.insertion_order type:FT_POINTER
+fd_exec_test.RepairContextV1.turbine_slots type:FT_POINTER
+fd_exec_test.RepairContextV1.peers type:FT_POINTER
+
+fd_exec_test.RepairEffectsV1.recovered type:FT_POINTER
+fd_exec_test.RepairEffectsV1.dropped_slots type:FT_POINTER
+
+fd_exec_test.RepairContextV2.peer_ids type:FT_POINTER
+fd_exec_test.RepairContextV2.chain type:FT_POINTER
+fd_exec_test.RepairContextV2.events type:FT_POINTER
+
+fd_exec_test.RepairSnapshot.slots type:FT_POINTER
+
+fd_exec_test.RepairEffectsV2.snapshots type:FT_POINTER
+fd_exec_test.RepairEffectsV2.requests type:FT_POINTER
+fd_exec_test.RepairEffectsV2.evicted_slots type:FT_POINTER

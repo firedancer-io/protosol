@@ -399,7 +399,7 @@ dependencies = [
 
 [[package]]
 name = "protosol"
-version = "18.0.0"
+version = "20.0.0"
 dependencies = [
  "prost",
  "prost-build",
