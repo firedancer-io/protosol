@@ -1,24 +1,28 @@
 votor.proto package:"fd_exec_test"
 votor.proto include:"../../../../ballet/nanopb/pb_firedancer.h"
 
-fd_exec_test.VotorBlockId.block_hash max_size:32 fixed_length:true
+fd_exec_test.VotorVote.block_id max_size:32 fixed_length:true
+fd_exec_test.VotorVote.signature max_size:192 fixed_length:true
 
-fd_exec_test.VotorBlockVote.block_hash max_size:32 fixed_length:true
+fd_exec_test.VotorCert.block_id max_size:32 fixed_length:true
+fd_exec_test.VotorCert.primary_bitmap max_size:253
+fd_exec_test.VotorCert.fallback_bitmap max_size:253
+fd_exec_test.VotorCert.signature max_size:192 fixed_length:true
 
-fd_exec_test.VotorContext.validators type:FT_POINTER
-fd_exec_test.VotorContext.key_seed max_size:32 fixed_length:true
-fd_exec_test.VotorContext.actions type:FT_POINTER
+fd_exec_test.VotorReceiveCert.block_id max_size:32 fixed_length:true
+fd_exec_test.VotorReceiveCert.primary_bitmap max_size:253
+fd_exec_test.VotorReceiveCert.fallback_bitmap max_size:253
 
-fd_exec_test.VotorAggSig.signers type:FT_POINTER
+fd_exec_test.VotorDatagram.data max_size:1280
 
-fd_exec_test.VotorBlockCert.block_hash max_size:32 fixed_length:true
+fd_exec_test.VotorReceiveContext.datagrams type:FT_POINTER
+fd_exec_test.VotorReceiveContext.validator_stakes max_count:16
 
-fd_exec_test.VotorNotarFallbackCert.block_hash max_size:32 fixed_length:true
+fd_exec_test.VotorReceiveEffects.results type:FT_POINTER
+fd_exec_test.VotorReceiveEffects.certs type:FT_POINTER
+fd_exec_test.VotorReceiveEffects.banned type:FT_POINTER
 
-fd_exec_test.VotorStandstill.certs type:FT_POINTER
-fd_exec_test.VotorStandstill.votes type:FT_POINTER
+fd_exec_test.VotorVoteSerializeEffects.wire max_size:236
+fd_exec_test.VotorVoteSerializeEffects.signing_payload max_size:43
 
-fd_exec_test.VotorActionResult.pool_events type:FT_POINTER
-fd_exec_test.VotorActionResult.repair_requests type:FT_POINTER
-
-fd_exec_test.VotorEffects.results type:FT_POINTER
+fd_exec_test.VotorCertSerializeEffects.wire max_size:1280
