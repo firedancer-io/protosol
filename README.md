@@ -54,7 +54,7 @@ let txn = protos::SanitizedTransaction {
 let account = protos::AcctState {
     address: vec![/* 32-byte address */],
     lamports: 1000000,
-    data: vec![/* account data */],
+    data_repr: Some(protos::acct_state::DataRepr::Data(vec![/* account data */])),
     executable: false,
     owner: vec![/* 32-byte owner */],
 };
@@ -63,17 +63,8 @@ let account = protos::AcctState {
 let block_ctx = protos::BlockContext {
     txns: vec![txn],
     acct_states: vec![account],
-    blockhash_queue: vec![/* recent blockhashes */],
-    slot_ctx: Some(protos::SlotContext {
-        slot: 12345,
-        poh: vec![/* POH hash */],
-        parent_bank_hash: vec![/* parent hash */],
-        parent_lthash: vec![/* parent LT hash */],
-    }),
-    features: Some(protos::FeatureSet {
-        features: vec![/* feature flags */],
-    }),
     bank: None,
+};
 ```
 
 ### Testing and Fuzzing
@@ -100,7 +91,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-protosol = "12.0.0"
+protosol = "18.0.0"
 ```
 
 No system dependencies needed — pre-generated Rust code is included.
