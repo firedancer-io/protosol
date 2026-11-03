@@ -47,6 +47,7 @@ let txn = protos::SanitizedTransaction {
         version: protos::TransactionVersion::V1 as i32,
         v1_config: None,
     }),
+    message_hash: vec![/* 32-byte message hash */],
     signatures: vec![vec![/* signature bytes */]],
 };
 
@@ -134,7 +135,7 @@ CI runs on every push and pull request:
 
 ## File Structure
 
-```
+```text
 src/generated/           # Pre-generated Rust code (checked in, no tools needed to build)
 
 proto/
