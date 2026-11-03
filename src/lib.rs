@@ -13,6 +13,11 @@ pub const FILE_DESCRIPTOR_SET_BYTES: &[u8] = include_bytes!("generated/file_desc
 
 mod accessors;
 
+/// Compiles the Rust examples in the README so they cannot drift from the schema.
+#[cfg(doctest)]
+#[doc = include_str!("../README.md")]
+struct ReadmeDoctests;
+
 #[cfg(feature = "solana-types")]
 pub mod convert;
 
